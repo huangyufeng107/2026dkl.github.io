@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D客连 — 产品功能开发说明文档</title>
+<style>
+  :root {
+    --primary: #1a56db;
+    --primary-light: #e8f0fe;
+    --primary-dark: #1240a6;
+    --success: #0e9f6e;
+    --success-light: #def7ec;
+    --warning: #c27803;
+    --warning-light: #fdf6b2;
+    --danger: #e02424;
+    --danger-light: #fde8e8;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --sidebar-width: 280px;
+    --header-height: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: #1e3a8a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 12px;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  }
+  .header-logo { font-size: 20px; }
+  .header-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .header-badge {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+  }
+  .header-meta { font-size: 12px; color: rgba(255,255,255,.65); }
+
+  /* ── Layout ── */
+  .layout {
+    display: flex;
+    margin-top: var(--header-height);
+    min-height: calc(100vh - var(--header-height));
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: #fff;
+    border-right: 1px solid var(--gray-200);
+    overflow-y: auto;
+    padding: 16px 0;
+    z-index: 90;
+  }
+  .sidebar-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 12px 20px 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--gray-600);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+  }
+  .nav-item:hover { background: var(--gray-50); color: var(--primary); }
+  .nav-item.active { background: var(--primary-light); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+  .nav-item .icon { font-size: 15px; width: 18px; flex-shrink: 0; }
+  .nav-sub {
+    padding-left: 20px;
+    border-left: none;
+  }
+  .nav-sub .nav-item { padding: 6px 20px 6px 12px; font-size: 13px; border-left: 2px solid transparent; }
+  .nav-sub .nav-item.active { border-left-color: var(--primary); }
+
+  /* ── Main ── */
+  .main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 1100px;
+  }
+
+  /* ── Section ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── Page Title ── */
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .page-desc {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-bottom: 28px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gray-50);
+  }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--gray-800); flex: 1; }
+  .card-body { padding: 20px; }
+
+  /* ── Module Overview (Index Page) ── */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .module-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .module-card.blue::before { background: #1a56db; }
+  .module-card.green::before { background: #0e9f6e; }
+  .module-card.purple::before { background: #7e3af2; }
+  .module-card.orange::before { background: #ff5a1f; }
+  .module-card.teal::before { background: #0694a2; }
+  .module-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+  .module-icon { font-size: 28px; margin-bottom: 10px; }
+  .module-name { font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 6px; }
+  .module-desc { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+  .module-tags { display: none; }
+  .tag {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag-blue { background: var(--primary-light); color: var(--primary); }
+  .tag-green { background: var(--success-light); color: var(--success); }
+  .tag-gray { background: var(--gray-100); color: var(--gray-600); }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--gray-50);
+    color: var(--gray-500);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-50); }
+  .td-code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #c0392b; background: #fef2f2; padding: 2px 5px; border-radius: 3px; white-space: nowrap; }
+  .td-type { font-family: monospace; font-size: 12px; color: #2980b9; }
+  .required { color: var(--danger); font-weight: 700; }
+  .optional { color: var(--gray-400); }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #6a9955; }
+  .code-block .key { color: #9cdcfe; }
+  .code-block .string { color: #ce9178; }
+  .code-block .number { color: #b5cea8; }
+  .code-block .keyword { color: #569cd6; }
+  .code-block .sql-kw { color: #569cd6; }
+  .code-block .sql-type { color: #4ec9b0; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-get { background: #dbeafe; color: #1e40af; }
+  .badge-post { background: #d1fae5; color: #065f46; }
+  .badge-put { background: #fef3c7; color: #92400e; }
+  .badge-patch { background: #ede9fe; color: #4c1d95; }
+  .badge-delete { background: #fee2e2; color: #991b1b; }
+  .badge-req { background: #fee2e2; color: #991b1b; }
+  .badge-opt { background: #f3f4f6; color: #6b7280; }
+
+  /* ── Alert ── */
+  .alert {
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin: 12px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .alert-info { background: var(--primary-light); color: #1e3a8a; border: 1px solid #bfdbfe; }
+  .alert-warning { background: var(--warning-light); color: #78350f; border: 1px solid #fde68a; }
+  .alert-success { background: var(--success-light); color: #064e3b; border: 1px solid #a7f3d0; }
+  .alert-danger { background: var(--danger-light); color: #7f1d1d; border: 1px solid #fca5a5; }
+
+  /* ── Steps ── */
+  .steps { display: flex; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-label { color: var(--gray-700); }
+  .step-arrow { color: var(--gray-300); margin: 0 8px; font-size: 16px; }
+
+  /* ── Status Flow ── */
+  .flow-container { display: flex; flex-wrap: wrap; gap: 0; align-items: center; margin: 12px 0; }
+  .flow-node {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .flow-arrow { color: var(--gray-400); margin: 0 6px; font-size: 18px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; border-bottom: 2px solid var(--gray-200); margin-bottom: 16px; gap: 0; }
+  .tab-btn {
+    padding: 8px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all .15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab-btn:hover { color: var(--primary); }
+  .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Section Divider ── */
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    width: 4px; height: 18px;
+    background: var(--primary);
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* ── Collapse ── */
+  .collapse-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    user-select: none;
+    border-radius: 6px;
+    background: var(--gray-50);
+    margin-bottom: 4px;
+  }
+  .collapse-header:hover { background: var(--gray-100); }
+  .collapse-arrow { transition: transform .2s; color: var(--gray-400); }
+  .collapse-arrow.open { transform: rotate(90deg); }
+  .collapse-body { display: none; padding: 4px 0; }
+  .collapse-body.open { display: block; }
+
+  /* ── Field Required/Optional ── */
+  .field-row td:nth-child(4) { font-size: 12px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+  /* ── Footer ── */
+  .footer {
+    margin-left: var(--sidebar-width);
+    padding: 16px 40px;
+    font-size: 12px;
+    color: var(--gray-400);
+    border-top: 1px solid var(--gray-200);
+    background: #fff;
+  }
+
+  /* ── Arch Diagram ── */
+  .arch-box {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 6px 0;
+    background: #fff;
+    font-size: 13px;
+  }
+  .arch-box.blue { border-color: #93c5fd; background: #eff6ff; }
+  .arch-box.green { border-color: #86efac; background: #f0fdf4; }
+  .arch-box.purple { border-color: #c4b5fd; background: #faf5ff; }
+  .arch-arrow-down {
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 20px;
+    margin: 4px 0;
+  }
+  .arch-flex { display: flex; gap: 8px; }
+  .arch-flex .arch-box { flex: 1; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main, .footer { margin-left: 0; padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <span class="header-logo">🚗</span>
+  <span class="header-title">D客连 — 产品功能开发说明文档</span>
+  <span class="header-badge">V1.0.3</span>
+  <span class="header-meta">2026-05-19 · DNDC产品组</span>
+</header>
+
+<!-- Layout -->
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section-title">概览</div>
+    <div class="nav-item active" onclick="showSection('overview')">
+      <span class="icon">🏠</span> 项目概览
+    </div>
+    <div class="nav-item" onclick="showSection('arch')">
+      <span class="icon">🏗️</span> 系统架构
+    </div>
+
+    <div class="sidebar-section-title">基础数据模块</div>
+    <div class="nav-item" onclick="showSection('brand')">
+      <span class="icon">🏷️</span> 品牌管理
+    </div>
+    <div class="nav-item" onclick="showSection('vehicle')">
+      <span class="icon">🚘</span> 车系管理
+    </div>
+    <div class="nav-item" onclick="showSection('city')">
+      <span class="icon">🏙️</span> 城市管理
+    </div>
+    <div class="nav-item" onclick="showSection('region')">
+      <span class="icon">🗺️</span> 区域管理
+    </div>
+    <div class="nav-item" onclick="showSection('store')">
+      <span class="icon">🏪</span> 门店管理
+    </div>
+    <div class="nav-item" onclick="showSection('supplier')">
+      <span class="icon">🤝</span> 合作供应商管理
+    </div>
+
+    <div class="sidebar-section-title">线索对接模块</div>
+    <div class="nav-item" onclick="showSection('openapi')">
+      <span class="icon">🔌</span> 线索推送 OpenAPI
+    </div>
+    <div class="nav-item" onclick="showSection('leads')">
+      <span class="icon">📋</span> 线索管理
+    </div>
+    <div class="nav-item" onclick="showSection('custom-fields')">
+      <span class="icon">⚙️</span> 自定义字段
+    </div>
+    <div class="nav-item" onclick="showSection('logs')">
+      <span class="icon">📝</span> 推送日志
+    </div>
+
+    <div class="sidebar-section-title">权限与规范</div>
+    <div class="nav-item" onclick="showSection('permission')">
+      <span class="icon">🔐</span> 权限设计
+    </div>
+    <div class="nav-item" onclick="showSection('appendix')">
+      <span class="icon">📎</span> 附录 & 枚举
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- ===================== OVERVIEW ===================== -->
+    <div id="overview" class="section active">
+      <div class="page-title">📄 项目概览</div>
+      <div class="page-desc">D客连 · 产品功能开发说明文档 V1.0.3</div>
+
+      <div class="alert alert-info">
+        💡 本文档覆盖「基础数据管理」和「线索对接」两大模块，包含数据结构、接口规范、业务规则，可直接指导研发实现。
+      </div>
+
+      <div class="section-title">功能模块总览</div>
+      <div class="module-grid">
+        <div class="module-card blue" onclick="showSection('brand')">
+          <div class="module-icon">🏷️</div>
+          <div class="module-name">品牌管理</div>
+          <div class="module-desc">管理主机厂品牌基础数据，作为车系、门店、供应商的上层关联主体</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">列表</span>
+            <span class="tag tag-blue">新增</span>
+            <span class="tag tag-blue">编辑</span>
+            <span class="tag tag-gray">启停</span>
+          </div>
+        </div>
+        <div class="module-card blue" onclick="showSection('vehicle')">
+          <div class="module-icon">🚘</div>
+          <div class="module-name">车系管理</div>
+          <div class="module-desc">管理主机厂车型，支持能源类型分类，供线索意向车型字段使用</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">列表</span>
+            <span class="tag tag-blue">新增</span>
+            <span class="tag tag-blue">编辑</span>
+            <span class="tag tag-gray">纯电/燃油/插混/增程/混动</span>
+          </div>
+        </div>
+        <div class="module-card blue" onclick="showSection('city')">
+          <div class="module-icon">🏙️</div>
+          <div class="module-name">城市管理</div>
+          <div class="module-desc">维护全国省市区三级联动数据，用于门店归属和线索城市字段</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">省/市/区三级</span>
+            <span class="tag tag-gray">启停</span>
+          </div>
+        </div>
+        <div class="module-card blue" onclick="showSection('region')">
+          <div class="module-icon">🗺️</div>
+          <div class="module-name">区域管理</div>
+          <div class="module-desc">管理品牌销售大区/小区划分，用于线索路由与绩效统计</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">大区</span>
+            <span class="tag tag-blue">小区</span>
+            <span class="tag tag-gray">品牌维度</span>
+          </div>
+        </div>
+        <div class="module-card blue" onclick="showSection('store')">
+          <div class="module-icon">🏪</div>
+          <div class="module-name">门店管理</div>
+          <div class="module-desc">管理经销商门店，是线索分配的最终落地单元，支持批量导入</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">一/二网店</span>
+            <span class="tag tag-gray">批量导入</span>
+            <span class="tag tag-green">地图选址</span>
+          </div>
+        </div>
+        <div class="module-card purple" onclick="showSection('supplier')">
+          <div class="module-icon">🤝</div>
+          <div class="module-name">合作供应商管理</div>
+          <div class="module-desc">管理接入线索的供应商账号，含 API Key 鉴权和数据权限配置</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">API Key</span>
+            <span class="tag tag-gray">总部/供应商/经销商</span>
+          </div>
+        </div>
+        <div class="module-card green" onclick="showSection('openapi')">
+          <div class="module-icon">🔌</div>
+          <div class="module-name">线索推送 OpenAPI</div>
+          <div class="module-desc">标准化 OpenAPI，支持外部供应商通过 HMAC 签名认证推送线索</div>
+          <div class="module-tags">
+            <span class="tag tag-green">HMAC签名</span>
+            <span class="tag tag-green">幂等设计</span>
+            <span class="tag tag-gray">去重</span>
+          </div>
+        </div>
+        <div class="module-card green" onclick="showSection('leads')">
+          <div class="module-icon">📋</div>
+          <div class="module-name">线索管理</div>
+          <div class="module-desc">全生命周期线索管理，支持分配、跟进、状态流转、导出</div>
+          <div class="module-tags">
+            <span class="tag tag-green">4种状态</span>
+            <span class="tag tag-green">跟进记录</span>
+            <span class="tag tag-gray">批量操作</span>
+          </div>
+        </div>
+        <div class="module-card orange" onclick="showSection('custom-fields')">
+          <div class="module-icon">⚙️</div>
+          <div class="module-name">自定义字段</div>
+          <div class="module-desc">支持按品牌/供应商配置自定义字段，满足个性化数据采集需求</div>
+          <div class="module-tags">
+            <span class="tag tag-blue">6种字段类型</span>
+            <span class="tag tag-gray">必填配置</span>
+          </div>
+        </div>
+        <div class="module-card teal" onclick="showSection('logs')">
+          <div class="module-icon">📝</div>
+          <div class="module-name">推送日志</div>
+          <div class="module-desc">记录所有 OpenAPI 推送请求，支持失败重推和排查问题</div>
+          <div class="module-tags">
+            <span class="tag tag-green">失败重推</span>
+            <span class="tag tag-gray">180天保留</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">关键约定</div>
+      <div class="card">
+        <div class="card-body">
+          <table>
+            <thead><tr><th>约定项</th><th>规范</th></tr></thead>
+            <tbody>
+              <tr><td>数据库主键，自增</td><td>统一使用 BIGINT AUTO_INCREMENT，禁用 INT</td></tr>
+              <tr><td>软删除</td><td>所有业务表均使用 is_deleted 字段，物理删除仅限管理员</td></tr>
+              <tr><td>手机号存储</td><td>展示时脱敏（138****8888）</td></tr>
+              <tr><td>时间字段</td><td>统一 DATETIME 类型，时区 Asia/Shanghai，接口使用 ISO 8601</td></tr>
+              <tr><td>接口版本</td><td>URL 带版本号 /api/v1/ 和 /open/v1/，向后兼容</td></tr>
+              <tr><td>分页</td><td>默认 page=1, page_size=20，最大 page_size=200</td></tr>
+              <tr><td>状态字段</td><td>1=启用，0=停用（TINYINT），默认 1</td></tr>
+              <tr><td>排序字段</td><td>sort_order 越小越靠前，默认 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ARCH ===================== -->
+    <div id="arch" class="section">
+      <div class="page-title">🏗️ 系统架构</div>
+      <div class="page-desc">整体技术架构与模块分层说明</div>
+
+      <div class="section-title">架构分层</div>
+      <div class="card">
+        <div class="card-body">
+          <div class="arch-box blue" style="text-align:center; font-weight:600; margin-bottom:4px;">
+            🌐 外部供应商层 — 媒体平台（懂车帝 / 汽车之家） · 三方 CRM · 自建渠道系统
+          </div>
+          <div class="arch-arrow-down">↓ OpenAPI 推送线索</div>
+          <div class="arch-box green" style="text-align:center; font-weight:600; margin-bottom:4px;">
+            🔒 线索接入网关（API Gateway）<br>
+            <span style="font-size:12px; font-weight:400; color:#065f46;">认证鉴权 · 限流熔断 · 参数校验 · HMAC 签名验证</span>
+          </div>
+          <div class="arch-arrow-down">↓</div>
+          <div class="arch-flex">
+            <div class="arch-box" style="text-align:center;">
+              🗄️ <strong>基础数据层</strong><br>
+              <span style="font-size:12px; color:var(--gray-500);">品牌 · 车系 · 城市 · 门店 · 区域</span>
+            </div>
+            <div class="arch-box" style="text-align:center;">
+              📋 <strong>线索管理层</strong><br>
+              <span style="font-size:12px; color:var(--gray-500);">接收 · 分配 · 跟进 · 回传</span>
+            </div>
+            <div class="arch-box" style="text-align:center;">
+              🔑 <strong>供应商账号层</strong><br>
+              <span style="font-size:12px; color:var(--gray-500);">API密钥 · 权限 · 配额</span>
+            </div>
+          </div>
+          <div class="arch-arrow-down">↓</div>
+          <div class="arch-flex">
+            <div class="arch-box" style="text-align:center;">
+              🗃️ MySQL (主从)<br><span style="font-size:12px; color:var(--gray-500);">业务数据</span>
+            </div>
+            <div class="arch-box" style="text-align:center;">
+              ⚡ Redis<br><span style="font-size:12px; color:var(--gray-500);">幂等/限流/缓存</span>
+            </div>
+            <div class="arch-box" style="text-align:center;">
+              📨 MQ (RocketMQ)<br><span style="font-size:12px; color:var(--gray-500);">异步分配/通知</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">线索流转全链路</div>
+      <div class="card">
+        <div class="card-body">
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div class="step-label">供应商推送线索</div></div>
+            <div class="step-arrow">→</div>
+            <div class="step"><div class="step-num">2</div><div class="step-label">网关认证校验</div></div>
+            <div class="step-arrow">→</div>
+            <div class="step"><div class="step-num">3</div><div class="step-label">去重判断</div></div>
+            <div class="step-arrow">→</div>
+            <div class="step"><div class="step-num">4</div><div class="step-label">写入线索库</div></div>
+            <div class="step-arrow">→</div>
+            <div class="step"><div class="step-num">5</div><div class="step-label">回传主机厂</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== BRAND ===================== -->
+    <div id="brand" class="section">
+      <div class="page-title">🏷️ 品牌管理</div>
+      <div class="page-desc">管理主机厂品牌基础数据，作为车系、门店等数据的上层关联主体</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">brand 表</span><span class="badge badge-req">核心表</span></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>主键，自增</td></tr>
+              <tr><td><span class="td-code">brand_name</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="required">●</span></td><td>品牌名称</td></tr>
+              <tr><td><span class="td-code">brand_code</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>品牌编码（全局唯一，建议大写英文，创建后不可修改）</td></tr>
+              <tr><td><span class="td-code">brand_logo</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="optional">○</span></td><td>品牌 Logo 图片 URL（CDN地址）</td></tr>
+              <tr><td><span class="td-code">sort_order</span></td><td><span class="td-type">INT</span></td><td><span class="optional">○</span></td><td>排序值，越小越靠前，默认 0</td></tr>
+              <tr><td><span class="td-code">status</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=启用 0=停用，默认 1</td></tr>
+              <tr><td><span class="td-code">created_at</span></td><td><span class="td-type">DATETIME</span></td><td>-</td><td>创建时间，系统自动填充</td></tr>
+              <tr><td><span class="td-code">updated_at</span></td><td><span class="td-type">DATETIME</span></td><td>-</td><td>更新时间，系统自动维护</td></tr>
+              <tr><td><span class="td-code">created_by</span></td><td><span class="td-type">BIGINT</span></td><td>-</td><td>创建人 ID</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>品牌列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/brands</code></td><td>支持按名称/编码/状态筛选</td></tr>
+              <tr><td>新增品牌</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/brands</code></td><td>-</td></tr>
+              <tr><td>编辑品牌</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/brands/{id}</code></td><td>brand_code 不可修改</td></tr>
+              <tr><td>启用/停用</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/brands/{id}/status</code></td><td>联动停用下属车系/门店</td></tr>
+              <tr><td>删除品牌</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/brands/{id}</code></td><td>有关联数据时禁止删除</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">业务规则</div>
+      <div class="card">
+        <div class="card-body">
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li>🔒 <code>brand_code</code> 全局唯一，创建后不可修改（与主机厂系统绑定）</li>
+            <li>⚠️ 停用品牌时，系统向前端展示警告："该品牌下共有 N 个车系、M 个门店，停用将同步停用，是否确认？"</li>
+            <li>🚫 删除前校验：该品牌下存在关联数据（车系/门店/线索）时不允许删除，返回关联数量提示</li>
+            <li>📶 列表默认按 <code>sort_order</code> 升序排列，sort_order 相同时按 created_at 降序</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VEHICLE ===================== -->
+    <div id="vehicle" class="section">
+      <div class="page-title">🚘 车系管理</div>
+      <div class="page-desc">管理主机厂车型基础数据，用于线索意向车型字段及线索分配路由</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>主键，自增</td></tr>
+              <tr><td><span class="td-code">series_name</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="required">●</span></td><td>车型名称（如：理想L9）</td></tr>
+              <tr><td><span class="td-code">series_code</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>车型编码，全局唯一，创建后不可修改</td></tr>
+              <tr><td><span class="td-code">brand_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>所属品牌 ID（外键）</td></tr>
+              <tr><td><span class="td-code">dealer_codes</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="optional">○</span></td><td>关联门店编码，多个以逗号分隔</td></tr>
+              <tr><td><span class="td-code">energy_type</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=纯电 2=燃油 3=插混 4=增程 5=混动</td></tr>
+              <tr><td><span class="td-code">cover_image</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="optional">○</span></td><td>车型图片 URL</td></tr>
+              <tr><td><span class="td-code">guide_price</span></td><td><span class="td-type">DECIMAL(10,2)</span></td><td><span class="optional">○</span></td><td>官网指导价（万元，精确2位小数）</td></tr>
+              <tr><td><span class="td-code">description</span></td><td><span class="td-type">TEXT</span></td><td><span class="optional">○</span></td><td>车型介绍</td></tr>
+              <tr><td><span class="td-code">remark</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="optional">○</span></td><td>备注</td></tr>
+              <tr><td><span class="td-code">sort_order</span></td><td><span class="td-type">INT</span></td><td><span class="optional">○</span></td><td>排序值，越小越靠前，默认 0</td></tr>
+              <tr><td><span class="td-code">status</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=启用 0=停用，默认 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">能源类型枚举</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>值</th><th>含义</th><th>英文缩写</th><th>示例车型</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-get">1</span></td><td>纯电</td><td>BEV</td><td>特斯拉 Model3、比亚迪海豹</td></tr>
+              <tr><td><span class="badge badge-post">2</span></td><td>燃油</td><td>ICE/FUEL</td><td>大众途观L、丰田凯美瑞</td></tr>
+              <tr><td><span class="badge badge-put">3</span></td><td>插电混动</td><td>PHEV</td><td>比亚迪宋Plus DM-i</td></tr>
+              <tr><td><span class="badge badge-patch">4</span></td><td>增程式</td><td>EREV</td><td>理想L9、问界M9</td></tr>
+              <tr><td><span class="badge badge-delete">5</span></td><td>普通混动</td><td>HEV</td><td>丰田RAV4荣放双擎</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>车系列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/vehicle-series</code></td></tr>
+              <tr><td>新增车系</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/vehicle-series</code></td></tr>
+              <tr><td>编辑车系</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/vehicle-series/{id}</code></td></tr>
+              <tr><td>启用/停用</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/vehicle-series/{id}/status</code></td></tr>
+              <tr><td>删除车系</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/vehicle-series/{id}</code></td></tr>
+              <tr><td>下拉选项（线索表单用）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/vehicle-series/options?brand_id=</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== CITY ===================== -->
+    <div id="city" class="section">
+      <div class="page-title">🏙️ 城市管理</div>
+      <div class="page-desc">维护全国省市区三级联动数据，用于门店归属和线索城市字段</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>主键，自增</td></tr>
+              <tr><td><span class="td-code">province</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>省份（如：广东省）</td></tr>
+              <tr><td><span class="td-code">city</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>城市（如：深圳市）</td></tr>
+              <tr><td><span class="td-code">district</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="optional">○</span></td><td>区/县（如：南山区）</td></tr>
+              <tr><td><span class="td-code">city_code</span></td><td><span class="td-type">VARCHAR(20)</span></td><td><span class="required">●</span></td><td>城市标准编码（可关联高德/腾讯地图）</td></tr>
+              <tr><td><span class="td-code">sort_order</span></td><td><span class="td-type">INT</span></td><td><span class="optional">○</span></td><td>排序值，越小越靠前，默认 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        💡 <strong>初始化说明：</strong>系统预置全国标准省市区数据（国家统计局标准），初始化时一次性导入。省份 + 城市 + 区县 三字段组合唯一约束。
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>城市列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/cities</code></td></tr>
+              <tr><td>新增城市</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/cities</code></td></tr>
+              <tr><td>编辑城市</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/cities/{id}</code></td></tr>
+              <tr><td>删除城市</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/cities/{id}</code></td></tr>
+              <tr><td>省市区联动</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/cities/cascade</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== REGION ===================== -->
+    <div id="region" class="section">
+      <div class="page-title">🗺️ 区域管理</div>
+      <div class="page-desc">管理品牌销售大区/小区划分，用于线索路由与绩效统计维度</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>主键，自增</td></tr>
+              <tr><td><span class="td-code">brand_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>所属品牌 ID</td></tr>
+              <tr><td><span class="td-code">region_name</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="required">●</span></td><td>大区名称（如：华南大区）</td></tr>
+              <tr><td><span class="td-code">sub_region</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="optional">○</span></td><td>小区名称（如：广深小区）</td></tr>
+              <tr><td><span class="td-code">region_code</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>区域编码</td></tr>
+              <tr><td><span class="td-code">sort_order</span></td><td><span class="td-type">INT</span></td><td><span class="optional">○</span></td><td>排序值，越小越靠前，默认 0</td></tr>
+              <tr><td><span class="td-code">status</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=启用 0=停用，默认 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        ⚠️ <strong>业务规则：</strong>大区必填，小区可选。同一品牌下大区+小区组合不可重复。区域停用后，关联门店的区域字段保留原值但展示"已停用"标记。
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>区域列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/regions</code></td></tr>
+              <tr><td>新增区域</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/regions</code></td></tr>
+              <tr><td>编辑区域</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/regions/{id}</code></td></tr>
+              <tr><td>启用/停用</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/regions/{id}/status</code></td></tr>
+              <tr><td>删除区域</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/regions/{id}</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== STORE ===================== -->
+    <div id="store" class="section">
+      <div class="page-title">🏪 门店管理</div>
+      <div class="page-desc">管理经销商门店，是线索分配的最终落地单元，支持批量导入和地图选址</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>主键，自增</td></tr>
+              <tr><td><span class="td-code">dealer_name</span></td><td><span class="td-type">VARCHAR(200)</span></td><td><span class="required">●</span></td><td>经销商名称</td></tr>
+              <tr><td><span class="td-code">dealer_code</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>经销商编码（全局唯一，与主机厂 DMS 对齐）</td></tr>
+              <tr><td><span class="td-code">dealer_type</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=一网店 2=二网店</td></tr>
+              <tr><td><span class="td-code">brand_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>所属品牌</td></tr>
+              <tr><td><span class="td-code">series_codes</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="required">●</span></td><td>关联车系编码，多个以逗号分隔</td></tr>
+              <tr><td><span class="td-code">city_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="required">●</span></td><td>所属城市 ID</td></tr>
+              <tr><td><span class="td-code">province / city / district</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="optional">○</span></td><td>省/市/区文本（冗余存储，避免联查）</td></tr>
+              <tr><td><span class="td-code">region_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="optional">○</span></td><td>所属品牌大区</td></tr>
+              <tr><td><span class="td-code">sub_region_id</span></td><td><span class="td-type">BIGINT</span></td><td><span class="optional">○</span></td><td>所属品牌小区</td></tr>
+              <tr><td><span class="td-code">after_sale_tel</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="optional">○</span></td><td>售后电话</td></tr>
+              <tr><td><span class="td-code">address</span></td><td><span class="td-type">VARCHAR(500)</span></td><td><span class="optional">○</span></td><td>详细地址</td></tr>
+              <tr><td><span class="td-code">email</span></td><td><span class="td-type">VARCHAR(200)</span></td><td><span class="optional">○</span></td><td>邮箱地址</td></tr>
+              <tr><td><span class="td-code">longitude / latitude</span></td><td><span class="td-type">DECIMAL(10,7)</span></td><td><span class="optional">○</span></td><td>经纬度（地图选址自动填充）</td></tr>
+              <tr><td><span class="td-code">status</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=启用 0=停用，默认 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>门店列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/stores</code></td></tr>
+              <tr><td>新增门店</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/stores</code></td></tr>
+              <tr><td>编辑门店</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/stores/{id}</code></td></tr>
+              <tr><td>启用/停用</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/stores/{id}/status</code></td></tr>
+              <tr><td>删除门店</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/stores/{id}</code></td></tr>
+              <tr><td>批量导入（Excel）</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/stores/import</code></td></tr>
+              <tr><td>导出门店</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/stores/export</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        ⚠️ <strong>重要：</strong>门店停用后，该门店停止接收新线索分配。已分配到该门店的进行中线索保持现状，不做强制流转。
+      </div>
+    </div>
+
+    <!-- ===================== SUPPLIER ===================== -->
+    <div id="supplier" class="section">
+      <div class="page-title">🤝 合作供应商管理</div>
+      <div class="page-desc">管理接入线索的外部供应商账号，含 API Key 鉴权和数据权限配置</div>
+
+      <div class="section-title">数据库结构</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">account_name</span></td><td><span class="td-type">VARCHAR(200)</span></td><td><span class="required">●</span></td><td>账号名称（供应商公司名）</td></tr>
+              <tr><td><span class="td-code">account_code</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="required">●</span></td><td>账号编码（全局唯一，创建后不可改）</td></tr>
+              <tr><td><span class="td-code">account_type</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=平台方 2=媒体方 3=供应商</td></tr>
+              <tr><td><span class="td-code">contact_name</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="optional">○</span></td><td>对接联系人姓名</td></tr>
+              <tr><td><span class="td-code">contact_phone</span></td><td><span class="td-type">VARCHAR(50)</span></td><td><span class="optional">○</span></td><td>联系人手机号</td></tr>
+              <tr><td><span class="td-code">status</span></td><td><span class="td-type">TINYINT</span></td><td><span class="required">●</span></td><td>1=启用 0=停用，默认 1</td></tr>
+              <tr><td colspan="4" style="background:#f0f9ff;padding:8px 14px;font-size:12px;color:#0369a1;"><strong>⬇ 以下字段仅当 account_type=3（供应商）时需填写</strong></td></tr>
+              <tr><td><span class="td-code">api_key</span></td><td><span class="td-type">VARCHAR(100)</span></td><td><span class="optional">○</span></td><td>API Key（系统生成，全局唯一）</td></tr>
+              <tr><td><span class="td-code">api_secret</span></td><td><span class="td-type">VARCHAR(200)</span></td><td><span class="optional">○</span></td><td>API Secret（仅生成时展示一次，加密存储）</td></tr>
+              <tr><td><span class="td-code">api_key_expire</span></td><td><span class="td-type">DATETIME</span></td><td><span class="optional">○</span></td><td>Key 过期时间，NULL = 永不过期</td></tr>
+              <tr><td><span class="td-code">brand_ids</span></td><td><span class="td-type">JSON</span></td><td><span class="optional">○</span></td><td>授权品牌 ID 列表，NULL = 全部品牌</td></tr>
+              <tr><td><span class="td-code">store_ids</span></td><td><span class="td-type">JSON</span></td><td><span class="optional">○</span></td><td>授权门店 ID 列表，NULL = 全部门店</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">账号类型权限说明</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>账号类型</th><th>品牌范围</th><th>门店范围</th><th>API 推送</th></tr></thead>
+            <tbody>
+              <tr><td>平台方（type=1）</td><td>全部品牌</td><td>全部门店</td><td>全品牌推送</td></tr>
+              <tr><td>媒体方（type=2）</td><td>授权品牌列表</td><td>授权品牌下所有门店</td><td>仅授权品牌</td></tr>
+              <tr><td>供应商（type=3）</td><td>授权品牌列表</td><td>授权门店列表</td><td>仅授权品牌</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        🔴 <strong>安全要求：</strong>API Secret 采用单向加密存储（如 bcrypt），仅在生成时明文展示一次。重置 API Key 后，旧 Key 立即失效（Redis 黑名单，5分钟TTL）。停用账号后，该账号 API 调用立即返回 401。
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>供应商列表（分页）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/suppliers</code></td></tr>
+              <tr><td>新增供应商</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/suppliers</code></td></tr>
+              <tr><td>编辑供应商</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/suppliers/{id}</code></td></tr>
+              <tr><td>启用/停用</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/suppliers/{id}/status</code></td></tr>
+              <tr><td>删除供应商</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/suppliers/{id}</code></td></tr>
+              <tr><td>重置 API Key</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/suppliers/{id}/reset-key</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== OPENAPI ===================== -->
+    <div id="openapi" class="section">
+      <div class="page-title">🔌 线索推送 OpenAPI</div>
+      <div class="page-desc">标准化接口，供外部供应商推送线索数据，支持 HMAC-SHA256 签名认证</div>
+
+      <div class="section-title">认证方式</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">HMAC-SHA256 签名认证</span></div>
+        <div class="card-body">
+          <p style="font-size:13px; color:var(--gray-600); margin-bottom:12px;">请求头携带以下字段：</p>
+          <div class="code-block">X-Api-Key:    {api_key}
+X-Timestamp:  {unix_timestamp_seconds}   <span class="comment">// 服务器时间±5分钟内有效</span>
+X-Nonce:      {6位随机字符串}
+X-Signature:  {hmac_sha256_signature}
+Content-Type: application/json</div>
+          <p style="font-size:13px; color:var(--gray-600); margin: 12px 0 4px;">签名算法：</p>
+          <div class="code-block"><span class="comment">// 1. 构造签名串</span>
+sign_str = api_key + "\n" + timestamp + "\n" + nonce + "\n" + md5(request_body)
+
+<span class="comment">// 2. 计算签名</span>
+X-Signature = HmacSHA256(sign_str, api_secret)
+
+<span class="comment">// 防重放：nonce + timestamp 组合 10 分钟内不允许重复（Redis 验证）</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">推送接口</div>
+      <div class="card">
+        <div class="card-header">
+          <span class="badge badge-post">POST</span>
+          <span class="card-title" style="margin-left:8px;">/open/v1/leads/push</span>
+        </div>
+        <div class="card-body">
+          <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(this, 'req-body')">请求体</button>
+            <button class="tab-btn" onclick="switchTab(this, 'resp-body')">响应体</button>
+            <button class="tab-btn" onclick="switchTab(this, 'error-codes')">错误码</button>
+          </div>
+          <div id="req-body" class="tab-content active">
+            <div class="code-block">{
+  <span class="key">"source_lead_id"</span>: <span class="string">"媒体平台侧线索唯一ID"</span>,  <span class="comment">// 必填，用于去重</span>
+  <span class="key">"source_channel"</span>: <span class="string">"dongchedi_form"</span>,     <span class="comment">// 必填，渠道标识</span>
+  <span class="key">"push_time"</span>: <span class="string">"2026-05-14T10:00:00+08:00"</span>,
+
+  <span class="key">"customer"</span>: {
+    <span class="key">"name"</span>: <span class="string">"张三"</span>,               <span class="comment">// 必填</span>
+    <span class="key">"phone"</span>: <span class="string">"Base64(AES加密后手机号)"</span>, <span class="comment">// 必填，加密传输</span>
+    <span class="key">"gender"</span>: <span class="number">1</span>,                 <span class="comment">// 1=男 2=女 0=未知</span>
+    <span class="key">"province"</span>: <span class="string">"广东省"</span>,
+    <span class="key">"city"</span>: <span class="string">"深圳市"</span>,
+    <span class="key">"district"</span>: <span class="string">"南山区"</span>
+  },
+
+  <span class="key">"intent"</span>: {
+    <span class="key">"brand_code"</span>: <span class="string">"LIXIANG"</span>,       <span class="comment">// 必填，与系统品牌编码对齐</span>
+    <span class="key">"series_code"</span>: <span class="string">"LIXIANG_L9"</span>,    <span class="comment">// 可选</span>
+    <span class="key">"dealer_code"</span>: <span class="string">"DLR_SZ_001"</span>,    <span class="comment">// 可选，直推到门店</span>
+    <span class="key">"budget_min"</span>: <span class="number">30</span>,
+    <span class="key">"budget_max"</span>: <span class="number">50</span>,
+    <span class="key">"purchase_timeline"</span>: <span class="number">2</span>,        <span class="comment">// 1=一月内 2=一至三月 3=三月以上</span>
+    <span class="key">"lead_level"</span>: <span class="string">"A"</span>             <span class="comment">// A/B/C/D</span>
+  },
+
+  <span class="key">"source_info"</span>: {
+    <span class="key">"utm_source"</span>: <span class="string">"dongchedi"</span>,
+    <span class="key">"utm_medium"</span>: <span class="string">"cpc"</span>,
+    <span class="key">"utm_campaign"</span>: <span class="string">"lixiang_l9_2026q2"</span>,
+    <span class="key">"clue_type"</span>: <span class="string">"试驾"</span>
+  },
+
+  <span class="key">"custom_fields"</span>: {          <span class="comment">// 与系统自定义字段 field_key 对应</span>
+    <span class="key">"marital_status"</span>: <span class="string">"1"</span>,
+    <span class="key">"referral_source"</span>: <span class="string">"朋友推荐"</span>
+  }
+}</div>
+          </div>
+          <div id="resp-body" class="tab-content">
+            <div class="code-block">{
+  <span class="key">"code"</span>: <span class="number">0</span>,
+  <span class="key">"message"</span>: <span class="string">"success"</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"lead_id"</span>: <span class="string">"LD20260514000001"</span>,    <span class="comment">// 系统生成的线索编号</span>
+    <span class="key">"source_lead_id"</span>: <span class="string">"原始推送线索ID"</span>,
+    <span class="key">"received_at"</span>: <span class="string">"2026-05-14T10:00:01+08:00"</span>
+  },
+  <span class="key">"request_id"</span>: <span class="string">"uuid-xxxxxxxx"</span>
+}</div>
+          </div>
+          <div id="error-codes" class="tab-content">
+            <table>
+              <thead><tr><th>code</th><th>含义</th><th>HTTP状态码</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>✅ 成功</td><td>200</td></tr>
+                <tr><td>1001</td><td>签名验证失败</td><td>401</td></tr>
+                <tr><td>1002</td><td>API Key 不存在或已停用</td><td>401</td></tr>
+                <tr><td>1003</td><td>请求时间戳超时（±5分钟）</td><td>401</td></tr>
+                <tr><td>1004</td><td>重复推送（source_lead_id 已存在）</td><td>409</td></tr>
+                <tr><td>1005</td><td>品牌编码不存在或无权限</td><td>400</td></tr>
+                <tr><td>1006</td><td>门店编码不存在或已停用</td><td>400</td></tr>
+                <tr><td>1007</td><td>手机号格式错误（解密后校验）</td><td>400</td></tr>
+                <tr><td>1008</td><td>超出每日推送配额</td><td>429</td></tr>
+                <tr><td>5000</td><td>系统内部错误</td><td>500</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">手机号加密规范</div>
+      <div class="card">
+        <div class="card-body">
+          <div class="code-block"><span class="comment">// 加密算法：AES-128-CBC + PKCS7 Padding</span>
+Key = api_secret 前 16 字符（ASCII）
+IV  = X-Nonce（6位）+ account_code 前 10 字符（共16位）
+
+encrypted_phone = AES_CBC_Encrypt(phone, key, iv)
+X-Phone = Base64_Encode(encrypted_phone)</div>
+        </div>
+      </div>
+
+      <div class="section-title">去重规则 <span style="font-size:12px;font-weight:normal;color:#999;">（暂不实现）</span></div>
+      <div class="card" style="opacity:0.6;">
+        <div class="card-body">
+          <p style="font-size:13px; margin-bottom:12px;text-decoration:line-through;">满足以下<strong>任意条件</strong>视为重复线索：</p>
+          <ul style="font-size:13px; line-height:2; padding-left:20px;text-decoration:line-through;">
+            <li>① 同一供应商 + 相同 <code>source_lead_id</code></li>
+            <li>② 同一手机号 + 同一品牌 + 72小时内已存在（时间窗口可后台配置）</li>
+          </ul>
+          <p style="font-size:13px; margin: 12px 0 4px;text-decoration:line-through;"><strong>重复策略（可后台配置）：</strong></p>
+          <table>
+            <thead><tr><th>策略</th><th>行为</th></tr></thead>
+            <tbody>
+              <tr><td>忽略（默认）</td><td>返回 409 Conflict，不写入</td></tr>
+              <tr><td>更新</td><td>用新数据覆盖原线索部分字段，返回原 lead_id</td></tr>
+              <tr><td>追加</td><td>新建线索并打标"疑似重复"，等待人工处理</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== LEADS ===================== -->
+    <div id="leads" class="section">
+      <div class="page-title">📋 线索管理</div>
+      <div class="page-desc">全生命周期线索管理，支持多维筛选、下发、查看、批量操作和导出</div>
+
+      <div class="section-title">线索状态流转</div>
+      <div class="card">
+        <div class="card-body">
+          <div class="flow-container">
+            <div class="flow-node" style="background:#dbeafe; color:#1e40af;">待处理 (1)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" style="background:#fef3c7; color:#92400e;">处理中 (2)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" style="background:#d1fae5; color:#065f46;">已下发 (3)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" style="background:#fee2e2; color:#991b1b;">下发失败 (4)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">核心字段说明</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段分组</th><th>字段</th><th>必填</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="5" style="font-weight:600; color:var(--primary);">客户信息</td><td><span class="td-code">customer_name</span></td><td><span class="required">●</span></td><td>客户姓名</td></tr>
+              <tr><td><span class="td-code">customer_phone</span></td><td><span class="required">●</span></td><td>手机号</td></tr>
+              <tr><td><span class="td-code">customer_phone_mask</span></td><td><span class="optional">○</span></td><td>脱敏手机号，用于展示和全文检索（系统根据customer_phone自动生成）</td></tr>
+              <tr><td><span class="td-code">customer_gender</span></td><td><span class="optional">○</span></td><td>性别：0=未知 1=男 2=女</td></tr>
+              <tr><td><span class="td-code">province/city/district</span></td><td><span class="optional">○</span></td><td>客户所在省市区</td></tr>
+              <tr><td rowspan="4" style="font-weight:600; color:var(--success);">意向信息</td><td><span class="td-code">brand_id</span></td><td><span class="optional">○</span></td><td>意向品牌</td></tr>
+              <tr><td><span class="td-code">series_id</span></td><td><span class="optional">○</span></td><td>意向车系</td></tr>
+              <tr><td><span class="td-code">store_id</span></td><td><span class="required">●</span></td><td>意向门店</td></tr>
+              <tr><td><span class="td-code">lead_level</span></td><td><span class="optional">○</span></td><td>线索等级：A/B/C/D（A为最高意向）</td></tr>
+              <tr><td rowspan="1" style="font-weight:600; color:var(--warning);">流转信息</td><td><span class="td-code">lead_status</span></td><td><span class="optional">○</span></td><td>线索状态 1=待处理 2=处理中 3=已下发 4=下发失败</td></tr>
+              <tr><td rowspan="6" style="font-weight:600; color:#7e3af2;">渠道来源</td><td><span class="td-code">source_lead_id</span></td><td><span class="required">●</span></td><td>来源线索ID（供应商侧唯一标识，用于去重）</td></tr>
+              <tr><td><span class="td-code">source_channel</span></td><td><span class="optional">○</span></td><td>来源渠道标识（如：dongchedi_form）</td></tr>
+              <tr><td><span class="td-code">budget_min / budget_max</span></td><td><span class="optional">○</span></td><td>预算范围（万元，精确2位小数）</td></tr>
+              <tr><td><span class="td-code">purchase_timeline</span></td><td><span class="optional">○</span></td><td>购车时间：1=一月内 2=一至三月 3=三月以上</td></tr>
+              <tr><td><span class="td-code">purchase_purpose</span></td><td><span class="optional">○</span></td><td>购车用途（如：家用/商务/网约车等）</td></tr>
+              <tr><td><span class="td-code">color_preference</span></td><td><span class="optional">○</span></td><td>颜色偏好（如：黑色/白色/蓝色等）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>线索列表（分页+筛选）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/leads</code></td></tr>
+              <tr><td>线索详情</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/leads/{id}</code></td></tr>
+              <tr><td>更新线索状态</td><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/leads/{id}/status</code></td></tr>
+              <tr><td>线索导出（异步）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/leads/export</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== CUSTOM FIELDS ===================== -->
+    <div id="custom-fields" class="section">
+      <div class="page-title">⚙️ 自定义字段配置</div>
+      <div class="page-desc">支持运营人员为线索对象添加自定义字段，满足不同品牌/供应商的个性化数据采集需求</div>
+
+      <div class="section-title">购车时间枚举</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>值</th><th>含义</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-get">1</span></td><td>一月内</td><td>客户意向在30天内购车</td></tr>
+              <tr><td><span class="badge badge-post">2</span></td><td>一至三月</td><td>客户意向在1-3个月内购车</td></tr>
+              <tr><td><span class="badge badge-put">3</span></td><td>三月以上</td><td>客户意向在3个月后购车，意向较弱</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">字段类型枚举</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>值</th><th>类型名</th><th>说明</th><th>前端组件</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>文本</td><td>单行文本输入</td><td>Input</td></tr>
+              <tr><td>2</td><td>数字</td><td>数值输入，可设小数位</td><td>InputNumber</td></tr>
+              <tr><td>3</td><td>日期</td><td>日期选择</td><td>DatePicker</td></tr>
+              <tr><td>4</td><td>单选</td><td>从枚举值中选一个</td><td>Radio / Select</td></tr>
+              <tr><td>5</td><td>多选</td><td>从枚举值中多选</td><td>Checkbox / MultiSelect</td></tr>
+              <tr><td>6</td><td>图片</td><td>上传图片，存储 CDN URL</td><td>Upload</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">枚举值 JSON 格式</div>
+      <div class="code-block"><span class="comment">// enum_values 字段格式（仅 field_type = 4/5 时有效）</span>
+[
+  { <span class="key">"value"</span>: <span class="string">"0"</span>, <span class="key">"label"</span>: <span class="string">"未知"</span> },
+  { <span class="key">"value"</span>: <span class="string">"1"</span>, <span class="key">"label"</span>: <span class="string">"已婚"</span> },
+  { <span class="key">"value"</span>: <span class="string">"2"</span>, <span class="key">"label"</span>: <span class="string">"未婚"</span> }
+]</div>
+
+      <div class="alert alert-info">
+        💡 <strong>作用域说明：</strong>自定义字段支持三个作用域 —— 全局（supplier_id=NULL && brand_id=NULL）、品牌级（brand_id 有值）、供应商级（supplier_id 有值）。字段数据存入 lead 表的 <code>custom_data JSON</code> 字段中，field_key 作为 JSON 的 key。
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>自定义字段列表</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/custom-fields</code></td></tr>
+              <tr><td>新增自定义字段</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/custom-fields</code></td></tr>
+              <tr><td>编辑自定义字段</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/custom-fields/{id}</code></td></tr>
+              <tr><td>删除自定义字段</td><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/custom-fields/{id}</code></td></tr>
+              <tr><td>调整排序</td><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/custom-fields/sort</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== LOGS ===================== -->
+    <div id="logs" class="section">
+      <div class="page-title">📝 推送日志</div>
+      <div class="page-desc">记录所有 OpenAPI 推送请求的完整日志，支持失败重推和问题排查</div>
+
+      <div class="section-title">日志字段</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>字段</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><span class="td-code">supplier_id</span></td><td>推送方供应商 ID</td></tr>
+              <tr><td><span class="td-code">request_ip</span></td><td>推送方 IP 地址</td></tr>
+              <tr><td><span class="td-code">request_header</span></td><td>请求头 JSON（含签名信息，脱敏 Secret）</td></tr>
+              <tr><td><span class="td-code">request_body</span></td><td>原始请求体（手机号已加密，保留原文）</td></tr>
+              <tr><td><span class="td-code">response_code</span></td><td>HTTP 响应状态码</td></tr>
+              <tr><td><span class="td-code">response_body</span></td><td>系统响应内容</td></tr>
+              <tr><td><span class="td-code">error_message</span></td><td>失败时的错误说明</td></tr>
+              <tr><td><span class="td-code">lead_id</span></td><td>成功时关联的线索 ID</td></tr>
+              <tr><td><span class="td-code">is_success</span></td><td>1=成功 0=失败</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        💡 推送日志<strong>保留 180 天</strong>，过期自动归档至冷存储。失败日志支持"失败重推"功能，重新触发推送并创建新的日志记录。
+      </div>
+
+      <div class="section-title">接口列表</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>功能</th><th>方法</th><th>路径</th></tr></thead>
+            <tbody>
+              <tr><td>推送日志列表（分页+筛选）</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/push-logs</code></td></tr>
+              <tr><td>推送日志详情</td><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/push-logs/{id}</code></td></tr>
+              <tr><td>失败重推</td><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/push-logs/{id}/retry</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== PERMISSION ===================== -->
+    <div id="permission" class="section">
+      <div class="page-title">🔐 权限设计</div>
+      <div class="page-desc">基于角色的权限隔离，确保多租户数据安全</div>
+
+      <div class="section-title">角色权限矩阵</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>角色</th><th>基础数据</th><th>线索查看</th><th>供应商管理</th><th>系统配置</th></tr></thead>
+            <tbody><tr><td><strong>总部超级管理员</strong></td><td>✅ 全部</td><td>✅ 全部</td><td>✅</td><td>✅</td></tr><tr><td><strong>总部运营人员</strong></td><td>✅ 所属品牌</td><td>✅ 所属品牌</td><td>❌</td><td>❌</td></tr><tr><td><strong>供应商管理员</strong></td><td>❌</td><td>✅ 仅自己推送的</td><td>❌</td><td>❌</td></tr><tr><td><strong>经销商运营人员</strong></td><td>❌</td><td>✅ 仅本门店</td><td>❌</td><td>❌</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">数据隔离规则</div>
+      <div class="card">
+        <div class="card-body">
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; font-size:13px;">
+            <li>🔒 所有列表接口自动附加数据范围过滤（WHERE brand_id IN (...) / store_id IN (...)）</li>
+            <li>🔒 供应商账号调用 OpenAPI 时，系统自动校验推送品牌是否在授权范围内</li>
+            <li>🔒 经销商运营人员无法查看其他门店线索，无法修改线索的品牌/来源信息</li>
+            <li>🔒 导出接口同样受数据范围限制，不可导出权限外数据</li>
+            <li>🔒 敏感操作（删除、导出、重置密钥）记录操作日志，保留 365 天</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== APPENDIX ===================== -->
+    <div id="appendix" class="section">
+      <div class="page-title">📎 附录 & 枚举值</div>
+      <div class="page-desc">系统全部枚举值、状态码、通用格式说明</div>
+
+      <div class="section-title">全局通用响应格式</div>
+      <div class="code-block">{
+  <span class="key">"code"</span>: <span class="number">0</span>,          <span class="comment">// 0=成功，其他=失败</span>
+  <span class="key">"message"</span>: <span class="string">"success"</span>,
+  <span class="key">"data"</span>: {},         <span class="comment">// 业务数据，失败时为 null</span>
+  <span class="key">"request_id"</span>: <span class="string">"uuid"</span>,
+  <span class="key">"timestamp"</span>: <span class="number">1715663535</span>
+}
+
+<span class="comment">// 分页列表 data 格式：</span>
+<span class="key">"data"</span>: {
+  <span class="key">"list"</span>: [],
+  <span class="key">"total"</span>: <span class="number">100</span>,
+  <span class="key">"page"</span>: <span class="number">1</span>,
+  <span class="key">"page_size"</span>: <span class="number">20</span>
+}</div>
+
+      <div class="section-title">枚举值汇总</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>枚举类型</th><th>值</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="5">能源类型（energy_type）</td><td>1</td><td>纯电（BEV）</td></tr>
+              <tr><td>2</td><td>燃油（ICE）</td></tr>
+              <tr><td>3</td><td>插电混动（PHEV）</td></tr>
+              <tr><td>4</td><td>增程式（EREV）</td></tr>
+              <tr><td>5</td><td>普通混动（HEV）</td></tr>
+              <tr><td rowspan="4">线索状态（lead_status）</td><td>1</td><td>待处理</td></tr>
+              <tr><td>2</td><td>处理中</td></tr>
+              <tr><td>3</td><td>已下发</td></tr>
+              <tr><td>4</td><td>下发失败</td></tr>
+              <tr><td rowspan="3">账号类型（account_type）</td><td>1</td><td>平台方</td></tr>
+              <tr><td>2</td><td>媒体方</td></tr>
+              <tr><td>3</td><td>供应商</td></tr>
+              <tr><td rowspan="2">门店类型（dealer_type）</td><td>1</td><td>一网店</td></tr>
+              <tr><td>2</td><td>二网店</td></tr>
+              <tr><td rowspan="3">线索等级（lead_level）</td><td>A</td><td>最高意向</td></tr>
+              <tr><td>B</td><td>较高意向</td></tr>
+              <tr><td>C</td><td>一般意向</td></tr>
+              <tr><td>D</td><td>低意向</td></tr>
+              <tr><td rowspan="3">性别（gender）</td><td>0</td><td>未知</td></tr>
+              <tr><td>1</td><td>男</td></tr>
+              <tr><td>2</td><td>女</td></tr>
+              <tr><td rowspan="2">系统状态（status）</td><td>1</td><td>启用</td></tr>
+              <tr><td>0</td><td>停用</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-title">线索编号生成规则</div>
+      <div class="code-block"><span class="comment">// 格式：LD + 日期（8位）+ 序号（6位，按日重置）</span>
+<span class="comment">// 示例：LD20260514000001</span>
+
+lead_no = "LD" + format(today, "YYYYMMDD") + leftpad(daily_seq, 6, "0")
+
+<span class="comment">// daily_seq 使用 Redis INCR 实现，每日 00:00 重置</span></div>
+
+      <div class="alert alert-success">
+        ✅ <strong>文档版本：</strong>V1.0.3 · 2026-05-19 · DNDC产品组 · 如有疑问请联系产品经理
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="footer">
+  D客连 — 产品功能开发说明文档 V1.0.3 &nbsp;|&nbsp; DNDC 产品组 &nbsp;|&nbsp; 2026-05-19
+</footer>
+
+<script>
+  function showSection(id) {
+    // Hide all
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    // Show target
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+    // Activate nav
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function switchTab(btn, targetId) {
+    const parent = btn.closest('.card-body') || btn.closest('.card');
+    if (!parent) return;
+    parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const el = document.getElementById(targetId);
+    if (el) el.classList.add('active');
+  }
+
+  function toggleCollapse(header) {
+    const arrow = header.querySelector('.collapse-arrow');
+    const body = header.nextElementSibling;
+    if (arrow) arrow.classList.toggle('open');
+    if (body && body.classList.contains('collapse-body')) {
+      body.classList.toggle('open');
+    }
+  }
+
+  // Module card click navigation
+  document.querySelectorAll('.module-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const onclick = this.getAttribute('onclick');
+      if (onclick) {
+        const match = onclick.match(/'([^']+)'/);
+        if (match) showSection(match[1]);
+      }
+    });
+  });
+</script>
+</body>
+</html>
