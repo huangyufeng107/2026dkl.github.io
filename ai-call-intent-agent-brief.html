@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI外呼线索意向级别智能体接入说明</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5b6577;
+      --line: #d9dee8;
+      --soft: #f6f8fb;
+      --blue: #1f6feb;
+      --blue-dark: #174ea6;
+      --green: #138a5b;
+      --amber: #a15c00;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #eef2f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 56px;
+    }
+
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav a:hover { color: var(--blue); }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 56px;
+    }
+
+    .hero {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 10px 28px rgba(23, 32, 51, 0.08);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 880px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .callout {
+      margin-top: 22px;
+      border-left: 5px solid var(--green);
+      background: #f0fbf6;
+      border-radius: 8px;
+      padding: 18px 20px;
+      font-weight: 700;
+      color: #0f5f41;
+    }
+
+    .callout.product {
+      border-left-color: var(--amber);
+      background: #fff8ea;
+      color: #744700;
+    }
+
+    section {
+      margin-top: 24px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px 28px;
+    }
+
+    h2.section-title {
+      margin: 0 0 16px;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+
+    .point {
+      border-left: 4px solid #c8d7f5;
+      background: var(--soft);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: var(--blue-dark);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(31, 111, 235, 0.35);
+    }
+
+    a:hover {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-top: 12px;
+      margin-bottom: 14px;
+    }
+
+    .flowchart-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #e9edf4;
+      padding: 18px;
+      margin-top: 12px;
+    }
+
+    .flowchart {
+      display: block;
+      width: min(100%, 760px);
+      min-width: 520px;
+      height: auto;
+      margin: 0 auto;
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .flowchart .node {
+      fill: #f0f0ef;
+      stroke: #cfd4dc;
+      stroke-width: 1.5;
+    }
+
+    .flowchart .node-text {
+      fill: #263040;
+      font-size: 18px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .flowchart .small-text {
+      fill: #808896;
+      font-size: 16px;
+      text-anchor: middle;
+    }
+
+    .flowchart .param-text {
+      fill: #d0021b;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .flowchart .line {
+      stroke: #9aa1aa;
+      stroke-width: 3;
+      fill: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--white);
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f3f5f9;
+      color: #253047;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    footer {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 0 0 34px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 860px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
+      }
+      .nav { justify-content: flex-start; }
+      h1 { font-size: 25px; }
+      main {
+        width: min(100% - 24px, 1120px);
+        padding-top: 18px;
+      }
+      .hero, section { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">AI外呼线索意向级别接入说明</div>
+      <nav class="nav" aria-label="页面导航">
+        <a href="#scope">分流口径</a>
+        <a href="#compare">规则对比</a>
+        <a href="#flow">接入流程</a>
+        <a href="#options">备选方案</a>
+        <a href="#roadmap">演进路线</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <p class="eyebrow">基于调整后文档生成</p>
+      <h1>AI外呼线索意向级别智能体接入说明</h1>
+      <p class="lead">本文用于说明 AI 外呼线索是否接入智能体进行 H/A/B/C 意向级别打标，以及对应的分流口径、规则差异、接入流程和产品方案选择。</p>
+    </div>
+    <div class="callout">核心结论：现有智能体可以复用，但建议不要直接替代【AI外呼线索下发配置】中的全部外呼规则。更合理的做法是：仅对命中“高意向”线索状态调用智能体，由智能体进一步将其细分为 H/A/B/C 等级别；其余线索则继续按照现有规则意向级别进行赋值。</div>
+<section><h2 class="section-title">一、业务背景</h2>
+<p>原有逻辑：AI外呼线索按【AI外呼线索下发配置】中的条件（外呼类型、通话状态、标签、通话时长、意向专营店等）判定是否下发、更新状态及赋予意向等级。</p>
+<p>本次调整：仅针对“高意向”线索状态调用智能体，输出 H/A/B/C 细分级别；其余未命中此条件的线索，继续保持现有规则。</p>
+<p>规则资料：<a href="https://docs.qq.com/sheet/DR3FqSFpKRUZxc3JX?tab=BB08J2" target="_blank" rel="noopener">AI外呼意向级别规则 &amp; 智能体意向级别规则</a></p>
+</section>
+<section id="scope"><h2 class="section-title">二、推荐分流口径</h2>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>线索类型</th>
+<th>是否调用智能体</th>
+<th>意向级别来源</th>
+<th>业务说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>命中：线索状态=高意向</td>
+<td>调用</td>
+<td>智能体输出 H/A/B/C</td>
+<td>用于替代原本固定值的做法，实现高意向线索内部再分层</td>
+</tr>
+<tr>
+<td>未命中：线索状态=高意向</td>
+<td>不调用</td>
+<td>保持现有规则</td>
+<td>例如：下发总部培育客服的C级、战败F级、休眠L级等，保持现有运营口径</td>
+</tr>
+<tr>
+<td>负向、异常、不可跟进类线索</td>
+<td>不调用</td>
+<td>保持现有规则</td>
+<td>如已购车、已下订、拒绝打扰、语音信箱、老年人、无购车意向等，保持现有运营口径</td>
+</tr>
+</tbody></table></div>
+</section>
+<section id="compare"><h2 class="section-title">三、两者间的规则差异</h2>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>对比项</th>
+<th>文档1：AI外呼线索下发配置</th>
+<th>文档2：智能体意向打标规则</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>规则性质</td>
+<td>业务决策表，决定线索下发、状态更新、异常原因和意向级别。</td>
+<td>评分模型，基于核心标签和补充标签计算意向等级。</td>
+</tr>
+<tr>
+<td>核心输入</td>
+<td>外呼类型、通话状态、包含/不包含标签、通话时长、是否有意向专营店。</td>
+<td>计划购车时间、预计到店时间、购车意向、购买形态、已到店、建联、金融、利益、产品等标签。</td>
+</tr>
+<tr>
+<td>高意向含义</td>
+<td>“高意向”是线索状态，代表满足业务流转条件，可下发到NEV线索中台。</td>
+<td>H级是意向等级，要求分数≥80且具备近期购车或到店的核心标签。</td>
+</tr>
+<tr>
+<td>输出范围</td>
+<td>可能输出H\A\B\C</td>
+<td>主要输出H\A\B\C，另有F/L/E等特殊口径说明。</td>
+</tr>
+<tr>
+<td>运营作用</td>
+<td>负责判断线索是否进入后续流转，以及如何处理负向/异常线索。</td>
+<td>负责对可跟进线索进行意向强弱分层。</td>
+</tr>
+</tbody></table></div>
+</section>
+<section><h2 class="section-title">四、为什么不能全量直接互用</h2>
+<p class="point"><strong>意向定义不同：</strong>命中【AI外呼线索下发配置】的“高意向”后，智能体可能将其进一步评定为 H、A、B、C 中的任一等级。其中，【智能体意向打标规则】中的“H级”门槛更高，必须同时满足“近期购车”或“近期到店”等更强条件。</p>
+<p class="point"><strong>判定依据不同：</strong>【AI外呼线索下发配置】主要依赖通话时长、是否有意向专营店、线索下发策略等业务流转条件；而这些并非【智能体意向打标规则】评分模型的核心依据。</p>
+<p class="point"><strong>输入字段不同：</strong>【智能体意向打标规则】依赖计划购车时间、预计到店时间等核心语义标签，而【AI外呼线索下发配置】中并未完整覆盖这些输入字段。</p>
+<p class="point"><strong>潜在风险提示：</strong>若将负向线索（如明确无购车意向的客户）送入智能体，可能因客户在对话中提及价格、产品、金融等话题，被误判为较高意向，进而干扰战败、休眠、无效等后续运营处理。</p>
+</section>
+<section id="process"><h2 class="section-title">五、接入流程说明</h2>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>步骤</th>
+<th>内容</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>① 数据沉淀</td>
+<td>AI外呼完成后，沉淀通话状态、通话时长、外呼标签、是否有意向专营店等</td>
+</tr>
+<tr>
+<td>② 规则执行</td>
+<td>按【AI外呼线索下发配置】判断：是否下发、是否更新状态、异常原因、默认意向级别</td>
+</tr>
+<tr>
+<td>③ 调用判断</td>
+<td>命中“高意向”状态 → 调用智能体；未命中 → 不调用，流程结束</td>
+</tr>
+<tr>
+<td>④ 智能体分层</td>
+<td>仅对高意向线索输出 H/A/B/C，其他线索不处理</td>
+</tr>
+<tr>
+<td>⑤ 结果处理</td>
+<td>正常：写回智能体意向等级；异常（空/无法判断/非H/A/B/C）：回退使用现有规则</td>
+</tr>
+</tbody></table></div>
+</section>
+<section id="flow"><h2 class="section-title">六、流程图</h2>
+<div class="flowchart-wrap" aria-label="AI外呼线索意向级别智能体接入流程图">
+  <svg class="flowchart" viewBox="0 0 760 1540" role="img">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="#9aa1aa"></path>
+      </marker>
+    </defs>
+
+    <ellipse class="node" cx="380" cy="48" rx="72" ry="40"></ellipse>
+    <text class="node-text" x="380" y="48">开始</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 88 L380 165"></path>
+    <rect class="node" x="308" y="170" width="144" height="84"></rect>
+    <text class="node-text" x="380" y="210">
+      <tspan x="380" dy="-10">外呼结果</tspan>
+      <tspan x="380" dy="26">接口处理</tspan>
+    </text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 254 L380 342"></path>
+    <polygon class="node" points="380,350 455,390 380,430 305,390"></polygon>
+    <text class="node-text" x="380" y="390">线索状态判断</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M455 390 L548 390"></path>
+    <text class="small-text" x="500" y="376">其他</text>
+    <rect class="node" x="548" y="350" width="116" height="80" rx="12"></rect>
+    <text class="node-text" x="606" y="390">结束</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 430 L380 512"></path>
+    <text class="small-text" x="345" y="468">高意向</text>
+    <rect class="node" x="308" y="520" width="144" height="88"></rect>
+    <text class="node-text" x="380" y="564">
+      <tspan x="380" dy="-12">请求</tspan>
+      <tspan x="380" dy="26">智能体意向级别</tspan>
+    </text>
+
+    <text class="param-text" x="485" y="536">携带参数</text>
+    <text class="param-text" x="485" y="566">· 总部培育编码</text>
+    <text class="param-text" x="485" y="596">· 培育任务编码</text>
+    <text class="param-text" x="485" y="626">· 回访工单编码</text>
+    <text class="param-text" x="485" y="656">· 录音文件地址</text>
+    <text class="param-text" x="485" y="686">· 录音文本内容</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 608 L380 718"></path>
+    <polygon class="node" points="380,726 455,766 380,806 305,766"></polygon>
+    <text class="node-text" x="380" y="766">判断是否超时</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M305 766 L98 766 L98 918"></path>
+    <text class="small-text" x="90" y="738">超时5分钟</text>
+    <rect class="node" x="28" y="920" width="144" height="88"></rect>
+    <text class="node-text" x="100" y="964">
+      <tspan x="100" dy="-10">保持</tspan>
+      <tspan x="100" dy="26">现有意向级别</tspan>
+    </text>
+    <path class="line" marker-end="url(#arrow)" d="M100 1008 L100 1114"></path>
+    <rect class="node" x="28" y="1120" width="144" height="80" rx="12"></rect>
+    <text class="node-text" x="100" y="1160">结束</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 806 L380 884"></path>
+    <text class="small-text" x="350" y="844">未超时</text>
+    <polygon class="node" points="380,892 470,944 380,996 290,944"></polygon>
+    <text class="node-text" x="380" y="944">
+      <tspan x="380" dy="-12">是否收到智能体返</tspan>
+      <tspan x="380" dy="26">回数据</tspan>
+    </text>
+
+    <path class="line" marker-end="url(#arrow)" d="M470 944 L548 944"></path>
+    <text class="small-text" x="506" y="930">N</text>
+    <rect class="node" x="548" y="904" width="116" height="80"></rect>
+    <text class="node-text" x="606" y="944">继续等待</text>
+
+    <text class="param-text" x="486" y="738">返回参数</text>
+    <text class="param-text" x="486" y="768">· 总部培育编码</text>
+    <text class="param-text" x="486" y="798">· 培育任务编码</text>
+    <text class="param-text" x="486" y="828">· 回访工单编码</text>
+    <text class="param-text" x="486" y="858">· 意向级别</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M290 944 L210 944 L210 1008 L172 1008"></path>
+    <text class="small-text" x="226" y="1012">无效</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 996 L380 1078"></path>
+    <text class="small-text" x="350" y="1038">Y</text>
+    <polygon class="node" points="380,1086 470,1138 380,1190 290,1138"></polygon>
+    <text class="node-text" x="380" y="1138">
+      <tspan x="380" dy="-12">智能体意向级别</tspan>
+      <tspan x="380" dy="26">有效判断</tspan>
+    </text>
+    <text class="param-text" x="486" y="1122">线索状态 = 高意向（符合：</text>
+    <text class="param-text" x="486" y="1152">H/A/B/C）</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 1190 L380 1268"></path>
+    <rect class="node" x="308" y="1274" width="144" height="80"></rect>
+    <text class="node-text" x="380" y="1314">更新意向级别</text>
+
+    <path class="line" marker-end="url(#arrow)" d="M380 1354 L380 1430"></path>
+    <rect class="node" x="308" y="1436" width="144" height="80" rx="12"></rect>
+    <text class="node-text" x="380" y="1476">结束</text>
+  </svg>
+</div>
+</section>
+<section id="options"><h2 class="section-title">七、从行业标准看，可选方案不止一种</h2>
+<p>从线索运营与智能分级的行业实践来看，常见的成熟做法并非以AI直接替代既有规则，而是采用“规则兜底、模型分层、人工反馈校准”的组合模式。这一模式的合理性在于：线索分级不仅影响销售的跟进优先级，还关系到后续的状态流转、异常处理以及客户体验。因此，不宜仅依赖单一模型进行判断，而应通过多环节协同来保障分级的准确性与稳定性。</p>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>方案</th>
+<th>做法</th>
+<th>优点</th>
+<th>风险/限制</th>
+<th>适用判断</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>方案A：高意向线索再分层</td>
+<td>优先判断是否高意向；仅高意向线索调用智能体输出H/A/B/C。</td>
+<td>改造小、风险低、保留现有运营闭环，能快速提升高意向线索排序能力。</td>
+<td>智能体覆盖范围有限，无法优化非高意向线索的分层。</td>
+<td>推荐作为第一阶段上线方案。</td>
+</tr>
+<tr>
+<td>方案B：决策规则引擎 + 智能体双评分</td>
+<td>决策规则引分，智能体输出语义分，再通过加权策略得到最终等级。</td>
+<td>兼顾业务确定性和语义理解能力，可逐步量化优化。</td>
+<td>需要建设评分口径、权重、样本评估和可解释能力，产品复杂度较高。</td>
+<td>适合第二阶段，当有足够样本和人工复核数据后推进。</td>
+</tr>
+<tr>
+<td>方案C：智能体主判，规则只做兜底</td>
+<td>智能体直接判断所有规则</td>
+<td>体验上最智能，规则维护成本可能下降。</td>
+<td>对模型稳定性、标签抽取质量、可解释性和业务容错要求很高。</td>
+<td>当前不建议，除非已有成熟质检和回溯体系。</td>
+</tr>
+</tbody></table></div>
+<div class="callout product">产品建议：当前最稳妥的路线是“方案A先上线，方案B做中长期演进”。先把高意向线索内部的H/A/B/C分层跑通，积累智能体结果、销售跟进结果和成交/到店反馈；当样本足够后，再设计规则分与智能体语义分的融合模型。</div>
+</section>
+<section id="roadmap"><h2 class="section-title">八、推荐演进路线</h2>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>阶段</th>
+<th>目标</th>
+<th>说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>P1 灰度上线</td>
+<td>只处理高意向状态线索</td>
+<td>验证智能体能否稳定区分H/A/B/C，并检查输出是否符合运营理解。</td>
+</tr>
+<tr>
+<td>P2 建立评估闭环</td>
+<td>用跟进结果校准等级</td>
+<td>记录到店、建联、下订、战败、销售反馈等结果，评估各等级的转化差异。</td>
+</tr>
+<tr>
+<td>P3 扩展为双评分</td>
+<td>规则分 + 智能体分</td>
+<td>当样本稳定后，再将文档1规则和智能体评分融合，形成更细的线索优先级。</td>
+</tr>
+</tbody></table></div>
+</section>
+  </main>
+
+  <footer>
+    由调整后的 Pages 文档导出 DOCX 后生成，用于业务运营、产品与研发评审。
+  </footer>
+</body>
+</html>
