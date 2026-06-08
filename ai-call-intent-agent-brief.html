@@ -146,6 +146,57 @@
       margin-bottom: 10px;
     }
 
+    .business-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .business-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      padding: 18px 20px;
+      min-height: 176px;
+    }
+
+    .business-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .business-badge.green {
+      color: #0f6041;
+      background: #dff6eb;
+    }
+
+    .business-badge.amber {
+      color: #744700;
+      background: #fff1d2;
+    }
+
+    .business-badge.red {
+      color: #9f2418;
+      background: #ffe4e0;
+    }
+
+    .business-card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .business-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
     a {
       color: var(--blue-dark);
       font-weight: 700;
@@ -259,6 +310,7 @@
         width: min(100% - 24px, 1120px);
         padding-top: 18px;
       }
+      .business-grid { grid-template-columns: 1fr; }
       .hero, section { padding: 20px; }
     }
   </style>
@@ -319,47 +371,78 @@
 </tr>
 </tbody></table></div>
 </section>
-<section id="compare"><h2 class="section-title">三、两者间的规则差异</h2>
+<section id="compare"><h2 class="section-title">三、现状规则主对照</h2>
 <div class="table-wrap">
 <table>
 <thead><tr>
-<th>对比项</th>
-<th>文档1：AI外呼线索下发配置</th>
-<th>文档2：智能体意向打标规则</th>
+<th>对照维度</th>
+<th>AI外呼线索下发配置</th>
+<th>智能体意向打标规则</th>
+<th>产品解读</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>规则性质</td>
-<td>业务决策表，决定线索下发、状态更新、异常原因和意向级别。</td>
-<td>评分模型，基于核心标签和补充标签计算意向等级。</td>
+<td>规则定位</td>
+<td>业务决策规则。判断线索是否下发、是否更新线索状态、异常原因，以及默认意向等级。</td>
+<td>意向评分规则。基于通话语义标签和评分模型，输出线索意向强弱。</td>
+<td>前者解决“怎么流转”，后者解决“意向多强”。</td>
 </tr>
 <tr>
-<td>核心输入</td>
-<td>外呼类型、通话状态、包含/不包含标签、通话时长、是否有意向专营店。</td>
-<td>计划购车时间、预计到店时间、购车意向、购买形态、已到店、建联、金融、利益、产品等标签。</td>
+<td>主要输入</td>
+<td>外呼类型、通话状态、包含标签、不包含标签、通话时长、是否有意向专营店。</td>
+<td>计划购车时间、预计到店时间、购车意向、购买形态、已到店、建联、金融因子、利益因子、产品因子。</td>
+<td>输入字段不完全一致，智能体依赖更细的语义标签。</td>
 </tr>
 <tr>
-<td>高意向含义</td>
-<td>“高意向”是线索状态，代表满足业务流转条件，可下发到NEV线索中台。</td>
-<td>H级是意向等级，要求分数≥80且具备近期购车或到店的核心标签。</td>
+<td>核心判断逻辑</td>
+<td>按照规则表命中条件执行，如高意向、总部培育、线索不下发、战败、休眠等。</td>
+<td>核心标签 + 补充标签累计得分，并结合核心标签门槛输出等级。</td>
+<td>一个是“规则命中式”，一个是“评分分层式”。</td>
 </tr>
 <tr>
-<td>输出范围</td>
-<td>可能输出H\A\B\C</td>
-<td>主要输出H\A\B\C，另有F/L/E等特殊口径说明。</td>
+<td>现有输出</td>
+<td>是否下发、是否更新状态、异常原因、意向级别 B/C/F/L 或不更新。</td>
+<td>主要输出 H/A/B/C；另有未接通、战败、休眠等特殊口径。</td>
+<td>输出颗粒度不同，不能简单字段替换。</td>
 </tr>
 <tr>
-<td>运营作用</td>
-<td>负责判断线索是否进入后续流转，以及如何处理负向/异常线索。</td>
-<td>负责对可跟进线索进行意向强弱分层。</td>
+<td>“高意向”含义</td>
+<td>高意向是线索状态，代表满足业务流转条件，可进入高意向跟进链路。</td>
+<td>H级是意向等级，通常要求近期购车或近期到店等更强条件，且评分达到门槛。</td>
+<td>“状态高意向”不等于“等级H”。这是最关键的差异。</td>
+</tr>
+<tr>
+<td>负向/异常处理</td>
+<td>已购车、已下订、拒绝打扰、语音信箱、老年人、无购车意向等，按战败/休眠/不下发处理。</td>
+<td>若直接进入智能体，可能因提到价格、金融、产品等话题产生较高评分。</td>
+<td>负向和异常线索应优先保留规则处置，避免误拉高。</td>
+</tr>
+<tr>
+<td>当前适用边界</td>
+<td>适用于所有 AI 外呼后的线索，作为第一层业务分流规则。</td>
+<td>更适合用于已经命中高意向状态的线索，做进一步 H/A/B/C 细分。</td>
+<td>建议“先规则分流，再智能体分层”。</td>
 </tr>
 </tbody></table></div>
 </section>
-<section><h2 class="section-title">四、为什么不能全量直接互用</h2>
-<p class="point"><strong>意向定义不同：</strong>命中【AI外呼线索下发配置】的“高意向”后，智能体可能将其进一步评定为 H、A、B、C 中的任一等级。其中，【智能体意向打标规则】中的“H级”门槛更高，必须同时满足“近期购车”或“近期到店”等更强条件。</p>
-<p class="point"><strong>判定依据不同：</strong>【AI外呼线索下发配置】主要依赖通话时长、是否有意向专营店、线索下发策略等业务流转条件；而这些并非【智能体意向打标规则】评分模型的核心依据。</p>
-<p class="point"><strong>输入字段不同：</strong>【智能体意向打标规则】依赖计划购车时间、预计到店时间等核心语义标签，而【AI外呼线索下发配置】中并未完整覆盖这些输入字段。</p>
-<p class="point"><strong>潜在风险提示：</strong>若将负向线索（如明确无购车意向的客户）送入智能体，可能因客户在对话中提及价格、产品、金融等话题，被误判为较高意向，进而干扰战败、休眠、无效等后续运营处理。</p>
+<section><h2 class="section-title">四、现状规则各自覆盖的业务问题</h2>
+<div class="business-grid">
+  <div class="business-card">
+    <span class="business-badge green">AI外呼线索下发配置</span>
+    <h3>负责业务流转</h3>
+    <p>判断是否下发到 NEV 线索中台、总部培育客服，或不下发；同时处理状态更新和异常原因。</p>
+  </div>
+  <div class="business-card">
+    <span class="business-badge amber">智能体意向打标规则</span>
+    <h3>负责意向强弱分层</h3>
+    <p>基于客户表达出的购车时间、到店时间、购车意向和关注点，判断 H/A/B/C 等级。</p>
+  </div>
+  <div class="business-card">
+    <span class="business-badge red">当前衔接点</span>
+    <h3>仅高意向进入智能体</h3>
+    <p>命中“高意向”线索状态后，调用智能体输出 H/A/B/C；未命中则继续保持现有规则。</p>
+  </div>
+</div>
 </section>
 <section id="process"><h2 class="section-title">五、接入流程说明</h2>
 <div class="table-wrap">
