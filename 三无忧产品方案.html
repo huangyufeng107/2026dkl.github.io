@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>冷线索「三无忧」AI 外呼 — 产品方案 v1.0</title>
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-light: #EEF2FF;
+    --primary-dark: #3730A3;
+    --success: #059669;
+    --success-light: #ECFDF5;
+    --warning: #D97706;
+    --warning-light: #FFFBEB;
+    --danger: #DC2626;
+    --danger-light: #FEF2F2;
+    --info: #2563EB;
+    --info-light: #EFF6FF;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.04);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── 顶部 Header ── */
+  .doc-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+    color: #fff;
+    padding: 48px 0 40px;
+  }
+  .doc-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .doc-header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    margin-bottom: 16px;
+  }
+  .doc-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -.3px;
+  }
+  .doc-header .subtitle {
+    font-size: 15px;
+    opacity: .85;
+    margin-bottom: 20px;
+  }
+  .doc-header .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font-size: 13px;
+    opacity: .72;
+  }
+  .doc-header .meta-row span { display:inline-flex; align-items:center; gap:4px; }
+
+  /* ── 主体 ── */
+  .doc-body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ── 目录 ── */
+  .toc {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .toc h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--gray-900);
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 24px;
+  }
+  .toc ol li {
+    counter-increment: toc;
+    font-size: 14px;
+  }
+  .toc ol li a {
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .toc ol li a::before {
+    content: counter(toc) ".";
+    font-weight: 600;
+    color: var(--gray-400);
+    font-size: 12px;
+    min-width: 18px;
+  }
+  .toc ol li a:hover { color: var(--primary-dark); text-decoration: underline; }
+
+  /* ── 章节 ── */
+  section {
+    margin-bottom: 48px;
+  }
+  section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 24px 0 10px;
+  }
+  section h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin: 20px 0 8px;
+  }
+
+  /* ── 卡片 ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    padding: 14px 20px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-body {
+    padding: 20px;
+  }
+  .card-body.no-padding { padding: 0; }
+
+  /* ── 表格 ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  thead th {
+    background: var(--gray-50);
+    color: var(--gray-600);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--gray-200);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: var(--gray-50); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── 标签 ── */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-p1 { background: var(--danger-light); color: var(--danger); }
+  .tag-p2 { background: var(--warning-light); color: var(--warning); }
+  .tag-p3 { background: var(--info-light); color: var(--info); }
+  .tag-p4 { background: var(--gray-100); color: var(--gray-500); }
+  .tag-new {
+    background: var(--success-light);
+    color: var(--success);
+  }
+  .tag-p0 { background: var(--danger-light); color: var(--danger); }
+  .tag-p1q { background: var(--warning-light); color: var(--warning); }
+  .tag-p2q { background: var(--gray-100); color: var(--gray-500); }
+
+  /* ── 代码块 ── */
+  pre {
+    background: #1E293B;
+    color: #E2E8F0;
+    font-family: 'SF Mono','Fira Code','Cascadia Code',monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 18px 22px;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  pre code { color: inherit; }
+  pre .kw { color: #C084FC; }
+  pre .str { color: #6EE7B7; }
+  pre .num { color: #F9A8D4; }
+  pre .cmt { color: #64748B; font-style: italic; }
+  pre .tbl { color: #7DD3FC; }
+
+  /* ── 行内代码 ── */
+  code {
+    background: var(--gray-100);
+    color: var(--danger);
+    font-family: 'SF Mono','Fira Code','Cascadia Code',monospace;
+    font-size: 13px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--gray-200);
+  }
+
+  /* ── 提示框 ── */
+  .callout {
+    border-left: 4px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout-info {
+    background: var(--info-light);
+    border-color: var(--info);
+    color: #1E40AF;
+  }
+  .callout-warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .callout-danger {
+    background: var(--danger-light);
+    border-color: var(--danger);
+  }
+  .callout-success {
+    background: var(--success-light);
+    border-color: var(--success);
+  }
+
+  /* ── 数据流图 ── */
+  .flow-diagram {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin: 16px 0;
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--gray-700);
+  }
+
+  /* ── 时序图 ── */
+  .timeline {
+    position: relative;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* 垂直连接线 */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 110px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--primary), var(--primary) 60%, var(--gray-300));
+    border-radius: 1px;
+  }
+  /* 每一行 */
+  .tl-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0;
+    position: relative;
+    min-height: 48px;
+    padding-bottom: 24px;
+  }
+  .tl-row:last-child { padding-bottom: 0; }
+  /* 时间标签 — 在垂直线左侧 */
+  .tl-time {
+    width: 110px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: .3px;
+    line-height: 1;
+    padding-top: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  /* 圆点 — 在垂直线上 */
+  .tl-row::after {
+    content: '';
+    position: absolute;
+    left: 103px;
+    top: 15px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--primary), 0 1px 3px rgba(0,0,0,.12);
+    z-index: 2;
+  }
+  .tl-row:last-child::after {
+    background: var(--success);
+    box-shadow: 0 0 0 2px var(--success), 0 1px 3px rgba(0,0,0,.12);
+  }
+  /* 内容卡片 — 在垂直线右侧 */
+  .tl-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow .15s;
+  }
+  .tl-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  .tl-card .tl-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--gray-800);
+    margin-bottom: 6px;
+  }
+  .tl-detail {
+    font-size: 13px;
+    color: var(--gray-600);
+    padding-left: 18px;
+    margin: 0;
+    line-height: 1.65;
+  }
+  .tl-detail li { margin-bottom: 2px; }
+  /* 当前步骤高亮 */
+  .tl-row.active .tl-time {
+    color: var(--danger);
+  }
+  .tl-row.active::after {
+    background: var(--danger);
+    box-shadow: 0 0 0 2px var(--danger), 0 0 0 4px rgba(220,38,38,.2), 0 1px 3px rgba(0,0,0,.12);
+    animation: tlPulse 2s ease-out infinite;
+  }
+  @keyframes tlPulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--danger), 0 0 0 4px rgba(220,38,38,.2), 0 1px 3px rgba(0,0,0,.12); }
+    50% { box-shadow: 0 0 0 2px var(--danger), 0 0 0 10px rgba(220,38,38,0), 0 1px 3px rgba(0,0,0,.12); }
+  }
+
+  /* ── 进度条 ── */
+  .progress-bar {
+    height: 8px;
+    background: var(--gray-100);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 6px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+  .progress-p1 { background: var(--danger); }
+  .progress-p2 { background: var(--warning); }
+  .progress-p3 { background: var(--info); }
+  .progress-p4 { background: var(--gray-400); }
+
+  /* ── 导航树 ── */
+  .nav-tree {
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--gray-700);
+    background: var(--gray-50);
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+  }
+  .nav-tree .new { color: var(--success); font-weight: 700; }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+  /* ── Stat card ── */
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    text-align: center;
+  }
+  .stat-card .stat-icon { font-size: 22px; margin-bottom: 6px; }
+  .stat-card .stat-value { font-size: 26px; font-weight: 700; color: var(--gray-900); }
+  .stat-card .stat-label { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  /* ── Footer ── */
+  .doc-footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 40px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-400);
+    border-top: 1px solid var(--gray-200);
+    padding-top: 24px;
+  }
+
+  /* ── 响应式 ── */
+  @media (max-width: 768px) {
+    .doc-header { padding: 32px 0 28px; }
+    .doc-header h1 { font-size: 24px; }
+    .toc ol { grid-template-columns: 1fr; }
+    .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+    .doc-body { padding: 24px 16px 60px; }
+    /* 时序图移动端适配 */
+    .timeline::before { left: 60px; }
+    .tl-time { width: 60px; padding-right: 14px; font-size: 11px; padding-top: 11px; }
+    .tl-row::after { left: 53px; width: 12px; height: 12px; top: 13px; }
+    .tl-card { padding: 12px 14px; }
+    .tl-card .tl-title { font-size: 13px; }
+    .tl-detail { padding-left: 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="doc-header">
+  <div class="doc-header-inner">
+    <div class="badge">📋 PRODUCT SPECIFICATION · v1.0</div>
+    <h1>冷线索「三无忧」AI 外呼 — 产品方案</h1>
+    <p class="subtitle">盘活 25/06 — 26/03 N6/N7/NX8 冷线索，系统按优先级分批推送至一知 AI 外呼</p>
+    <div class="meta-row">
+      <span>📅 2026/06/15</span>
+      <span>👤 需求来源：运营（三无忧服务营销活动）</span>
+      <span>🎯 目标系统：DCC培育系统 v1.0.1 → 一知 AI 外呼</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BODY ═══════════════ -->
+<div class="doc-body">
+
+<!-- ── 目录 ── -->
+<div class="toc">
+  <h2>📑 目录</h2>
+  <ol>
+    <li><a href="#s1">系统间数据流图</a></li>
+    <li><a href="#s2">分层标签与权重对照关系</a></li>
+    <li><a href="#s3">数据抽取 &amp; 去重逻辑详述</a></li>
+    <li><a href="#s4">每日推送任务流程（时序图）</a></li>
+    <li><a href="#s5">SMS 模板管理 &amp; 发送规则</a></li>
+    <li><a href="#s6">新增配置项清单</a></li>
+    <li><a href="#s7">前端页面清单</a></li>
+    <li><a href="#s8">数据模型变更</a></li>
+    <li style="grid-column:1/-1"><a href="#sA">附录 A：待运营确认问题清单</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════ 1. 系统间数据流图 ═══════════ -->
+<section id="s1">
+  <h2><span class="num">1</span> 系统间数据流图</h2>
+
+  <!-- 数据流可视化图 -->
+  <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:32px 24px;margin:16px 0;overflow-x:auto;">
+
+    <!-- 三大系统横向排列 -->
+    <div style="display:flex;align-items:stretch;gap:0;min-width:780px;">
+
+      <!-- 数据组 -->
+      <div style="flex:0 0 180px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:2px solid var(--primary);border-radius:var(--radius);padding:20px 16px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-weight:700;font-size:15px;color:var(--primary-dark);margin-bottom:4px;">📦 数据组</div>
+        <div style="font-size:12px;color:var(--gray-500);margin-bottom:8px;">（数据源头）</div>
+        <div style="text-align:left;font-size:11px;color:var(--gray-600);line-height:1.7;background:rgba(255,255,255,.6);border-radius:6px;padding:8px 10px;">
+          ● 总部培育线索<br>
+          ● 留资未满线索<br>
+          ● NEV培育数据<br>
+          <span style="color:var(--primary);font-weight:600;">★ 分层标签打标</span><br>
+          <span style="color:var(--primary);font-weight:600;">★ 总部培育筛选</span><br>
+          <span style="color:var(--primary);font-weight:600;">★ 车型过滤</span>
+        </div>
+      </div>
+
+      <!-- 箭头1 -->
+      <div style="flex:0 0 48px;display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:24px;color:var(--primary);">▶</div>
+      </div>
+
+      <!-- DCC培育系统 SaaS平台（核心） -->
+      <div style="flex:1;background:#fff;border:2px solid var(--gray-300);border-radius:var(--radius);padding:20px;min-width:400px;">
+        <div style="font-weight:700;font-size:15px;color:var(--gray-800);margin-bottom:14px;text-align:center;padding-bottom:10px;border-bottom:1px dashed var(--gray-200);">⚙️ DCC培育系统 · SaaS平台</div>
+
+        <!-- 横向处理流水线 -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+          <div style="background:var(--primary-light);border:1px solid var(--primary);border-radius:8px;padding:10px 14px;text-align:center;flex:1;min-width:80px;">
+            <div style="font-weight:600;font-size:13px;color:var(--primary-dark)">线索抽取</div>
+            <div style="font-size:11px;color:var(--gray-400)">SQL</div>
+          </div>
+          <div style="color:var(--gray-300);font-size:16px;">→</div>
+          <div style="background:var(--primary-light);border:1px solid var(--primary);border-radius:8px;padding:10px 14px;text-align:center;flex:1;min-width:80px;">
+            <div style="font-weight:600;font-size:13px;color:var(--primary-dark)">分层排序</div>
+            <div style="font-size:11px;color:var(--gray-400)">引擎</div>
+          </div>
+          <div style="color:var(--gray-300);font-size:16px;">→</div>
+          <div style="background:var(--primary-light);border:1px solid var(--primary);border-radius:8px;padding:10px 14px;text-align:center;flex:1;min-width:80px;">
+            <div style="font-weight:600;font-size:13px;color:var(--primary-dark)">每日推送调度</div>
+            <div style="font-size:11px;color:var(--gray-400)">≤10,000条/天</div>
+          </div>
+        </div>
+
+        <!-- 下方两分支：短信 + AI外呼 -->
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <!-- 短信下发 -->
+          <div style="flex:1;background:var(--success-light);border:1px solid var(--success);border-radius:8px;padding:12px 14px;text-align:center;">
+            <div style="font-weight:600;font-size:13px;color:#065F46;">💬 短信下发</div>
+            <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">全量客户</div>
+          </div>
+          <!-- AI外呼 -->
+          <div style="flex:1;background:var(--warning-light);border:1px solid var(--warning);border-radius:8px;padding:12px 14px;text-align:center;">
+            <div style="font-weight:600;font-size:13px;color:#92400E;">📞 AI外呼</div>
+            <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">按车型</div>
+          </div>
+        </div>
+
+        <!-- 底部：外呼结果回写 -->
+        <div style="margin-top:12px;background:var(--gray-50);border:1px dashed var(--gray-300);border-radius:8px;padding:10px 14px;text-align:center;">
+          <div style="font-weight:600;font-size:13px;color:var(--gray-700);">🔄 外呼结果回写 &amp; 监控看板</div>
+        </div>
+      </div>
+
+      <!-- 箭头2 -->
+      <div style="flex:0 0 48px;display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:24px;color:var(--primary);">▶</div>
+      </div>
+
+      <!-- 一知 + 短信平台 -->
+      <div style="flex:0 0 200px;display:flex;flex-direction:column;gap:16px;">
+        <!-- 一知 AI外呼 -->
+        <div style="flex:1;background:linear-gradient(135deg,#FFF7ED,#FFEDD5);border:2px solid var(--warning);border-radius:var(--radius);padding:16px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-weight:700;font-size:14px;color:#92400E;">📞 一知 AI 外呼</div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">（外呼执行）</div>
+          <div style="margin-top:8px;text-align:left;font-size:11px;color:var(--gray-500);line-height:1.6;background:rgba(255,255,255,.6);border-radius:4px;padding:6px 8px;">
+            ← 外呼结果回调<br>
+            ← 线索状态更新<br>
+            ← 意向级别更新
+          </div>
+        </div>
+        <!-- 短信平台 -->
+        <div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid var(--success);border-radius:var(--radius);padding:16px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-weight:700;font-size:14px;color:#065F46;">💬 短信平台</div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">（每日外呼前）</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔗 数据流详细说明</div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:36px">#</th><th>环节</th><th>系统/角色</th><th>输入</th><th>输出</th></tr></thead>
+          <tbody>
+            <tr><td>①</td><td>数据准备</td><td>数据组</td><td>全量线索数据</td><td>打好分层标签、过滤后的线索样本</td></tr>
+            <tr><td>②</td><td>线索抽取</td><td>DCC</td><td>数据组产出的线索池</td><td>符合推送条件的候选列表</td></tr>
+            <tr><td>③</td><td>分层排序</td><td>DCC</td><td>候选列表</td><td>按优先级排序的待推送队列</td></tr>
+            <tr><td>④</td><td>每日调度</td><td>DCC</td><td>排序队列</td><td>当日推送批次（≤10,000条）</td></tr>
+            <tr><td>⑤</td><td>短信下发</td><td>短信平台</td><td>当日推送客户列表</td><td>短信发送记录</td></tr>
+            <tr><td>⑥</td><td>AI外呼</td><td>一知平台</td><td>当日推送批次 + 话术任务ID</td><td>外呼执行结果</td></tr>
+            <tr><td>⑦</td><td>结果回写</td><td>DCC</td><td>一知外呼结果回调</td><td>线索状态 + 意向级别更新</td></tr>
+            <tr><td>⑧</td><td>黑名单过滤</td><td>DCC</td><td>投诉/退订记录</td><td>过滤后的推送池</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 2. 分层标签与权重对照关系 ═══════════ -->
+<section id="s2">
+  <h2><span class="num">2</span> 分层标签与权重对照关系</h2>
+
+  <h3>2.1 标签定义</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:60px">优先级</th><th>分层标签</th><th>数据组判定逻辑</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-p1">P1</span></td>
+          <td><strong>历史试驾过 / 历史到店过</strong></td>
+          <td>查询历史试驾记录表、到店记录表</td>
+          <td>最高优先级，高意向客户</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-p2">P2</span></td>
+          <td><strong>门店跟进次数 ≥ 3次</strong></td>
+          <td>查询门店跟进记录表，count ≥ 3</td>
+          <td>门店多次跟进未转化</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-p3">P3</span></td>
+          <td><strong>休眠未购</strong></td>
+          <td>有互动记录但未购车、最后互动时间 &gt; N天</td>
+          <td>有触达但未转化</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-p4">P4</span></td>
+          <td><strong>休眠失联</strong></td>
+          <td>无有效互动记录、号码可能失效</td>
+          <td>最低优先级，兜底</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2 去重与优先级冲突处理</h3>
+  <pre><span class="cmt">规则1：</span>一个客户同时命中多个分层 → 取最高权重（<span class="kw">P1 > P2 > P3 > P4</span>）
+<span class="cmt">规则2：</span>同一手机号在推送池中只保留一条记录
+<span class="cmt">规则3：</span>同层内按创建时间升序（先进先出）
+<span class="cmt">规则4：</span>同层内若创建时间相同 → 按线索ID升序</pre>
+
+  <div class="callout callout-info">
+    <strong>💡 建议方案：</strong>数据组根据分层定义打上分层标签，系统实时根据分层标签映射的权重进行推送优先级判断。
+  </div>
+
+  <h3>2.3 建议数据组产出的数据格式</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>总部线索ID</td><td>varchar(64)</td><td>✅</td><td>总部线索唯一标识，用于跨系统关联与去重。</td></tr>
+        <tr><td>培育线索编码</td><td>varchar(64)</td><td>✅</td><td>培育平台侧线索编码，用于定位具体培育线索。</td></tr>
+        <tr><td>培育任务编码</td><td>varchar(64)</td><td>✅</td><td>当前线索所属培育任务编码，用于任务维度统计和回溯。</td></tr>
+        <tr><td>线索状态</td><td>varchar(32)</td><td>✅</td><td>当前线索状态，如待跟进、跟进中、战败、休眠等，以业务系统枚举为准。</td></tr>
+        <tr><td>异常原因</td><td>varchar(100)</td><td>—</td><td>线索状态异常或不可跟进时的原因说明。</td></tr>
+        <tr><td>客户姓名</td><td>varchar(50)</td><td>✅</td><td>客户姓名，按数据安全要求可脱敏展示。</td></tr>
+        <tr><td>手机号码</td><td>varchar(20)</td><td>✅</td><td>客户手机号，作为去重和触达校验的重要字段，按要求脱敏展示。</td></tr>
+        <tr><td>意向车系</td><td>varchar(50)</td><td>—</td><td>客户当前表达的意向车系。</td></tr>
+        <tr><td>意向专营店</td><td>varchar(100)</td><td>—</td><td>客户当前关联或表达意向的专营店。</td></tr>
+        <tr><td>最新留资车系</td><td>varchar(50)</td><td>—</td><td>客户最近一次留资对应的车系。</td></tr>
+        <tr><td>SmartCode</td><td>varchar(64)</td><td>—</td><td>线索当前 SmartCode 值，用于业务分层或状态识别。</td></tr>
+        <tr><td>最近跟进时间</td><td>datetime</td><td>—</td><td>门店或培育侧最近一次跟进时间。</td></tr>
+        <tr><td>门店跟进次数</td><td>int</td><td>—</td><td>门店累计跟进次数。</td></tr>
+        <tr><td>分层标签</td><td>varchar(10)</td><td>✅</td><td>数据组产出的分层结果，如 P1 / P2 / P3 / P4，用于系统推送优先级判断。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ 3. 数据抽取 & 去重逻辑 ═══════════ -->
+<section id="s3">
+  <h2><span class="num">3</span> 数据抽取 &amp; 去重逻辑详述</h2>
+
+  <h3>3.1 数据准入条件</h3>
+  <pre><span class="cmt">准入条件1：</span>创建时间 ∈ [2025-06-01, 2026-03-31]
+<span class="cmt">准入条件2：</span>车型 ∈ {N6, N7, NX8}
+<span class="cmt">准入条件3：</span>总部培育标志 = TRUE（不包含"留资未满"场景留资线索）
+<span class="cmt">准入条件4：</span>分层标签 ∈ {P1, P2, P3, P4}</pre>
+
+  <div class="callout callout-info">
+    <strong>💡 建议方案：</strong>数据组根据判断标准，只取在总部培育过的数据（数据源头控制数据样本范围）。
+  </div>
+
+  <h3>3.2 实时去重规则（系统端执行）</h3>
+
+  <div class="card">
+    <div class="card-header">🔍 去重规则 1：30天内未被 AI外呼 建联过</div>
+    <div class="card-body">
+      <p><strong>数据来源：</strong>NEV培育线索数据 + 留资未满数据</p>
+      <p><strong>查询方式：</strong>以手机号为 key，查询外呼记录表中最近外呼时间</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔍 去重规则 2：30天内未被 人工外呼 建联过</div>
+    <div class="card-body">
+      <p><strong>数据来源：</strong>人工外呼记录表</p>
+      <p><strong>查询方式：</strong>以手机号为 key，查询外呼记录表中最近外呼时间</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔍 去重规则 3：手机号不在黑名单中</div>
+    <div class="card-body">
+      <p><strong>数据来源：</strong>DCC 拦截规则 → 黑名单模块</p>
+      <p><strong>过滤类型：</strong>全业务黑名单 (type=4)、外呼黑名单 (type=1)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔍 去重规则 4：同一手机号仅推送一次（活动周期内不重复推送）</div>
+    <div class="card-body">
+      <p><strong>数据来源：</strong>本活动推送记录表</p>
+      <p><strong>注意：</strong>已推送过的手机号，即使外呼未接通也不再推送</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔍 去重规则 5：同一手机号是否存在与门店跟进冲突</div>
+    <div class="card-body">
+      <p><strong>数据来源：</strong>联友培育线索接口</p>
+      <p><strong>判断逻辑：</strong>以手机号为 key，查询是否存在门店正在跟进、近期已跟进或其他不可重复触达的培育线索。</p>
+      <p><strong>执行时点：</strong>① 执行推送到 DCC 系统前；② DCC 系统外呼完成并更新线索数据时。</p>
+      <p><strong>注意：</strong>如存在门店跟进冲突，应拦截或跳过本次推送/更新，避免 AI 外呼与门店跟进动作互相干扰。</p>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 建议方案：</strong>系统实时查询"手机号码"近30天是否未被AI及人工外呼建联过（数据范围：包含NEV培育线索数据和留资未满）。
+  </div>
+
+  <h3>3.3 待确认问题</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:32px">#</th><th>问题</th><th>建议方案</th><th style="width:80px">需确认</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>每日推送超10,000条后，剩余线索如何处理？</td><td>次日继续按优先级推送，高层级未推完继续推高层级</td><td><span class="tag tag-p0">运营确认</span></td></tr>
+        <tr><td>2</td><td>黑名单客户是否需要过滤？</td><td><strong>需要过滤</strong>，外呼黑名单和全业务黑名单均应排除</td><td><span class="tag tag-p0">运营确认</span></td></tr>
+        <tr><td>3</td><td>"30天"是自然天还是工作日？</td><td>建议自然天（T（天）-30）</td><td><span class="tag tag-p1q">运营确认</span></td></tr>
+        <tr><td>4</td><td>活动周期内已推送过的客户，后续是否再次推送？</td><td>建议不重复推送</td><td><span class="tag tag-p1q">运营确认</span></td></tr>
+        <tr><td>5</td><td>分层标签是否需要支持运营手动调整？</td><td>建议以数据组标签为准</td><td><span class="tag tag-p1q">运营确认</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ 4. 每日推送任务流程 ═══════════ -->
+<section id="s4">
+  <h2><span class="num">4</span> 每日推送任务流程（时序图）</h2>
+
+  <div class="timeline">
+    <div class="tl-row">
+      <div class="tl-time">08:00</div>
+      <div class="tl-card">
+        <div class="tl-title">📥 数据组定时任务</div>
+        <div style="font-size:13px;color:var(--gray-600)">推送增量线索样本至 DCC 平台</div>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-time">08:30</div>
+      <div class="tl-card">
+        <div class="tl-title">⚙️ DCC 定时任务：线索抽取 + 分层排序 + 去重</div>
+        <ul class="tl-detail">
+          <li>查询数据组最新样本数据</li>
+          <li>实时查询 30天外呼记录 → 过滤已外呼号码</li>
+          <li>查询黑名单 → 过滤黑名单号码</li>
+          <li>查询本活动推送记录 → 过滤已推送号码</li>
+          <li>按分层权重排序 → 生成当日推送队列</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-time">09:00</div>
+      <div class="tl-card">
+        <div class="tl-title">💬 DCC 定时任务：短信批量下发</div>
+        <ul class="tl-detail">
+          <li>取当日推送队列全部客户</li>
+          <li>调用短信平台 API</li>
+          <li>模板：<strong>冷线索-三无忧</strong></li>
+          <li>记录短信发送状态</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-row active">
+      <div class="tl-time">09:30</div>
+      <div class="tl-card">
+        <div class="tl-title">🚀 DCC 定时任务：推送至一知 AI 外呼</div>
+        <ul class="tl-detail">
+          <li>按车型拆分推送批次</li>
+          <li>NX8 → 任务ID: <code>1704345165750</code> → 话术: NEV-冷线索-NX8-三无忧</li>
+          <li>N6  → 任务ID: <code>1704345165747</code> → 话术: NEV-冷线索-N6-三无忧</li>
+          <li>N7  → 任务ID: <code>1704345161532</code> → 话术: NEV-冷线索-N7-三无忧</li>
+          <li>单日推送 ≤ 10,000 条（三车型合计）</li>
+          <li>调用一知平台 API 推送客户数据</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-time">10:00</div>
+      <div class="tl-card">
+        <div class="tl-title">📞 一知平台：执行 AI 外呼</div>
+        <div style="font-size:13px;color:var(--gray-500)">分车型按绑定的专属话术流程任务执行外呼</div>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-time">18:00</div>
+      <div class="tl-card">
+        <div class="tl-title">🔄 DCC 定时任务：拉取一知外呼结果</div>
+        <ul class="tl-detail">
+          <li>回调 / 轮询一知外呼结果</li>
+          <li>更新线索状态（已接通 / 未接通 / 意向级别）</li>
+          <li>更新监控看板数据</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-time">18:30</div>
+      <div class="tl-card">
+        <div class="tl-title">📊 运营查看当日推送结果</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.1 推送消耗策略</h3>
+  <pre><span class="cmt">策略：严格按优先级降序推送，高层级全部推完才启用下一层级</span>
+
+<span class="cmt">示例：</span>
+  某日候选池：<span class="kw">P1</span>=<span class="num">3,000</span>, <span class="kw">P2</span>=<span class="num">5,000</span>, <span class="kw">P3</span>=<span class="num">4,000</span>, <span class="kw">P4</span>=<span class="num">8,000</span>
+  当日推送：P1(3,000) + P2(5,000) + P3(2,000) = <span class="num">10,000</span>
+  次日推送：P3剩余(2,000) + P4(8,000) = <span class="num">10,000</span>
+  第三日：P4剩余(—)已全部推完
+
+<span class="cmt">注意：每日数据组可能新增样本，新增的高优先级线索会在当日优先推送</span></pre>
+
+  <div class="grid-4" style="margin-top:16px">
+    <div class="stat-card">
+      <div class="stat-icon">🔴</div>
+      <div class="stat-value" style="color:var(--danger)">3,000</div>
+      <div class="stat-label">P1 历史试驾/到店</div>
+      <div class="progress-bar"><div class="progress-fill progress-p1" style="width:100%"></div></div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:4px">当日全量推送</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🟠</div>
+      <div class="stat-value" style="color:var(--warning)">5,000</div>
+      <div class="stat-label">P2 跟进≥3次</div>
+      <div class="progress-bar"><div class="progress-fill progress-p2" style="width:100%"></div></div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:4px">当日全量推送</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔵</div>
+      <div class="stat-value" style="color:var(--info)">2,000/4,000</div>
+      <div class="stat-label">P3 休眠未购</div>
+      <div class="progress-bar"><div class="progress-fill progress-p3" style="width:50%"></div></div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:4px">当日部分推送</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚪</div>
+      <div class="stat-value" style="color:var(--gray-400)">—</div>
+      <div class="stat-label">P4 休眠失联</div>
+      <div class="progress-bar"><div class="progress-fill progress-p4" style="width:0%"></div></div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:4px">本日未推送</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 5. SMS 模板管理 & 发送规则 ═══════════ -->
+<section id="s5">
+  <h2><span class="num">5</span> 短信模板 &amp; 发送规则</h2>
+
+  <div class="callout callout-info">
+    💡 DCC 平台已有短信模板管理功能，本次仅需在现有模板管理页面新增以下模板并配置发送规则。
+  </div>
+
+  <h3>5.1 新增短信模板</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:110px">模板字段</th><th>值</th></tr></thead>
+      <tbody>
+        <tr><td>模板名称</td><td><strong>冷线索-三无忧</strong></td></tr>
+        <tr><td>模板编码</td><td><code>COLD_LEAD_THREE_CARE</code></td></tr>
+        <tr><td>适用场景</td><td>N6/N7/NX8 三无忧服务外呼前短信</td></tr>
+        <tr><td>下发对象</td><td>当日推送的全部客户</td></tr>
+        <tr><td>下发时间</td><td>每日外呼前</td></tr>
+        <tr><td>下发方式</td><td>自动批量下发（非手动）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.2 短信发送规则</h3>
+  <pre><span class="cmt">规则1：</span>发送时间 = 每日外呼开始时间前
+<span class="cmt">规则2：</span>发送对象 = 当日推送的全部客户（不分层，不分车型）
+<span class="cmt">规则3：</span>发送方式 = 调用短信平台 API 批量发送
+<span class="cmt">规则4：</span>发送失败重试 = 3次，间隔5分钟
+</pre>
+</section>
+
+<!-- ═══════════ 6. 新增配置项清单 ═══════════ -->
+<section id="s6">
+  <h2><span class="num">6</span> 新增配置项清单</h2>
+
+  <h3>6.1 外呼类型配置</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:140px">配置项</th><th>配置值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>外呼类型编码</td><td><code>YIZHI_COLD_LEAD_THREE_CARE</code></td><td>系统唯一标识</td></tr>
+        <tr><td>外呼类型名称</td><td><strong>一知-冷线索（三无忧）</strong></td><td>前端展示名称</td></tr>
+        <tr><td>外呼平台</td><td>一知</td><td>对接的外呼平台</td></tr>
+        <tr><td>所属模块</td><td>DCC培育系统 → 线索管理 → 三无忧</td><td>导航归属</td></tr>
+        <tr><td>状态</td><td><span class="tag" style="background:var(--success-light);color:var(--success)">启用</span></td><td>启用/禁用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 车型-话术任务绑定配置</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>车型</th><th>一知任务ID</th><th>话术流程名称</th><th style="width:60px">权重</th></tr></thead>
+      <tbody>
+        <tr><td><strong>NX8</strong></td><td><code>1704345165750</code></td><td>NEV-冷线索-NX8-三无忧</td><td>1</td></tr>
+        <tr><td><strong>N6</strong></td><td><code>1704345165747</code></td><td>NEV-冷线索-N6-三无忧</td><td>2</td></tr>
+        <tr><td><strong>N7</strong></td><td><code>1704345161532</code></td><td>NEV-冷线索-N7-三无忧</td><td>3</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-info">
+    💡 车型与一知任务ID 一对多绑定，支持同一车型不同活动绑定不同话术任务。下次类似活动只需新增绑定记录。
+  </div>
+
+  <h3>6.3 分层权重配置</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-body">
+        <table>
+          <tr><td style="color:var(--gray-500);font-size:13px">分层取数来源</td><td><code>layer_tag</code> 字段</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">权重映射</td><td>P1→100, P2→70, P3→40, P4→10</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">消耗模式</td><td>严格降序 / 比例混合</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">同层排序</td><td>创建时间升序 / 最近跟进时间</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <table>
+          <tr><td style="color:var(--gray-500);font-size:13px">每日上限</td><td>10,000 条（三车型合计）</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">单车型上限</td><td>不限（仅受总量限制）</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">外呼时间</td><td>09:00 – 20:00</td></tr>
+          <tr><td style="color:var(--gray-500);font-size:13px">免打扰</td><td>12:30 – 14:00</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h3>6.4 ~ 6.6 其他配置项</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>配置类别</th><th>配置项</th><th>默认值</th><th>可调</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><strong>去重窗口</strong></td><td>AI外呼去重窗口</td><td>30 天</td><td>✅</td></tr>
+        <tr><td>人工外呼去重窗口</td><td>30 天</td><td>✅</td></tr>
+        <tr><td>活动内去重</td><td>是（不重复推送）</td><td>✅</td></tr>
+        <tr><td rowspan="4"><strong>短信发送</strong></td><td>短信模板</td><td>冷线索-三无忧</td><td>✅</td></tr>
+        <tr><td>发送时间</td><td>推送外呼系统前</td><td>✅</td></tr>
+        <tr><td>失败重试次数</td><td>3 次</td><td>✅</td></tr>
+        <tr><td>发送通道</td><td>短信平台 API</td><td>✅</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ 7. 前端页面清单 ═══════════ -->
+<section id="s7">
+  <h2><span class="num">7</span> 前端页面清单</h2>
+
+  <h3>7.1 导航结构变更</h3>
+  <div class="nav-tree">
+DCC培育系统 &gt;
+  <span class="new">└── 线索管理           ★ 新增一级菜单</span>
+  <span class="new">    ├── 三无忧             ★ 新增</span>
+  </div>
+
+  <h3>7.2 页面详情</h3>
+
+  <div class="card">
+    <div class="card-header">📋 三无忧活动列表 <code style="font-weight:400">page-outbound-campaign</code></div>
+    <div class="card-body">
+      <table>
+        <tr><td style="width:80px;color:var(--gray-500)">定位</td><td>类似排期管理，作为外呼活动的管理入口</td></tr>
+        <tr><td style="color:var(--gray-500)">列表字段</td><td>批次号、批次编码、外呼类型、车型范围、线索时间范围、每日上限、分层策略、总部线索ID、培育线索编码、培育线索任务、状态、创建时间</td></tr>
+        <tr><td style="color:var(--gray-500)">搜索</td><td>批次号、外呼类型、状态</td></tr>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════ 8. 数据模型变更 ═══════════ -->
+<section id="s8">
+  <h2><span class="num">8</span> 数据模型变更</h2>
+
+  <h3>8.1 新增表</h3>
+
+  <div class="card">
+    <div class="card-header">📦 <code>outbound_campaign</code> — 外呼活动配置表</div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>BIGINT PK</td><td>主键</td></tr>
+            <tr><td><code>campaign_code</code></td><td>VARCHAR(64) UNIQUE</td><td>批次编码</td></tr>
+            <tr><td><code>campaign_name</code></td><td>VARCHAR(128)</td><td>批次号</td></tr>
+            <tr><td><code>outbound_type</code></td><td>VARCHAR(32)</td><td>外呼类型</td></tr>
+            <tr><td><code>model_codes</code></td><td>VARCHAR(128)</td><td>车型范围（逗号分隔）</td></tr>
+            <tr><td><code>lead_start_time</code></td><td>DATETIME</td><td>线索时间范围-开始</td></tr>
+            <tr><td><code>lead_end_time</code></td><td>DATETIME</td><td>线索时间范围-结束</td></tr>
+            <tr><td><code>daily_limit</code></td><td>INT DEFAULT 10000</td><td>每日推送上限</td></tr>
+            <tr><td><code>priority_strategy</code></td><td>VARCHAR(32)</td><td>STRICT / MIXED</td></tr>
+            <tr><td><code>sms_template_id</code></td><td>BIGINT</td><td>关联短信模板ID</td></tr>
+            <tr><td><code>sms_send_before_min</code></td><td>INT DEFAULT 30</td><td>短信提前发送分钟数</td></tr>
+            <tr><td><code>dedup_window_days</code></td><td>INT DEFAULT 30</td><td>去重时间窗口（天）</td></tr>
+            <tr><td><code>status</code></td><td>TINYINT DEFAULT 1</td><td>1启用 0禁用</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">📦 <code>outbound_push_log</code></div>
+      <div class="card-body" style="font-size:13px;line-height:1.8">
+        <strong>每日推送记录表</strong><br>
+        <code>campaign_id</code> 活动ID<br>
+        <code>push_date</code> 推送日期<br>
+        <code>model_code</code> 车型<br>
+        <code>priority_level</code> 层级 P1/P2/P3/P4<br>
+        <code>push_count</code> 推送数量<br>
+        <code>sms_count</code> 短信数量<br>
+        <code>sms_status</code> SUCCESS/FAIL/PARTIAL<br>
+        <code>push_status</code> 推送状态<br>
+        <code>push_time</code> 推送时间<br>
+        <code>fail_reason</code> 失败原因
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">📦 <code>outbound_push_detail</code></div>
+      <div class="card-body" style="font-size:13px;line-height:1.8">
+        <strong>推送明细表（客户级）</strong><br>
+        <code>push_log_id</code> 关联推送记录<br>
+        <code>lead_id</code> 线索ID<br>
+        <code>phone</code> 手机号（脱敏）<br>
+        <code>model_code</code> 车型<br>
+        <code>priority_level</code> 分层标签<br>
+        <code>sms_sent</code> 短信是否已发<br>
+        <code>call_result</code> 外呼结果（回写）<br>
+        <code>intent_level</code> 意向级别（回写）<br>
+        <code>yizhi_task_id</code> 使用的一知任务ID
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════ 附录 A ═══════════ -->
+<section id="sA">
+  <h2><span class="num" style="background:var(--warning)">A</span> 待运营确认问题清单</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:32px">#</th><th>问题</th><th style="width:70px">优先级</th><th>建议方案</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>每日推送超限后剩余线索处理规则？</strong></td>
+          <td><span class="tag tag-p0">🔴 P0</span></td>
+          <td>次日继续按优先级推送</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>黑名单用户是否需要过滤？过滤哪些类型？</strong></td>
+          <td><span class="tag tag-p0">🔴 P0</span></td>
+          <td>过滤外呼黑名单(type=1) + 全业务黑名单(type=4)</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>"30天"是自然天还是工作日？</td>
+          <td><span class="tag tag-p1q">🟡 P1</span></td>
+          <td>自然天（T-30 ~ T-1）</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>活动周期内已推送客户是否可重复推送？</td>
+          <td><span class="tag tag-p1q">🟡 P1</span></td>
+          <td>不重复推送</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>分层标签是否支持运营手动调整？</td>
+          <td><span class="tag tag-p1q">🟡 P1</span></td>
+          <td>以数据组为准，运营可覆盖</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>短信模板内容由谁提供？</td>
+          <td><span class="tag tag-p1q">🟡 P1</span></td>
+          <td>运营/市场部提供文案</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>外呼效果指标定义（接通率/意向率基准值）？</td>
+          <td><span class="tag tag-p2q">🟢 P2</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>推送失败（如一知宕机）重试策略？</td>
+          <td><span class="tag tag-p2q">🟢 P2</span></td>
+          <td>3次重试，间隔10分钟</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>是否需要手动推送按钮（紧急活动）？</td>
+          <td><span class="tag tag-p2q">🟢 P2</span></td>
+          <td>建议保留手动触发能力</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>是否需要每日推送前的运营审核环节？</td>
+          <td><span class="tag tag-p2q">🟢 P2</span></td>
+          <td>建议先自动执行，后续可加审批流</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /doc-body -->
+
+<div class="doc-footer">
+  <p>冷线索「三无忧」AI 外呼 — 产品方案 v1.0 &nbsp;|&nbsp; 2026/06/15 &nbsp;|&nbsp; DCC培育系统 · SaaS平台</p>
+</div>
+
+</body>
+</html>
