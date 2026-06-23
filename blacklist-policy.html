@@ -171,6 +171,41 @@
     .sidebar-item svg { width: 18px; height: 18px; opacity: 1; flex-shrink: 0; transition: stroke 0.15s; }
     .sidebar-item.active svg { stroke: #1890ff !important; }
     .sidebar-item:hover svg { stroke: #262626 !important; }
+    .sidebar-report-parent {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      font-family: inherit;
+      text-align: left;
+    }
+    .sidebar-report-parent .sidebar-chevron {
+      margin-left: auto;
+      color: #94a3b8;
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+    .sidebar-report-parent.expanded .sidebar-chevron { transform: rotate(90deg); }
+    .sidebar-submenu {
+      display: none;
+      margin: 0 0 4px 28px;
+      padding-left: 10px;
+      border-left: 1px solid #e2e8f0;
+    }
+    .sidebar-submenu.show { display: block; }
+    .sidebar-submenu-item {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #64748b;
+      font: inherit;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .sidebar-submenu-item:hover,
+    .sidebar-submenu-item.active { background: #eef6ff; color: #155eef; font-weight: 600; }
     .sidebar-item .badge {
       margin-left: auto;
       background: #ff4d4f; color: #fff;
@@ -478,9 +513,102 @@
     }
     #leadAssignmentConfigPage .page-hero,
     #leadDispatchConfigPage .page-hero,
-    #smsDispatchPolicyPage .page-hero {
+    #smsDispatchPolicyPage .page-hero,
+    #preCallReportPage .page-hero {
       display: flex;
     }
+    .precall-report-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .precall-report-panel {
+      padding: 18px;
+      border: 1px solid #e8eef7;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+    }
+    .precall-report-panel-title { margin-bottom: 16px; font-size: 15px; font-weight: 700; color: #1e293b; }
+    .precall-trend { display: flex; align-items: flex-end; gap: 16px; height: 178px; padding: 8px 6px 0; }
+    .precall-trend-item { display: flex; flex: 1; min-width: 36px; height: 100%; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; }
+    .precall-trend-bars { display: flex; align-items: flex-end; gap: 4px; height: 134px; }
+    .precall-trend-bar { width: 12px; min-height: 4px; border-radius: 4px 4px 0 0; background: #93c5fd; }
+    .precall-trend-bar.completed { background: #2563eb; }
+    .precall-trend-label { color: #64748b; font-size: 12px; white-space: nowrap; }
+    .precall-funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+    .precall-funnel-label { width: 64px; color: #475569; font-size: 13px; }
+    .precall-funnel-track { flex: 1; height: 10px; overflow: hidden; border-radius: 99px; background: #e8eef7; }
+    .precall-funnel-value { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #60a5fa, #2563eb); }
+    .precall-funnel-count { width: 72px; color: #334155; font-size: 13px; font-weight: 700; text-align: right; }
+    .precall-rate { color: #16a34a; font-weight: 700; }
+    .precall-tab-bar { display: flex; gap: 4px; overflow-x: auto; margin: 0 0 14px; padding: 4px; border: 1px solid #e8eef7; border-radius: 8px; background: #fff; }
+    .precall-tab { flex: 0 0 auto; padding: 8px 12px; border: 0; border-radius: 6px; background: transparent; color: #64748b; font: inherit; font-size: 13px; cursor: pointer; }
+    .precall-tab:hover { color: #155eef; background: #f8fbff; }
+    .precall-tab.active { color: #155eef; font-weight: 700; background: #eaf3ff; }
+    .precall-analysis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .precall-analysis-grid .card { margin-bottom: 0; }
+    .precall-status-badge { display: inline-block; padding: 2px 8px; border-radius: 99px; background: #eff6ff; color: #2563eb; font-size: 12px; font-weight: 600; }
+    .precall-status-badge.warn { background: #fff7ed; color: #c2410c; }
+    .precall-status-badge.danger { background: #fef2f2; color: #dc2626; }
+    .precall-alert { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-bottom: 1px solid #edf2f7; }
+    .precall-alert:last-child { border-bottom: 0; }
+    .precall-alert-level { flex: 0 0 auto; min-width: 30px; padding: 3px 6px; border-radius: 4px; color: #fff; background: #f59e0b; font-size: 11px; font-weight: 700; text-align: center; }
+    .precall-alert-level.p2 { background: #64748b; }
+    .precall-alert-title { color: #1e293b; font-weight: 700; line-height: 1.6; }
+    .precall-alert-desc { margin-top: 3px; color: #64748b; font-size: 12px; line-height: 1.6; }
+    .precall-alert-time { margin-left: auto; color: #94a3b8; font-size: 12px; white-space: nowrap; }
+    .predial-path { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .predial-path-node { padding: 7px 10px; border: 1px solid #dbeafe; border-radius: 6px; background: #f8fbff; color: #1e40af; font-size: 12px; font-weight: 600; }
+    .predial-path-node.manual { border-color: #fde68a; background: #fffbeb; color: #a16207; }
+    .predial-path-node.system { border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
+    .predial-path-arrow { color: #94a3b8; font-weight: 700; }
+    .predial-task-status { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 12px; font-weight: 700; background: #eff6ff; color: #2563eb; }
+    .predial-task-status.complete { background: #ecfdf5; color: #15803d; }
+    .predial-task-status.overdue { background: #fff7ed; color: #c2410c; }
+    .predial-call-result { color: #475569; font-size: 12px; }
+    .policy-reference-list { display: grid; gap: 8px; margin: 12px 16px 16px; }
+    .policy-reference-message { padding: 0 16px; }
+    .policy-reference-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 1px solid #dfe8f5; border-radius: 8px; background: #f8fafc; }
+    .policy-reference-item strong { display: block; color: #334155; font-size: 13px; }
+    .policy-reference-item span { display: block; margin-top: 3px; color: #64748b; font-size: 12px; }
+    .policy-reference-link { margin: 0; padding: 0; border: 0; background: transparent; color: #2563eb; font: inherit; font-weight: 700; cursor: pointer; }
+    .policy-reference-link:hover { color: #1d4ed8; text-decoration: underline; }
+    .allocation-policy-reference-id { margin-top: 5px; color: #64748b; font-size: 12px; font-weight: 500; }
+    .referenced-rule-highlight td { background: #eff6ff !important; }
+    .referenced-rule-highlight td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
+    .policy-reference-status { flex: 0 0 auto; margin: 0 !important; padding: 2px 8px; border-radius: 99px; background: #f1f5f9; color: #64748b !important; font-weight: 700; }
+    .policy-reference-status.active { background: #ecfdf5; color: #15803d !important; }
+    #preCallReportPage { width: 100%; max-width: none; margin: 0; }
+    .predial-report-shell { display: flex; flex-direction: column; gap: 14px; }
+    .predial-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 4px 2px 2px; }
+    .predial-page-title { color: #0f172a; font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+    .predial-page-subtitle { max-width: 760px; margin-top: 7px; color: #64748b; font-size: 13px; line-height: 1.7; }
+    .predial-filter-panel { display: grid; grid-template-columns: 1.35fr 0.8fr 1.1fr auto; align-items: end; gap: 18px; padding: 18px 20px; border: 1px solid #e5edf8; border-radius: 10px; background: #fff; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.035); }
+    .predial-filter-field { min-width: 0; }
+    .predial-filter-field label { display: block; margin-bottom: 6px; color: #64748b; font-size: 12px; font-weight: 700; }
+    .predial-filter-field .filter-select { width: 100%; height: 34px; }
+    .predial-date-range { display: grid; grid-template-columns: 1fr 14px 1fr; align-items: center; gap: 6px; }
+    .predial-date-range span { color: #94a3b8; font-size: 12px; text-align: center; }
+    .predial-filter-actions { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    #preCallReportPage .precall-tab-bar { margin: 0; padding: 3px; border-color: #e5edf8; box-shadow: 0 5px 14px rgba(15, 23, 42, 0.025); }
+    #preCallReportPage .precall-tab { padding: 9px 14px; }
+    #preCallReportPage .summary-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; overflow: visible; max-width: none; }
+    #preCallReportPage .summary-card { min-width: 0; max-width: none; padding: 18px 20px; border: 1px solid #e8eef7; box-shadow: none; }
+    #preCallReportPage .summary-label { margin-bottom: 11px; color: #64748b; font-size: 13px; }
+    #preCallReportPage .summary-value { color: #1e3a8a; font-size: 27px; line-height: 1; }
+    #preCallReportPage .precall-analysis-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 18px; }
+    #preCallReportPage .precall-report-panel,
+    #preCallReportPage .card { margin: 0; border-color: #e5edf8; border-radius: 10px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.035); }
+    #preCallReportPage .precall-report-panel { min-height: 236px; padding: 22px; }
+    #preCallReportPage .card-title { padding: 16px 18px 12px; }
+    #preCallReportPage .data-table th { background: #f8fafc; }
+    #preCallReportPage .data-table td { padding-top: 12px; padding-bottom: 12px; }
+    @media (max-width: 1180px) { .predial-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } .predial-filter-actions { grid-column: 1 / -1; } }
+    @media (max-width: 760px) { .predial-page-header { flex-direction: column; } .predial-filter-panel { grid-template-columns: 1fr; } .predial-filter-actions { grid-column: auto; flex-wrap: wrap; } #preCallReportPage .summary-strip { grid-template-columns: 1fr; } #preCallReportPage .precall-analysis-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1080px) { .precall-report-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1080px) { .precall-analysis-grid { grid-template-columns: 1fr; } }
     #leadDispatchConfigPage .data-table .action-btns {
       flex-wrap: nowrap;
       white-space: nowrap;
@@ -4681,9 +4809,15 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="#722ed1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     客户管理
   </div>
-  <div class="sidebar-item">
+  <div class="sidebar-report-group">
+    <button class="sidebar-item sidebar-report-parent expanded" type="button" onclick="toggleReportSubmenu(this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="#13c2c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     统计报表
+      <span class="sidebar-chevron">›</span>
+    </button>
+    <div class="sidebar-submenu show" id="reportSubmenu">
+      <button class="sidebar-submenu-item" type="button" onclick="showPreCallReport(this)">预外呼报表</button>
+    </div>
   </div>
 
   <div class="sidebar-section-label">系统</div>
@@ -5660,6 +5794,7 @@
     <div class="lead-page" id="leadAssignmentConfigPage"></div>
     <div class="lead-page" id="leadDispatchConfigPage"></div>
     <div class="lead-page" id="smsDispatchPolicyPage"></div>
+    <div class="lead-page" id="preCallReportPage"></div>
 
     <div class="design-stage" id="designStage">
       <div>
@@ -6308,6 +6443,30 @@ function setSidebarActive(el) {
   el.classList.add('active');
 }
 
+function toggleReportSubmenu(button) {
+  const submenu = document.getElementById('reportSubmenu');
+  if (!submenu) return;
+  const expanded = !submenu.classList.contains('show');
+  submenu.classList.toggle('show', expanded);
+  button.classList.toggle('expanded', expanded);
+}
+
+function showPreCallReport(button) {
+  const reportParent = button.closest('.sidebar-report-group')?.querySelector('.sidebar-report-parent');
+  if (reportParent) setSidebarActive(reportParent);
+  document.querySelectorAll('.sidebar-submenu-item').forEach(item => item.classList.remove('active'));
+  button.classList.add('active');
+  setStrategyConfigTabsVisible(false);
+  document.querySelector('nav[aria-label="培育策略三级菜单"]').classList.add('hidden');
+  document.querySelector('.leads-nav').classList.remove('show');
+  hideLeadPages();
+  setPolicyContentVisible(false);
+  document.getElementById('designStage').classList.remove('show');
+  setPageName('统计报表 / 预外呼报表');
+  document.getElementById('preCallReportPage').classList.add('show');
+  renderPreCallReportPage();
+}
+
 function setPageName(name) {
   document.querySelector('.topbar-left .page-name').textContent = name;
 }
@@ -6319,9 +6478,328 @@ function setPolicyContentVisible(visible) {
 }
 
 function hideLeadPages() {
-  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage'].forEach(id => {
+  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage', 'preCallReportPage'].forEach(id => {
     document.getElementById(id)?.classList.remove('show');
   });
+}
+
+const preCallReportRows = [
+  { date: '2026-06-16', region: '华南', source: '小程序', channel: '百度SEM', skillGroup: '技能组A', prepared: 1240, dialed: 1168, connected: 402, converted: 61, invalid: 42, ringTime: 21 },
+  { date: '2026-06-17', region: '华东', source: '官网留资', channel: '抖音信息流', skillGroup: '技能组B', prepared: 1186, dialed: 1119, connected: 386, converted: 54, invalid: 38, ringTime: 20 },
+  { date: '2026-06-18', region: '华北', source: '活动报名', channel: '自然流量', skillGroup: '技能组C', prepared: 1328, dialed: 1240, connected: 435, converted: 69, invalid: 47, ringTime: 22 },
+  { date: '2026-06-19', region: '华南', source: '小程序', channel: '百度SEM', skillGroup: '技能组A', prepared: 1416, dialed: 1326, connected: 462, converted: 73, invalid: 51, ringTime: 20 },
+  { date: '2026-06-20', region: '华东', source: '官网留资', channel: '抖音信息流', skillGroup: '技能组B', prepared: 1272, dialed: 1194, connected: 411, converted: 66, invalid: 44, ringTime: 19 },
+  { date: '2026-06-21', region: '华北', source: '活动报名', channel: '自然流量', skillGroup: '技能组C', prepared: 1198, dialed: 1127, connected: 377, converted: 52, invalid: 39, ringTime: 21 },
+  { date: '2026-06-22', region: '华南', source: '小程序', channel: '百度SEM', skillGroup: '技能组A', prepared: 1364, dialed: 1278, connected: 448, converted: 71, invalid: 46, ringTime: 20 }
+];
+
+let preCallReportFilters = { startDate: '2026-06-16', endDate: '2026-06-22', region: 'all', source: 'all', channel: 'all', skillGroup: 'all' };
+let preCallReportActiveTab = 'overview';
+
+function getFilteredPreCallReportRows() {
+  const { startDate, endDate, region, source, channel, skillGroup } = preCallReportFilters;
+  return preCallReportRows.filter(row => (
+    row.date >= startDate && row.date <= endDate &&
+    (region === 'all' || row.region === region) &&
+    (source === 'all' || row.source === source) &&
+    (channel === 'all' || row.channel === channel) &&
+    (skillGroup === 'all' || row.skillGroup === skillGroup)
+  ));
+}
+
+function formatPreCallRate(numerator, denominator) {
+  return denominator ? `${(numerator / denominator * 100).toFixed(1)}%` : '0.0%';
+}
+
+function renderPreCallReportPage() {
+  const page = document.getElementById('preCallReportPage');
+  if (!page) return;
+  renderPreDialerReportPage(page);
+  return;
+  const rows = getFilteredPreCallReportRows();
+  const total = rows.reduce((sum, row) => ({
+    prepared: sum.prepared + row.prepared,
+    dialed: sum.dialed + row.dialed,
+    connected: sum.connected + row.connected,
+    converted: sum.converted + row.converted,
+    invalid: sum.invalid + row.invalid,
+    ringTime: sum.ringTime + row.ringTime
+  }), { prepared: 0, dialed: 0, connected: 0, converted: 0, invalid: 0, ringTime: 0 });
+  const maxDialed = Math.max(...rows.map(row => row.dialed), 1);
+  const maxFunnel = Math.max(total.prepared, 1);
+  const trendHtml = rows.length ? rows.map(row => `
+    <div class="precall-trend-item" title="${row.date}：预呼${row.prepared}，已外呼${row.dialed}">
+      <div class="precall-trend-bars">
+        <span class="precall-trend-bar" style="height:${Math.round(row.prepared / maxDialed * 100)}%"></span>
+        <span class="precall-trend-bar completed" style="height:${Math.round(row.dialed / maxDialed * 100)}%"></span>
+      </div>
+      <span class="precall-trend-label">${row.date.slice(5)}</span>
+    </div>
+  `).join('') : '<div class="empty-state">当前筛选条件下暂无趋势数据</div>';
+  const funnelItems = [
+    ['预外呼线索', total.prepared],
+    ['已发起外呼', total.dialed],
+    ['成功接通', total.connected],
+    ['有效转化', total.converted]
+  ];
+  const funnelHtml = funnelItems.map(([label, count]) => `
+    <div class="precall-funnel-row">
+      <span class="precall-funnel-label">${label}</span>
+      <span class="precall-funnel-track"><span class="precall-funnel-value" style="width:${Math.max(3, Math.round(count / maxFunnel * 100))}%"></span></span>
+      <span class="precall-funnel-count">${count.toLocaleString()}</span>
+    </div>
+  `).join('');
+  page.innerHTML = `
+    <div class="page-hero">
+      <div>
+        <div class="page-title">预外呼效果报表</div>
+        <div class="page-subtitle">按预呼批次追踪外呼执行、接通与有效转化表现</div>
+      </div>
+      <button class="btn-secondary" type="button" onclick="exportPreCallReport()">导出报表</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">统计日期</span>
+      <input class="filter-select" id="preCallReportStartDate" type="date" value="${preCallReportFilters.startDate}" />
+      <span class="filter-label">至</span>
+      <input class="filter-select" id="preCallReportEndDate" type="date" value="${preCallReportFilters.endDate}" />
+      <span class="filter-label">区域</span>
+      <select class="filter-select" id="preCallReportRegion"><option value="all">全部区域</option>${['华南', '华东', '华北'].map(value => `<option value="${value}" ${preCallReportFilters.region === value ? 'selected' : ''}>${value}</option>`).join('')}</select>
+      <span class="filter-label">线索来源</span>
+      <select class="filter-select" id="preCallReportSource"><option value="all">全部来源</option>${['小程序', '官网留资', '活动报名'].map(value => `<option value="${value}" ${preCallReportFilters.source === value ? 'selected' : ''}>${value}</option>`).join('')}</select>
+      <span class="filter-label">SC渠道</span>
+      <select class="filter-select" id="preCallReportChannel"><option value="all">全部渠道</option>${['百度SEM', '抖音信息流', '自然流量'].map(value => `<option value="${value}" ${preCallReportFilters.channel === value ? 'selected' : ''}>${value}</option>`).join('')}</select>
+      <span class="filter-label">技能组</span>
+      <select class="filter-select" id="preCallReportSkillGroup"><option value="all">全部技能组</option>${['技能组A', '技能组B', '技能组C'].map(value => `<option value="${value}" ${preCallReportFilters.skillGroup === value ? 'selected' : ''}>${value}</option>`).join('')}</select>
+      <button class="btn-add" type="button" onclick="queryPreCallReport()">查询</button>
+      <button class="btn-secondary" type="button" onclick="resetPreCallReportFilters()">重置</button>
+      <button class="btn-secondary" type="button" onclick="refreshPreCallReport()">刷新</button>
+    </div>
+    <div class="summary-strip">
+      <div class="summary-card"><div class="summary-label">预外呼线索</div><div class="summary-value">${total.prepared.toLocaleString()}</div></div>
+      <div class="summary-card"><div class="summary-label">已发起外呼</div><div class="summary-value">${total.dialed.toLocaleString()}</div></div>
+      <div class="summary-card"><div class="summary-label">外呼完成率</div><div class="summary-value">${formatPreCallRate(total.dialed, total.prepared)}</div></div>
+      <div class="summary-card"><div class="summary-label">成功接通</div><div class="summary-value">${total.connected.toLocaleString()}</div></div>
+      <div class="summary-card"><div class="summary-label">接通率</div><div class="summary-value">${formatPreCallRate(total.connected, total.dialed)}</div></div>
+      <div class="summary-card"><div class="summary-label">有效转化</div><div class="summary-value">${total.converted.toLocaleString()}</div></div>
+      <div class="summary-card"><div class="summary-label">转化率</div><div class="summary-value">${formatPreCallRate(total.converted, total.connected)}</div></div>
+    </div>
+    <div class="precall-report-grid">
+      <section class="precall-report-panel"><div class="precall-report-panel-title">预呼与外呼趋势</div><div class="precall-trend">${trendHtml}</div><div class="form-hint">浅蓝：预外呼线索；深蓝：已发起外呼</div></section>
+      <section class="precall-report-panel"><div class="precall-report-panel-title">转化漏斗</div>${funnelHtml}<div class="form-hint">无效号码 ${total.invalid.toLocaleString()} 条；平均振铃时长 ${rows.length ? Math.round(total.ringTime / rows.length) : 0} 秒</div></section>
+    </div>
+    <div class="card">
+      <div class="card-title">预外呼效果明细 <span class="table-count">共 ${rows.length} 天</span></div>
+      <table class="data-table"><thead><tr><th>日期</th><th>区域</th><th>线索来源</th><th>预外呼线索</th><th>已发起外呼</th><th>完成率</th><th>成功接通</th><th>接通率</th><th>有效转化</th><th>转化率</th><th>无效号码</th><th>平均振铃</th></tr></thead>
+      <tbody>${rows.length ? rows.map(row => `<tr><td>${row.date}</td><td>${row.region}</td><td>${row.source}</td><td>${row.prepared.toLocaleString()}</td><td>${row.dialed.toLocaleString()}</td><td class="precall-rate">${formatPreCallRate(row.dialed, row.prepared)}</td><td>${row.connected.toLocaleString()}</td><td class="precall-rate">${formatPreCallRate(row.connected, row.dialed)}</td><td>${row.converted.toLocaleString()}</td><td class="precall-rate">${formatPreCallRate(row.converted, row.connected)}</td><td>${row.invalid.toLocaleString()}</td><td>${row.ringTime} 秒</td></tr>`).join('') : '<tr><td colspan="12" class="empty-state">当前筛选条件下暂无数据</td></tr>'}</tbody></table>
+    </div>
+  `;
+  renderPreCallReportTabContent(page, rows, total);
+}
+
+function switchPreCallReportTab(tab) {
+  preCallReportActiveTab = tab;
+  renderPreCallReportPage();
+}
+
+function renderPreCallReportTabContent(page, rows, total) {
+  const tabs = [
+    ['overview', '总览看板'], ['smartcode', 'SmartCode分析'], ['channel', 'SC渠道分析'], ['status', '线索状态分析'],
+    ['quality', '外呼质量分析'], ['redial', '话单重推分析'], ['skillgroup', '技能组分析'], ['alert', '告警监控']
+  ];
+  page.querySelector('.filter-row').insertAdjacentHTML('beforebegin', `<div class="precall-tab-bar">${tabs.map(([key, label]) => `<button class="precall-tab ${preCallReportActiveTab === key ? 'active' : ''}" type="button" onclick="switchPreCallReportTab('${key}')">${label}</button>`).join('')}</div>`);
+  if (preCallReportActiveTab === 'overview') return;
+  page.querySelectorAll('.summary-strip, .precall-report-grid, .card').forEach(element => element.remove());
+  page.insertAdjacentHTML('beforeend', renderPreCallReportAnalysis(preCallReportActiveTab, rows, total));
+}
+
+function renderPreCallReportAnalysis(tab, rows, total) {
+  const totalDialed = total.dialed || 1;
+  const totalConnected = total.connected || 1;
+  const table = (headers, body) => `<div class="card"><table class="data-table"><thead><tr>${headers.map(header => `<th>${header}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+  const dailyRows = rows.length ? rows : [];
+  if (tab === 'smartcode') {
+    return table(['SmartCode', 'SC渠道', '任务量', '已推送量', '推送率', '待回传', '接通量', '接通率', '到店量', '成交量'], dailyRows.map((row, index) => `<tr><td>SC-${['N6-0891', 'GZ-2026', 'SY-0234', 'XK-7712', 'QJ-5520', 'TL-4219', 'N6-1068'][index]}</td><td>${row.source}</td><td>${row.prepared}</td><td>${row.dialed}</td><td class="precall-rate">${formatPreCallRate(row.dialed, row.prepared)}</td><td>${Math.max(0, row.dialed - row.connected)}</td><td>${row.connected}</td><td class="precall-rate">${formatPreCallRate(row.connected, row.dialed)}</td><td>${Math.round(row.connected * 0.17)}</td><td>${row.converted}</td></tr>`).join('') || '<tr><td colspan="10" class="empty-state">当前筛选条件下暂无数据</td></tr>');
+  }
+  if (tab === 'channel') {
+    const channels = [['百度SEM', 0.91, 0.63, 0.18, 0.058], ['抖音信息流', 0.87, 0.59, 0.15, 0.046], ['自然流量', 0.94, 0.66, 0.21, 0.071]];
+    return `<div class="precall-analysis-grid"><section class="precall-report-panel"><div class="precall-report-panel-title">各渠道任务量与推送率</div>${channels.map(([name, push, connect]) => `<div class="precall-funnel-row"><span class="precall-funnel-label">${name}</span><span class="precall-funnel-track"><span class="precall-funnel-value" style="width:${push * 100}%"></span></span><span class="precall-funnel-count">接通 ${(connect * 100).toFixed(1)}%</span></div>`).join('')}</section><section class="precall-report-panel"><div class="precall-report-panel-title">渠道转化表现</div>${table(['渠道', '推送率', '待回传', '接通率', '到店率', '成交率'], channels.map(([name, push, connect, visit, deal]) => `<tr><td>${name}</td><td>${(push * 100).toFixed(1)}%</td><td>${(100 - push * 100).toFixed(1)}%</td><td class="precall-rate">${(connect * 100).toFixed(1)}%</td><td>${(visit * 100).toFixed(1)}%</td><td>${(deal * 100).toFixed(1)}%</td></tr>`).join(''))}</section></div>`;
+  }
+  if (tab === 'status') {
+    const statuses = [['待培育', 0.42, 0.88, 0.61, 0.17, 0.052], ['已预约', 0.18, 0.95, 0.74, 0.43, 0.168], ['休眠未购', 0.21, 0.79, 0.48, 0.08, 0.018], ['无效', 0.11, 0.23, 0.09, 0.00, 0.00], ['战败', 0.08, 0.51, 0.27, 0.03, 0.006]];
+    return table(['线索状态', '任务量', '占比', '已推送量', '推送率', '待回传', '接通率', '到店率', '成交率'], statuses.map(([name, share, push, connect, visit, deal]) => { const task = Math.round(total.prepared * share); return `<tr><td><span class="precall-status-badge ${name === '无效' ? 'danger' : name === '战败' ? 'warn' : ''}">${name}</span></td><td>${task}</td><td>${(share * 100).toFixed(1)}%</td><td>${Math.round(task * push)}</td><td>${(push * 100).toFixed(1)}%</td><td>${Math.round(task * push * 0.12)}</td><td class="precall-rate">${(connect * 100).toFixed(1)}%</td><td>${(visit * 100).toFixed(1)}%</td><td>${(deal * 100).toFixed(1)}%</td></tr>`; }).join(''));
+  }
+  if (tab === 'quality') {
+    return `<div class="summary-strip"><div class="summary-card"><div class="summary-label">外呼总次数</div><div class="summary-value">${(total.dialed + Math.round(total.dialed * 0.18)).toLocaleString()}</div></div><div class="summary-card"><div class="summary-label">接通次数</div><div class="summary-value">${total.connected.toLocaleString()}</div></div><div class="summary-card"><div class="summary-label">有效通话（≥30秒）</div><div class="summary-value">${Math.round(total.connected * 0.75).toLocaleString()}</div></div><div class="summary-card"><div class="summary-label">平均通话时长</div><div class="summary-value">56 秒</div></div><div class="summary-card"><div class="summary-label">最优拨打时段</div><div class="summary-value">15:00-17:00</div></div></div><div class="precall-analysis-grid">${table(['未接通原因', '次数', '占比', '建议'], [['无人接听', 1284, '42.1%', '安排二次触达'], ['关机/停机', 524, '17.2%', '延迟重推'], ['拒接', 396, '13.0%', '降低触达频次'], ['空号/错号', 287, '9.4%', '回流号码清洗']].map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join(''))}${table(['通话时长', '话单量', '占比', '有效性'], [['＜15秒', 628, '16.9%', '低'], ['15-30秒', 703, '18.9%', '低'], ['30-60秒', 1124, '30.2%', '有效'], ['60-120秒', 832, '22.3%', '有效'], ['＞120秒', 437, '11.7%', '高价值']].map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join(''))}</div>`;
+  }
+  if (tab === 'redial') {
+    return `<div class="summary-strip"><div class="summary-card"><div class="summary-label">重推触发总量</div><div class="summary-value">${Math.round(total.dialed * 0.21).toLocaleString()}</div></div><div class="summary-card"><div class="summary-label">重推后接通量</div><div class="summary-value">${Math.round(total.connected * 0.16).toLocaleString()}</div></div><div class="summary-card"><div class="summary-label">重推后到店</div><div class="summary-value">${Math.round(total.connected * 0.021).toLocaleString()}</div></div></div><div class="precall-analysis-grid">${table(['话单状态', '触发次数', '占比', '重推执行量', '重推后接通率'], [['无人接听', 1284, '45.5%', 904, '46.2%'], ['主动挂断', 906, '32.1%', '—', '—'], ['关机/停机', 279, '9.9%', 238, '38.7%'], ['空号/错号', 172, '6.1%', '—', '—'], ['拒接', 180, '6.4%', 205, '35.1%']].map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join(''))}${table(['推送次数', '任务数', '占比', '平均接通率', '平均到店率', '成交率'], [['1次（首次推送）', total.dialed, '79.3%', '62.1%', '17.5%', '8.3%'], ['2次', 2341, '14.7%', '44.8%', '13.2%', '6.1%'], ['3次', 689, '4.3%', '32.5%', '8.6%', '3.9%'], ['≥4次', 254, '1.6%', '21.3%', '4.2%', '1.8%']].map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join(''))}</div><div class="form-hint" style="margin-top:12px">重推次数达到 4 次及以上时，接通和到店效果明显下降；建议设置频次上限并关注骚扰风险。</div>`;
+  }
+  if (tab === 'skillgroup') {
+    return `${table(['技能组', '推送接收量', '执行率', '接通率', '平均通话时长', '到店率', '成交率', '积压量'], [['技能组A', 6842, '96.0%', '63.2%', '56 秒', '19.2%', '5.8%', 142], ['技能组B', 5891, '89.5%', '57.8%', '48 秒', '15.6%', '4.7%', 623], ['技能组C', 3158, '82.1%', '51.4%', '41 秒', '11.8%', '3.5%', 328]].map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join(''))}<div class="precall-analysis-grid">${table(['技能组', '待回传', '超24小时', '超48小时', '待回传率'], [['技能组A', 876, 238, 52, '12.8%'], ['技能组B', 892, 174, 35, '15.1%'], ['技能组C', 418, 0, 0, '13.2%']].map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join(''))}<section class="precall-report-panel"><div class="precall-report-panel-title">各技能组接通率趋势（近 7 日）</div>${[['技能组A', 63.2], ['技能组B', 57.8], ['技能组C', 51.4]].map(([name, rate]) => `<div class="precall-funnel-row"><span class="precall-funnel-label">${name}</span><span class="precall-funnel-track"><span class="precall-funnel-value" style="width:${rate}%"></span></span><span class="precall-funnel-count">${rate}%</span></div>`).join('')}</section></div>`;
+  }
+  return `<div class="card"><div class="card-title">告警监控</div>${[['P1', '技能组B积压量超阈值', '当前积压 623 条，超过阈值 500；建议扩充资源或暂缓新推送。', '今天 09:42'], ['P2', '接通率连续 3 日下滑', '近三日接通率持续下降，建议检查号码质量与拨打时段。', '今天 08:00'], ['P1', '话单回传率低于阈值', `当前待回传 ${Math.max(0, total.dialed - total.connected).toLocaleString()} 条，建议检查外呼平台接口状态。`, '今天 10:15']].map(([level, title, desc, time]) => `<div class="precall-alert"><span class="precall-alert-level ${level === 'P2' ? 'p2' : ''}">${level}</span><div><div class="precall-alert-title">${title}</div><div class="precall-alert-desc">${desc}</div></div><span class="precall-alert-time">${time}</span></div>`).join('')}</div>`;
+}
+
+function queryPreCallReport() {
+  const startDate = document.getElementById('preCallReportStartDate').value;
+  const endDate = document.getElementById('preCallReportEndDate').value;
+  if (!startDate || !endDate || startDate > endDate) {
+    showToast('请设置有效的统计日期范围', false);
+    return;
+  }
+  preCallReportFilters = {
+    startDate,
+    endDate,
+    region: document.getElementById('preCallReportRegion').value,
+    source: document.getElementById('preCallReportSource').value,
+    channel: document.getElementById('preCallReportChannel').value,
+    skillGroup: document.getElementById('preCallReportSkillGroup').value
+  };
+  renderPreCallReportPage();
+}
+
+function resetPreCallReportFilters() {
+  preCallReportFilters = { startDate: '2026-06-16', endDate: '2026-06-22', region: 'all', source: 'all', channel: 'all', skillGroup: 'all' };
+  renderPreCallReportPage();
+}
+
+function refreshPreCallReport() {
+  renderPreCallReportPage();
+  showToast('预外呼报表已刷新', true);
+}
+
+function exportPreCallReport() {
+  const rows = getFilteredPreCallReportRows();
+  if (!rows.length) {
+    showToast('当前筛选条件下暂无可导出数据', false);
+    return;
+  }
+  const csvRows = [
+    ['日期', '区域', '线索来源', '预外呼线索', '已发起外呼', '完成率', '成功接通', '接通率', '有效转化', '转化率', '无效号码', '平均振铃时长'].map(csvEscape).join(','),
+    ...rows.map(row => [row.date, row.region, row.source, row.prepared, row.dialed, formatPreCallRate(row.dialed, row.prepared), row.connected, formatPreCallRate(row.connected, row.dialed), row.converted, formatPreCallRate(row.converted, row.connected), row.invalid, `${row.ringTime}秒`].map(csvEscape).join(','))
+  ];
+  downloadCsvFile(`预外呼效果报表_${preCallReportFilters.startDate}_${preCallReportFilters.endDate}.csv`, csvRows, `已导出 ${rows.length} 天预外呼效果数据`);
+}
+
+const preDialerTasks = [
+  { id: 'PD-20260622-001', leadId: 'HQ-20260622-018', customer: '陈先生', mobile: '138****1298', series: 'N6', syncDate: '2026-06-22', syncTime: '09:08', syncStatus: '已同步', status: '处理中', lastCall: '2026-06-22 10:26', lastResult: '客户未接听', updatedAt: '2026-06-22 10:26', overdue: false },
+  { id: 'PD-20260622-002', leadId: 'HQ-20260622-024', customer: '林女士', mobile: '139****4821', series: '轩逸', syncDate: '2026-06-22', syncTime: '09:16', syncStatus: '已同步', status: '已完成', lastCall: '2026-06-22 14:12', lastResult: '已建联，预约到店', updatedAt: '2026-06-22 14:15', overdue: false },
+  { id: 'PD-20260622-003', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', status: '处理中', lastCall: '2026-06-22 15:40', lastResult: '关机', updatedAt: '2026-06-22 15:40', overdue: true },
+  { id: 'PD-20260621-004', leadId: 'HQ-20260621-095', customer: '王女士', mobile: '137****8096', series: '逍客', syncDate: '2026-06-21', syncTime: '11:25', syncStatus: '已同步', status: '已完成', lastCall: '2026-06-21 17:08', lastResult: '已建联，继续跟进', updatedAt: '2026-06-21 17:10', overdue: false },
+  { id: 'PD-20260621-005', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '已同步', status: '已完成', lastCall: '2026-06-22 09:34', lastResult: '三次未接听，结束处理', updatedAt: '2026-06-22 09:35', overdue: false },
+  { id: 'PD-20260620-006', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '15:10', syncStatus: '已同步', status: '处理中', lastCall: '2026-06-22 08:48', lastResult: '号码忙', updatedAt: '2026-06-22 08:48', overdue: true }
+];
+
+const preDialerCallRecords = [
+  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1001', attempt: 1, callTime: '2026-06-22 09:36', duration: '0秒', result: '客户未接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:37', connected: false },
+  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1007', attempt: 2, callTime: '2026-06-22 10:26', duration: '0秒', result: '客户未接听', handleStatus: '处理中', returnedAt: '2026-06-22 10:27', connected: false },
+  { taskId: 'PD-20260622-002', callId: 'CALL-0622-1014', attempt: 1, callTime: '2026-06-22 09:48', duration: '38秒', result: '已建联，预约到店', handleStatus: '已完成', returnedAt: '2026-06-22 09:49', connected: true },
+  { taskId: 'PD-20260622-002', callId: 'CALL-0622-1058', attempt: 2, callTime: '2026-06-22 14:12', duration: '56秒', result: '确认预约时间', handleStatus: '已完成', returnedAt: '2026-06-22 14:15', connected: true },
+  { taskId: 'PD-20260622-003', callId: 'CALL-0622-1023', attempt: 1, callTime: '2026-06-22 10:34', duration: '0秒', result: '关机', handleStatus: '处理中', returnedAt: '2026-06-22 10:35', connected: false },
+  { taskId: 'PD-20260622-003', callId: 'CALL-0622-1069', attempt: 2, callTime: '2026-06-22 15:40', duration: '0秒', result: '关机', handleStatus: '处理中', returnedAt: '2026-06-22 15:41', connected: false },
+  { taskId: 'PD-20260621-004', callId: 'CALL-0621-0888', attempt: 1, callTime: '2026-06-21 11:46', duration: '42秒', result: '已建联，继续跟进', handleStatus: '已完成', returnedAt: '2026-06-21 11:47', connected: true },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0621-0934', attempt: 1, callTime: '2026-06-21 14:10', duration: '0秒', result: '客户未接听', handleStatus: '处理中', returnedAt: '2026-06-21 14:11', connected: false },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0981', attempt: 2, callTime: '2026-06-22 09:02', duration: '0秒', result: '客户未接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:03', connected: false },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0994', attempt: 3, callTime: '2026-06-22 09:34', duration: '0秒', result: '三次未接听，结束处理', handleStatus: '已完成', returnedAt: '2026-06-22 09:35', connected: false },
+  { taskId: 'PD-20260620-006', callId: 'CALL-0620-0710', attempt: 1, callTime: '2026-06-20 15:31', duration: '0秒', result: '号码忙', handleStatus: '处理中', returnedAt: '2026-06-20 15:32', connected: false },
+  { taskId: 'PD-20260620-006', callId: 'CALL-0622-0967', attempt: 2, callTime: '2026-06-22 08:48', duration: '0秒', result: '号码忙', handleStatus: '处理中', returnedAt: '2026-06-22 08:49', connected: false }
+];
+
+let preDialerReportFilters = { startDate: '2026-06-20', endDate: '2026-06-22', status: 'all', keyword: '' };
+let preDialerReportActiveTab = 'overview';
+
+function getFilteredPreDialerTasks() {
+  const { startDate, endDate, status, keyword } = preDialerReportFilters;
+  const query = keyword.trim().toLowerCase();
+  return preDialerTasks.filter(task => task.syncDate >= startDate && task.syncDate <= endDate && (status === 'all' || task.status === status) && (!query || [task.id, task.leadId, task.customer, task.mobile].join(' ').toLowerCase().includes(query)));
+}
+
+function getTaskCallRecords(taskId) {
+  return preDialerCallRecords.filter(record => record.taskId === taskId);
+}
+
+function renderPreDialerReportPage(page) {
+  const tasks = getFilteredPreDialerTasks();
+  const taskIds = new Set(tasks.map(task => task.id));
+  const calls = preDialerCallRecords.filter(record => taskIds.has(record.taskId));
+  const processing = tasks.filter(task => task.status === '处理中');
+  const completed = tasks.filter(task => task.status === '已完成');
+  const connectedTaskCount = tasks.filter(task => getTaskCallRecords(task.id).some(record => record.connected)).length;
+  const multipleAttempts = tasks.filter(task => getTaskCallRecords(task.id).length >= 2).length;
+  const averageAttempts = tasks.length ? (calls.length / tasks.length).toFixed(1) : '0.0';
+  const tabItems = [['overview', '总览看板'], ['task', '同步任务监控'], ['call', '外呼话单监控'], ['timeliness', '处理时效'], ['alert', '异常监控']];
+  const rate = (value, base) => base ? `${(value / base * 100).toFixed(1)}%` : '0.0%';
+  page.innerHTML = `
+    <div class="predial-report-shell">
+      <header class="predial-page-header">
+        <div><div class="predial-page-title">预外呼任务监控</div><div class="predial-page-subtitle">以“同步到预外呼系统的任务”为主线，追踪每一次外呼话单回传、任务处理结果与超时风险。当前范围：${tasks.length} 个同步任务 / ${calls.length} 条话单。</div></div>
+        <button class="btn-secondary" type="button" onclick="exportPreDialerReport()">导出当前视图</button>
+      </header>
+      <section class="predial-filter-panel">
+        <div class="predial-filter-field"><label>同步日期</label><div class="predial-date-range"><input class="filter-select" id="preDialerStartDate" type="date" value="${preDialerReportFilters.startDate}"><span>至</span><input class="filter-select" id="preDialerEndDate" type="date" value="${preDialerReportFilters.endDate}"></div></div>
+        <div class="predial-filter-field"><label>任务处理状态</label><select class="filter-select" id="preDialerStatus"><option value="all">全部状态</option><option value="处理中" ${preDialerReportFilters.status === '处理中' ? 'selected' : ''}>处理中</option><option value="已完成" ${preDialerReportFilters.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
+        <div class="predial-filter-field"><label>任务 / 线索检索</label><input class="filter-select" id="preDialerKeyword" placeholder="任务ID、总部线索ID或客户" value="${escapeAttr(preDialerReportFilters.keyword)}"></div>
+        <div class="predial-filter-actions"><button class="btn-add" type="button" onclick="queryPreDialerReport()">查询</button><button class="btn-secondary" type="button" onclick="resetPreDialerReportFilters()">重置</button><button class="btn-secondary" type="button" onclick="refreshPreDialerReport()">刷新</button></div>
+      </section>
+      <nav class="precall-tab-bar" aria-label="预外呼报表页签">${tabItems.map(([key, label]) => `<button class="precall-tab ${preDialerReportActiveTab === key ? 'active' : ''}" type="button" onclick="switchPreDialerReportTab('${key}')">${label}</button>`).join('')}</nav>
+      ${renderPreDialerReportContent(preDialerReportActiveTab, { tasks, calls, processing, completed, connectedTaskCount, multipleAttempts, averageAttempts, rate })}
+    </div>
+  `;
+}
+
+function switchPreDialerReportTab(tab) {
+  preDialerReportActiveTab = tab;
+  renderPreCallReportPage();
+}
+
+function renderPreDialerReportContent(tab, data) {
+  const { tasks, calls, processing, completed, connectedTaskCount, multipleAttempts, averageAttempts, rate } = data;
+  const table = (headers, rows, emptyText = '当前筛选条件下暂无数据') => `<div class="card"><table class="data-table"><thead><tr>${headers.map(header => `<th>${header}</th>`).join('')}</tr></thead><tbody>${rows || `<tr><td colspan="${headers.length}" class="empty-state">${emptyText}</td></tr>`}</tbody></table></div>`;
+  if (tab === 'overview') {
+    const funnel = [['总部推送至DCC线索', tasks.length * 3], ['分配人工外呼', tasks.length * 2], ['同步预外呼系统', tasks.length], ['已回传外呼话单', calls.length], ['已完成处理任务', completed.length], ['建联成功任务', connectedTaskCount]];
+    return `<div class="summary-strip"><div class="summary-card"><div class="summary-label">同步预外呼任务</div><div class="summary-value">${tasks.length}</div></div><div class="summary-card"><div class="summary-label">处理中任务</div><div class="summary-value">${processing.length}</div></div><div class="summary-card"><div class="summary-label">已完成任务</div><div class="summary-value">${completed.length}</div></div><div class="summary-card"><div class="summary-label">回传外呼话单</div><div class="summary-value">${calls.length}</div></div><div class="summary-card"><div class="summary-label">多次外呼任务</div><div class="summary-value">${multipleAttempts}</div></div><div class="summary-card"><div class="summary-label">平均外呼次数</div><div class="summary-value">${averageAttempts}</div></div><div class="summary-card"><div class="summary-label">建联成功率（任务）</div><div class="summary-value">${rate(connectedTaskCount, tasks.length)}</div></div></div><div class="precall-analysis-grid"><section class="precall-report-panel"><div class="precall-report-panel-title">DCC 至预外呼系统路径</div><div class="predial-path"><span class="predial-path-node">总部推送线索</span><span class="predial-path-arrow">→</span><span class="predial-path-node">DCC 路径判断</span><span class="predial-path-arrow">→</span><span class="predial-path-node manual">人工外呼</span><span class="predial-path-arrow">→</span><span class="predial-path-node system">同步预外呼系统</span></div><div class="form-hint">AI 外呼与人工主动外呼不纳入本报表；本页仅追踪同步至预外呼系统的人工外呼任务。</div></section><section class="precall-report-panel"><div class="precall-report-panel-title">任务到话单处理漏斗</div>${funnel.map(([label, count], index) => `<div class="precall-funnel-row"><span class="precall-funnel-label">${label}</span><span class="precall-funnel-track"><span class="precall-funnel-value" style="width:${Math.max(8, Math.round(count / Math.max(funnel[0][1], 1) * 100))}%"></span></span><span class="precall-funnel-count">${count}</span></div>${index < funnel.length - 1 ? '' : ''}`).join('')}</section></div>${table(['同步日期', '预外呼任务', '处理中', '已完成', '回传话单', '建联成功任务'], [...new Set(tasks.map(task => task.syncDate))].sort().map(date => { const dateTasks = tasks.filter(task => task.syncDate === date); const dateCalls = calls.filter(call => dateTasks.some(task => task.id === call.taskId)); return `<tr><td>${date}</td><td>${dateTasks.length}</td><td>${dateTasks.filter(task => task.status === '处理中').length}</td><td>${dateTasks.filter(task => task.status === '已完成').length}</td><td>${dateCalls.length}</td><td>${dateTasks.filter(task => getTaskCallRecords(task.id).some(call => call.connected)).length}</td></tr>`; }).join(''))}`;
+  }
+  if (tab === 'task') {
+    return table(['预外呼任务ID', '总部线索ID', '客户', '意向车系', '同步时间', '外呼次数', '最后一次话单结果', '任务处理状态', '更新时间'], tasks.map(task => { const attempts = getTaskCallRecords(task.id).length; return `<tr><td>${task.id}</td><td>${task.leadId}</td><td>${task.customer}<div class="predial-call-result">${task.mobile}</div></td><td>${task.series}</td><td>${task.syncDate} ${task.syncTime}</td><td>${attempts}${attempts > 1 ? ' <span class="precall-status-badge warn">多次</span>' : ''}</td><td>${task.lastResult}</td><td><span class="predial-task-status ${task.status === '已完成' ? 'complete' : task.overdue ? 'overdue' : ''}">${task.overdue ? '处理中（超时）' : task.status}</span></td><td>${task.updatedAt}</td></tr>`; }).join(''));
+  }
+  if (tab === 'call') {
+    return table(['话单ID', '预外呼任务ID', '外呼次数', '外呼时间', '通话时长', '外呼结果', '预外呼处理状态', '回传时间'], calls.map(call => `<tr><td>${call.callId}</td><td>${call.taskId}</td><td>第 ${call.attempt} 次</td><td>${call.callTime}</td><td>${call.duration}</td><td>${call.result}</td><td><span class="predial-task-status ${call.handleStatus === '已完成' ? 'complete' : ''}">${call.handleStatus}</span></td><td>${call.returnedAt || '待回传'}</td></tr>`).join(''));
+  }
+  if (tab === 'timeliness') {
+    return `${table(['预外呼任务ID', '同步时间', '最新话单时间', '累计外呼次数', '当前状态', '超时判断', '建议动作'], tasks.map(task => { const attempts = getTaskCallRecords(task.id).length; const waiting = task.status === '处理中' ? (task.overdue ? '超过24小时' : '24小时内') : '—'; return `<tr><td>${task.id}</td><td>${task.syncDate} ${task.syncTime}</td><td>${task.lastCall}</td><td>${attempts}</td><td>${task.status}</td><td><span class="predial-task-status ${task.overdue ? 'overdue' : task.status === '已完成' ? 'complete' : ''}">${task.overdue ? waiting : task.status === '已完成' ? '已完成' : waiting}</span></td><td>${task.overdue ? '核查预外呼系统处理队列与重试策略' : task.status === '处理中' ? '持续监控下一次外呼及话单回传' : '无需处理'}</td></tr>`; }).join(''))}<div class="form-hint">时效监控以“同步至预外呼系统后尚未完成处理”为口径；同一任务的多次外呼话单不会重复计算任务数。</div>`;
+  }
+  const alerts = tasks.filter(task => task.overdue).map(task => ['P1', `任务 ${task.id} 处理超时`, `已同步 ${task.syncDate} ${task.syncTime}，目前 ${getTaskCallRecords(task.id).length} 次外呼均未完成处理，最后结果：${task.lastResult}。`, task.updatedAt]);
+  if (multipleAttempts) alerts.push(['P2', '多次外呼任务需关注', `${multipleAttempts} 个任务存在 2 次及以上外呼，建议按最后一次话单结果核查重试规则与触达频次。`, '刚刚']);
+  return `<div class="card"><div class="card-title">预外呼异常监控 <span class="table-count">${alerts.length} 条待关注</span></div>${alerts.length ? alerts.map(([level, title, desc, time]) => `<div class="precall-alert"><span class="precall-alert-level ${level === 'P2' ? 'p2' : ''}">${level}</span><div><div class="precall-alert-title">${title}</div><div class="precall-alert-desc">${desc}</div></div><span class="precall-alert-time">${time}</span></div>`).join('') : '<div class="empty-state">当前无待关注异常</div>'}</div>`;
+}
+
+function queryPreDialerReport() {
+  const startDate = document.getElementById('preDialerStartDate').value;
+  const endDate = document.getElementById('preDialerEndDate').value;
+  if (!startDate || !endDate || startDate > endDate) return showToast('请设置有效的同步日期范围', false);
+  preDialerReportFilters = { startDate, endDate, status: document.getElementById('preDialerStatus').value, keyword: document.getElementById('preDialerKeyword').value };
+  renderPreCallReportPage();
+}
+
+function resetPreDialerReportFilters() {
+  preDialerReportFilters = { startDate: '2026-06-20', endDate: '2026-06-22', status: 'all', keyword: '' };
+  renderPreCallReportPage();
+}
+
+function refreshPreDialerReport() {
+  renderPreCallReportPage();
+  showToast('预外呼任务与话单数据已刷新', true);
+}
+
+function exportPreDialerReport() {
+  const tasks = getFilteredPreDialerTasks();
+  const taskIds = new Set(tasks.map(task => task.id));
+  const calls = preDialerCallRecords.filter(call => taskIds.has(call.taskId));
+  const isCallTab = preDialerReportActiveTab === 'call';
+  const headers = isCallTab ? ['话单ID', '预外呼任务ID', '外呼次数', '外呼时间', '通话时长', '外呼结果', '处理状态', '回传时间'] : ['预外呼任务ID', '总部线索ID', '客户', '同步时间', '外呼次数', '最后结果', '处理状态', '更新时间'];
+  const rows = isCallTab ? calls.map(call => [call.callId, call.taskId, call.attempt, call.callTime, call.duration, call.result, call.handleStatus, call.returnedAt]) : tasks.map(task => [task.id, task.leadId, task.customer, `${task.syncDate} ${task.syncTime}`, getTaskCallRecords(task.id).length, task.lastResult, task.status, task.updatedAt]);
+  if (!rows.length) return showToast('当前筛选条件下暂无可导出数据', false);
+  downloadCsvFile(`预外呼${isCallTab ? '话单' : '任务'}监控_${preDialerReportFilters.startDate}_${preDialerReportFilters.endDate}.csv`, [headers.map(csvEscape).join(','), ...rows.map(row => row.map(csvEscape).join(','))], `已导出 ${rows.length} 条预外呼${isCallTab ? '话单' : '任务'}数据`);
 }
 
 function toggleWorryFreeConfig() {
@@ -7224,6 +7702,7 @@ function showDesignStage(name) {
 
 document.querySelectorAll('.sidebar .sidebar-item').forEach(item => {
   item.addEventListener('click', () => {
+    if (item.classList.contains('sidebar-report-parent')) return;
     const name = item.textContent.trim();
     setSidebarActive(item);
     if (name === '培育策略') {
@@ -7360,7 +7839,8 @@ const leadAssignmentDimensions = [
     rules: [
       { id: 'CAR-001', name: 'N6车系优先培育', keyValue: 'N6', seriesValues: ['N6'], callTypes: ['AI外呼'], condition: '意向车系=N6', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-10 10:18' },
       { id: 'CAR-002', name: '轩逸车系人工承接', keyValue: '轩逸', seriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-09 16:40' },
-      { id: 'CAR-003', name: '默认车系暂不分配', keyValue: '其他车系', seriesValues: ['其他车系'], callTypes: ['AI外呼'], condition: '意向车系=其他车系', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-06-01 09:12' }
+      { id: 'CAR-003', name: '默认车系暂不分配', keyValue: '其他车系', seriesValues: ['其他车系'], callTypes: ['AI外呼'], condition: '意向车系=其他车系', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-06-01 09:12' },
+      { id: 'CAR-004', name: 'N6车系华南比例分配', keyValue: 'N6', seriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '启用', updatedAt: '2026-06-14 09:36' }
     ]
   },
   {
@@ -7387,13 +7867,14 @@ const leadAssignmentDimensions = [
     fields: '大项目名、车系、是否按比例、分配比例策略、外呼类型、排序序号',
     rules: [
       { id: 'PROJ-001', name: '新能源专项项目', keyValue: '新能源专项', projectValues: ['新能源专项'], projectSeriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-003', callTypes: ['AI外呼', '人工外呼'], condition: '大项目名=新能源专项 / 意向车系=N6 / 分配比例策略=AI人工混合策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：AI人工混合策略', ratio: '比例策略', sort: 1, status: '启用', updatedAt: '2026-06-06 12:33' },
-      { id: 'PROJ-002', name: '置换活动项目', keyValue: '置换活动', projectValues: ['置换活动'], projectSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '大项目名=置换活动 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 3, status: '启用', updatedAt: '2026-06-03 09:30' }
+      { id: 'PROJ-002', name: '置换活动项目', keyValue: '置换活动', projectValues: ['置换活动'], projectSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '大项目名=置换活动 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 3, status: '启用', updatedAt: '2026-06-03 09:30' },
+      { id: 'PROJ-003', name: '华南新能源项目分配', keyValue: '新能源专项', projectValues: ['新能源专项'], projectSeriesValues: ['N6', '天籁'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '大项目名=新能源专项 / 意向车系=N6、天籁 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 2, status: '启用', updatedAt: '2026-06-12 15:48' }
     ]
   },
   {
     key: 'channel',
     name: '渠道编码',
-    ruleLabel: '渠道编辑分配规则',
+    ruleLabel: '渠道编码分配规则',
     owner: '渠道运营',
     source: 'samrtcode系统-R渠道、基础车系字典',
     desc: '按渠道编码和意向车系识别线索应进入的培育路径',
@@ -7401,7 +7882,8 @@ const leadAssignmentDimensions = [
     rules: [
       { id: 'CH-001', name: 'R1渠道新线索AI外呼', keyValue: 'R1', channelValues: ['R1'], channelSeriesValues: ['N6'], callTypes: ['AI外呼'], condition: '渠道编码=R1 / 意向车系=N6', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-10 15:20' },
       { id: 'CH-002', name: 'R2渠道人工跟进', keyValue: 'R2', channelValues: ['R2'], channelSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '渠道编码=R2 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-02 13:17' },
-      { id: 'CH-003', name: '未知渠道暂缓', keyValue: '未知渠道', channelValues: ['未知渠道'], channelSeriesValues: [], callTypes: ['AI外呼'], condition: '渠道编码=未知渠道', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-05-30 08:42' }
+      { id: 'CH-003', name: '未知渠道暂缓', keyValue: '未知渠道', channelValues: ['未知渠道'], channelSeriesValues: [], callTypes: ['AI外呼'], condition: '渠道编码=未知渠道', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-05-30 08:42' },
+      { id: 'CH-004', name: 'R1渠道华南比例分配', keyValue: 'R1', channelValues: ['R1'], channelSeriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '渠道编码=R1 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '启用', updatedAt: '2026-06-13 10:26' }
     ]
   },
   {
@@ -7415,7 +7897,8 @@ const leadAssignmentDimensions = [
     rules: [
       { id: 'LS-001', name: '待培育线索进入AI', keyValue: '待培育', leadStatusValues: ['待培育'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], callTypes: ['AI外呼'], condition: '线索状态=待培育 / 意向车系=N6', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-07 10:10' },
       { id: 'LS-002', name: '已预约线索人工跟进', keyValue: '已预约', leadStatusValues: ['已预约'], leadStatusReasonValues: [], leadStatusSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '线索状态=已预约 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-05 18:12' },
-      { id: 'LS-003', name: '无效状态暂不分配', keyValue: '无效', leadStatusValues: ['无效'], leadStatusReasonValues: ['明确空号'], leadStatusSeriesValues: [], callTypes: ['AI外呼'], condition: '线索状态=无效 / 异常原因=明确空号', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 8, status: '启用', updatedAt: '2026-06-01 16:55' }
+      { id: 'LS-003', name: '无效状态暂不分配', keyValue: '无效', leadStatusValues: ['无效'], leadStatusReasonValues: ['明确空号'], leadStatusSeriesValues: [], callTypes: ['AI外呼'], condition: '线索状态=无效 / 异常原因=明确空号', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 8, status: '启用', updatedAt: '2026-06-01 16:55' },
+      { id: 'LS-004', name: '待培育线索华南比例分配', keyValue: '待培育', leadStatusValues: ['待培育'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '线索状态=待培育 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '启用', updatedAt: '2026-06-14 11:18' }
     ]
   },
   {
@@ -7429,11 +7912,13 @@ const leadAssignmentDimensions = [
     rules: [
       { id: 'DLR-001', name: '有意向门店优先人工', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['待培育'], callTypes: ['人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 线索状态=待培育', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-10 09:08' },
       { id: 'DLR-002', name: '门店覆盖区AI跟进', keyValue: '深圳南山日产', dealerValues: ['深圳南山日产'], dealerSeriesValues: ['轩逸'], dealerLeadStatusValues: ['已预约'], callTypes: ['AI外呼'], condition: '意向门店=深圳南山日产 / 意向车系=轩逸 / 线索状态=已预约', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-04 11:48' },
-      { id: 'DLR-003', name: '门店缺失暂不分配', keyValue: '无意向门店', dealerValues: ['无意向门店'], dealerSeriesValues: [], dealerLeadStatusValues: [], callTypes: ['AI外呼'], condition: '意向门店=无意向门店', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-05-29 10:31' }
+      { id: 'DLR-003', name: '门店缺失暂不分配', keyValue: '无意向门店', dealerValues: ['无意向门店'], dealerSeriesValues: [], dealerLeadStatusValues: [], callTypes: ['AI外呼'], condition: '意向门店=无意向门店', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-05-29 10:31' },
+      { id: 'DLR-004', name: '广州门店华南比例分配', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['待培育'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '停用', updatedAt: '2026-06-11 17:18' }
     ]
   }
 ];
 let activeLeadAssignmentDimension = 'series';
+let highlightedLeadAssignmentRuleId = '';
 let leadAssignmentCurrentPage = 1;
 let leadAssignmentPageSize = 10;
 
@@ -7607,6 +8092,56 @@ function renderAllocationPolicyTemplatePage() {
   renderAllocationPolicyPanel('allocationPolicyTemplatePanel');
 }
 
+function getAllocationPolicyReferences(policyId) {
+  return leadAssignmentDimensions.flatMap(dimension => (
+    dimension.rules
+      .filter(rule => rule.allocationPolicyId === policyId)
+      .map(rule => ({
+        dimension: dimension.name,
+        dimensionKey: dimension.key,
+        ruleLabel: dimension.ruleLabel,
+        ruleId: rule.id,
+        ruleName: rule.name,
+        status: rule.status
+      }))
+  ));
+}
+
+function renderAllocationPolicyReferenceSummary(policyId) {
+  const references = getAllocationPolicyReferences(policyId);
+  if (!references.length) return '<span class="rule-muted">暂无引用</span>';
+  return `<span class="rule-text-main">${references.length} 条规则引用</span>`;
+}
+
+function renderAllocationPolicyReferenceDetails(policyId) {
+  const references = getAllocationPolicyReferences(policyId);
+  if (!references.length) return '<div class="rule-detail-value policy-reference-message">当前没有分配规则引用此策略，可安全删除。</div>';
+  return `
+    <div class="rule-detail-value policy-reference-message">当前被以下 ${references.length} 条分配规则引用；如需删除，请先在对应分配规则中改为其他比例策略或不按比例分配。</div>
+    <div class="policy-reference-list">
+      ${references.map(item => `<div class="policy-reference-item"><div><strong>${escapeHtml(item.ruleName)}</strong><span>${escapeHtml(item.ruleLabel)}ID · <button class="policy-reference-link" type="button" onclick="openAllocationPolicyReferenceRule('${escapeAttr(item.dimensionKey)}', '${escapeAttr(item.ruleId)}')">${escapeHtml(item.ruleId)}</button></span></div><span class="policy-reference-status ${item.status === '启用' ? 'active' : ''}">${escapeHtml(item.status)}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+function openAllocationPolicyReferenceRule(dimensionKey, ruleId) {
+  const dimension = leadAssignmentDimensions.find(item => item.key === dimensionKey);
+  const rule = dimension?.rules.find(item => item.id === ruleId);
+  if (!dimension || !rule) {
+    showToast('未找到对应的分配规则', false);
+    return;
+  }
+  activeLeadAssignmentDimension = dimensionKey;
+  const orderedRules = [...dimension.rules].sort((a, b) => Number(a.sort || 99) - Number(b.sort || 99));
+  const ruleIndex = orderedRules.findIndex(item => item.id === ruleId);
+  leadAssignmentCurrentPage = Math.floor(Math.max(ruleIndex, 0) / leadAssignmentPageSize) + 1;
+  highlightedLeadAssignmentRuleId = ruleId;
+  closeModal('leadDispatchRuleModal');
+  const assignmentNav = document.querySelector('.strategy-nav-item[data-page="lead-assignment"]');
+  if (assignmentNav) switchStrategyNav(assignmentNav);
+  document.querySelector(`[data-rule-id="${ruleId}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 function renderAllocationPolicySummary() {
   const enabledCount = leadAllocationPolicies.filter(item => item.status === '启用').length;
   const cityCount = leadAllocationPolicies.filter(item => item.byCity === '是').length;
@@ -7673,6 +8208,7 @@ function renderAllocationPolicyPanel(targetId = 'leadAssignmentDimensionPanel') 
             <th style="width:110px">是否按城市</th>
             <th>分配规则</th>
             <th>关联外呼类型</th>
+            <th style="min-width:200px">引用关系</th>
             <th style="width:80px">状态</th>
             <th style="width:190px">操作</th>
           </tr>
@@ -7739,6 +8275,7 @@ function renderAllocationPolicyTable() {
       <td>${policy.byCity || '否'}</td>
       <td>${renderClampedCellText(getAllocationPolicySummary(policy))}</td>
       <td>${renderClampedCellText(getAllocationPolicyCallTypes(policy).join('、'))}</td>
+      <td>${renderAllocationPolicyReferenceSummary(policy.id)}</td>
       <td>${policy.status === '启用' ? '<span class="col-status-on">● 启用</span>' : '<span class="col-status-off">● 停用</span>'}</td>
       <td>
         <div class="action-btns">
@@ -7748,7 +8285,7 @@ function renderAllocationPolicyTable() {
         </div>
       </td>
     </tr>
-  `).join('') : '<tr><td colspan="7"><div class="empty-state">暂无匹配的分配比例策略</div></td></tr>';
+  `).join('') : '<tr><td colspan="8"><div class="empty-state">暂无匹配的分配比例策略</div></td></tr>';
 }
 
 function filterAllocationPolicyTable() {
@@ -7822,7 +8359,7 @@ function renderLeadAssignmentDimensionTable() {
   if (prevButton) prevButton.disabled = leadAssignmentCurrentPage <= 1;
   if (nextButton) nextButton.disabled = leadAssignmentCurrentPage >= totalPages;
   body.innerHTML = pageRows.length ? pageRows.map((rule, index) => `
-    <tr>
+    <tr class="${rule.id === highlightedLeadAssignmentRuleId ? 'referenced-rule-highlight' : ''}" data-rule-id="${rule.id}">
       ${isCompactAssignmentDimension(dimension) ? `<td class="row-index">${start + index + 1}</td>` : `<td><strong>P${rule.sort}</strong></td>`}
       <td>
         <div class="rule-text-stack">
@@ -7912,6 +8449,10 @@ function renderAllocationPolicyDetail(policy) {
           <div class="rule-detail-field"><div class="rule-detail-label">关联外呼类型</div><div class="rule-detail-value">${detailValue(getAllocationPolicyCallTypes(policy).join('、'))}</div></div>
         </div>
       </div>
+      <div class="rule-detail-section">
+        <div class="rule-detail-title">引用关系</div>
+        ${renderAllocationPolicyReferenceDetails(policy.id)}
+      </div>
     </div>
   `;
 }
@@ -7930,7 +8471,7 @@ function renderAllocationPolicyForm(policy = {}) {
       <select class="form-input" id="allocationPolicyStatus">
         ${['启用', '停用'].map(status => `<option value="${status}" ${policy.status === status ? 'selected' : ''}>${status}</option>`).join('')}
       </select>
-      <div class="form-hint">只有启用状态的分配比例策略可被 SmartCode 分配规则引用。</div>
+      <div class="form-hint">只有启用状态的分配比例策略可被分配规则引用。</div>
     </div>
 
     <div class="section-heading">分配动作</div>
@@ -8046,11 +8587,9 @@ function saveAllocationPolicy() {
 function deleteAllocationPolicy(id) {
   const policy = getAllocationPolicyById(id);
   if (!policy) return;
-  const referencedCount = leadAssignmentDimensions.reduce((sum, dimension) => {
-    return sum + dimension.rules.filter(rule => rule.allocationPolicyId === id).length;
-  }, 0);
-  if (referencedCount) {
-    showToast(`该分配比例策略已被 ${referencedCount} 条分配规则引用，暂不能删除`, false);
+  const references = getAllocationPolicyReferences(id);
+  if (references.length) {
+    showToast(`策略「${policy.name}」被 ${references.length} 条分配规则引用，请先解除关联后再删除`, false);
     return;
   }
   if (!confirm(`确认删除分配比例策略「${policy.name}」？`)) return;
@@ -8507,6 +9046,11 @@ function renderCompactAssignmentRuleDetail(rule, dimension) {
   const useAllocationPolicy = mode === 'ratio' ? (rule.useAllocationPolicy || (rule.allocationPolicyId ? '是' : '否')) : '否';
   const allocationPolicy = mode === 'ratio' ? getAllocationPolicyById(rule.allocationPolicyId) : null;
   const isRatio = mode === 'ratio';
+  const allocationPolicyDisplay = useAllocationPolicy !== '是'
+    ? '未接入'
+    : allocationPolicy
+      ? `<div>${escapeHtml(allocationPolicy.name)}</div><div class="allocation-policy-reference-id">策略ID：${escapeHtml(allocationPolicy.id)}</div>`
+      : '比例策略已停用/不存在';
   return `
     <div class="rule-detail-layout">
       <div class="rule-detail-section">
@@ -8532,7 +9076,7 @@ function renderCompactAssignmentRuleDetail(rule, dimension) {
           <div class="rule-detail-field"><div class="rule-detail-label">是否按比例</div><div class="rule-detail-value">${isRatio ? '是' : '否'}</div></div>
           ${isRatio
             ? `
-              <div class="rule-detail-field"><div class="rule-detail-label">分配比例策略</div><div class="rule-detail-value">${useAllocationPolicy === '是' ? detailValue(allocationPolicy?.name || '比例策略已停用/不存在') : '未接入'}</div></div>
+              <div class="rule-detail-field"><div class="rule-detail-label">分配比例策略</div><div class="rule-detail-value">${allocationPolicyDisplay}</div></div>
               <div class="rule-detail-field wide"><div class="rule-detail-label">模板规则</div><div class="rule-detail-value">${detailValue(allocationPolicy ? getAllocationPolicySummary(allocationPolicy) : rule.action)}</div></div>
             `
             : `
@@ -9027,17 +9571,6 @@ function switchSeriesAllocationMode(triggerOrMode, maybeMode) {
 
 function addSeriesAllocationRow() {
   document.getElementById('seriesAllocationRows')?.insertAdjacentHTML('beforeend', renderSeriesAllocationRow({ channel: 'AI外呼', percent: '' }));
-}
-
-function switchCityAllocationMode(button, mode) {
-  const row = button.closest('.city-allocation-row');
-  if (!row) return;
-  row.querySelectorAll('.city-mode-toggle .duration-tab').forEach(tab => tab.classList.remove('active'));
-  button.classList.add('active');
-  const single = row.querySelector('.city-single-allocation');
-  const ratio = row.querySelector('.city-ratio-allocation');
-  if (single) single.style.display = mode === 'single' ? '' : 'none';
-  if (ratio) ratio.style.display = mode === 'ratio' ? '' : 'none';
 }
 
 function addSmartCodeCityAllocationRow() {
