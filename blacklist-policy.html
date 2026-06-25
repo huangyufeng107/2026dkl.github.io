@@ -612,8 +612,11 @@
     #preCallReportPage .predial-overview-card .metric-value { margin-top: 7px; color: #0f172a; font-size: 24px; font-weight: 800; line-height: 1.1; }
     #preCallReportPage .predial-overview-card .metric-sub { min-height: 16px; margin-top: 7px; color: #94a3b8; font-size: 12px; }
     #preCallReportPage .predial-overview-card .metric-sub strong { color: #475569; font-weight: 800; }
-    #preCallReportPage .predial-overview-card:not(.metric-alert) { border-top-color: #cbd5e1 !important; }
-    #preCallReportPage .predial-overview-card.metric-alert { border-color: #e8eef7; border-top-color: #ea580c; background: #fff; }
+    #preCallReportPage .predial-overview-card.metric-flow { border-top-color: #2563eb; }
+    #preCallReportPage .predial-overview-card.metric-quality { border-top-color: #16a34a; }
+    #preCallReportPage .predial-overview-card.metric-risk { border-top-color: #ea580c; }
+    #preCallReportPage .predial-overview-card.metric-alert { border-color: #fca5a5; border-top-color: #dc2626; background: #fef2f2; }
+    #preCallReportPage .predial-overview-card.metric-alert .metric-value { color: #991b1b; }
     @media (max-width: 1080px) { #preCallReportPage .predial-overview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 680px) { #preCallReportPage .predial-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; } }
     #preCallReportPage .precall-analysis-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 18px; }
@@ -6775,6 +6778,11 @@ function getPreDialerMetrics(tasks, calls) {
   const lineUncalledCalls = calls.filter(call => call.result === '线路未呼');
   const assignedAgentsTotal = [...new Set(tasks.map(task => task.id))].length;
   const assignedAgentsAnswered = calls.filter(call => call.connected).length;
+  const firstCalls = calls.filter(call => call.attempt === 1);
+  const firstCallConnected = firstCalls.filter(call => call.connected);
+  const nonFirstCalls = calls.filter(call => call.attempt > 1);
+  const nonFirstCallConnected = nonFirstCalls.filter(call => call.connected);
+  const totalDurationSeconds = connectedCalls.reduce((sum, call) => sum + (Number.parseInt(call.duration, 10) || 0), 0);
   const retriggerCalls = calls.filter(call => call.retriggerRequired);
   const nevDispatchedTasks = tasks.filter(task => task.nevDispatched);
   return {
@@ -6793,16 +6801,25 @@ function getPreDialerMetrics(tasks, calls) {
     lineUncalledCalls: lineUncalledCalls.length,
     assignedAgentsTotal: assignedAgentsTotal,
     assignedAgentsAnswered: assignedAgentsAnswered,
+    firstCallTotal: firstCalls.length,
+    firstCallConnected: firstCallConnected.length,
+    firstCallRate: firstCalls.length ? `${(firstCallConnected.length / firstCalls.length * 100).toFixed(1)}%` : '0.0%',
+    nonFirstCallTotal: nonFirstCalls.length,
+    nonFirstCallConnected: nonFirstCallConnected.length,
+    nonFirstCallRate: nonFirstCalls.length ? `${(nonFirstCallConnected.length / nonFirstCalls.length * 100).toFixed(1)}%` : '0.0%',
+    totalDurationSeconds: totalDurationSeconds,
+    avgDurationPerAgent: assignedAgentsTotal ? `${Math.round(totalDurationSeconds / assignedAgentsTotal)}秒` : '0秒',
     retriggerCalls: retriggerCalls.length,
     nevDispatchedTasks: nevDispatchedTasks.length
   };
 }
 
-function renderPreDialerMetricCard(name, value, subtitle) {
-  const attentionMetrics = ['同步失败量', '话单超时未回传', '录音丢失量'];
-  const needsAttention = attentionMetrics.includes(name) && Number(value) > 0;
-  const alertClass = needsAttention ? ' metric-alert' : '';
-  return `<button class="predial-overview-card predial-metric-card${alertClass}" type="button" onclick="showPreDialerMetricInfo('${name}')"><div class="metric-label">${name}</div><div class="metric-value">${value}</div><div class="metric-sub">${subtitle}</div></button>`;
+function renderPreDialerMetricCard(name, value, subtitle, category) {
+  const alertMetrics = ['同步失败量', '话单超时未回传', '录音丢失量', '线路拒呼', '线路未呼'];
+  const needsAlert = alertMetrics.includes(name) && Number(value) > 0;
+  const catClass = category ? ` metric-${category}` : '';
+  const alertClass = needsAlert ? ' metric-alert' : '';
+  return `<button class="predial-overview-card predial-metric-card${catClass}${alertClass}" type="button" onclick="showPreDialerMetricInfo('${name}')"><div class="metric-label">${name}</div><div class="metric-value">${value}</div><div class="metric-sub">${subtitle}</div></button>`;
 }
 
 function formatPreDialerDisplayDate(value) {
@@ -6890,28 +6907,32 @@ function renderPreDialerReportPage(page) {
           <section class="predial-overview-group">
             <div class="predial-overview-group-title">任务流转与坐席分配<span>关注任务同步、重推和后续线索承接</span></div>
             <div class="predial-overview-grid">
-              ${renderPreDialerMetricCard('预外呼任务总量', metrics.totalTasks, '需推送至预外呼')}
-              ${renderPreDialerMetricCard('已推送任务量', metrics.pushedTasks, `推送率 <strong>${rate(metrics.pushedTasks, metrics.totalTasks)}</strong>`)}
-              ${renderPreDialerMetricCard('同步失败量', metrics.syncFailedTasks, '任务同步异常')}
-              ${renderPreDialerMetricCard('重推触发量', metrics.retriggerCalls, '已回传且命中重推规则')}
-              ${renderPreDialerMetricCard('已分配坐席（总数）', metrics.assignedAgentsTotal, '坐席接听去重')}
-              ${renderPreDialerMetricCard('已分配坐席（通话状态为坐席接听）', metrics.assignedAgentsAnswered, '坐席接听去重')}
-              ${renderPreDialerMetricCard('线索下发量', metrics.nevDispatchedTasks, '已下发至 NEV线索中台')}
+              ${renderPreDialerMetricCard('预外呼任务总量', metrics.totalTasks, '需推送至预外呼', 'flow')}
+              ${renderPreDialerMetricCard('已推送任务量', metrics.pushedTasks, `推送率 <strong>${rate(metrics.pushedTasks, metrics.totalTasks)}</strong>`, 'flow')}
+              ${renderPreDialerMetricCard('同步失败量', metrics.syncFailedTasks, '任务同步异常', 'flow')}
+              ${renderPreDialerMetricCard('重推触发量', metrics.retriggerCalls, '已回传且命中重推规则', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（总数）', metrics.assignedAgentsTotal, '坐席接听去重', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（通话状态为坐席接听）', metrics.assignedAgentsAnswered, '坐席接听去重', 'flow')}
+              ${renderPreDialerMetricCard('线索下发量', metrics.nevDispatchedTasks, '已下发至 NEV线索中台', 'flow')}
             </div>
           </section>
           <section class="predial-overview-group">
             <div class="predial-overview-group-title">外呼与回传监控<span>关注预外呼处理进度、话单回传及通话质量</span></div>
             <div class="predial-overview-grid">
-              ${renderPreDialerMetricCard('任务处理中', metrics.processingTasks, `占比 ${rate(metrics.processingTasks, metrics.totalTasks)}`)}
-              ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.totalTasks)}</strong>`)}
-              ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, `占比 <strong>${rate(metrics.returnedCalls, calls.length)}</strong>`)}
-              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, `占比 ${rate(metrics.pendingCalls, calls.length)}`)}
-              ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传')}
-              ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音')}
-              ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, calls.length)}</strong>`)}
-              ${renderPreDialerMetricCard('有效通话量', metrics.effectiveCalls, `有效通话率 <strong>${rate(metrics.effectiveCalls, metrics.connectedCalls)}</strong>`)}
-              ${renderPreDialerMetricCard('线路拒呼', metrics.lineRejectedCalls, '按话单统计')}
-              ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计')}
+              ${renderPreDialerMetricCard('任务处理中', metrics.processingTasks, `占比 ${rate(metrics.processingTasks, metrics.totalTasks)}`, 'quality')}
+              ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.totalTasks)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, '不按任务去重', 'quality')}
+              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '不按任务去重', 'quality')}
+              ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传', 'risk')}
+              ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音', 'risk')}
+              ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, calls.length)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('有效通话量', metrics.effectiveCalls, `有效通话率 <strong>${rate(metrics.effectiveCalls, metrics.connectedCalls)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('线路拒呼', metrics.lineRejectedCalls, '按话单统计', 'risk')}
+              ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
+              ${renderPreDialerMetricCard('首呼接通率', metrics.firstCallRate, `首次接通 ${metrics.firstCallConnected} / ${metrics.firstCallTotal}`, 'quality')}
+              ${renderPreDialerMetricCard('2~5呼接通率', metrics.nonFirstCallRate, `非首次接通 ${metrics.nonFirstCallConnected} / ${metrics.nonFirstCallTotal}`, 'quality')}
+              ${renderPreDialerMetricCard('呼叫接通时长', `${metrics.totalDurationSeconds}秒`, '接通通话总时长', 'quality')}
+              ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 坐席总人数', 'quality')}
             </div>
           </section>
         </div>
@@ -6938,7 +6959,7 @@ function renderPreDialerReportPage(page) {
       `; })() : preDialerListActiveTab === 'batch' ? (() => { const batchTotalPages = Math.max(1, Math.ceil(dates.length / preDialerBatchPageSize)); const batchClampedPage = Math.min(preDialerBatchCurrentPage, batchTotalPages); const batchStart = (batchClampedPage - 1) * preDialerBatchPageSize; const pageDates = dates.slice(batchStart, batchStart + preDialerBatchPageSize); return `
       <section class="card">
         <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">同步批次汇总</div><span class="table-count">按同步日期统计，与概览指标口径一致</span></div></div>
-        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务总量</th><th>已推送任务量</th><th>同步失败量</th><th>任务处理中</th><th>任务已处理</th><th>话单已回传</th><th>话单待回传</th><th>话单超时未回传</th><th>录音丢失量</th><th>外呼接通量</th><th>有效通话量</th><th>线路拒呼</th><th>线路未呼</th><th>已分配坐席（总数）</th><th>已分配坐席（坐席接听）</th><th>重推触发量</th><th>线索下发量</th></tr></thead><tbody>${pageDates.length ? pageDates.map(date => { const dateTasks = tasks.filter(task => task.syncDate === date); const ids = new Set(dateTasks.map(task => task.id)); const dateCalls = calls.filter(call => ids.has(call.taskId)); const dateMetrics = getPreDialerMetrics(dateTasks, dateCalls); return `<tr><td>${date}</td><td>${dateMetrics.totalTasks}</td><td>${dateMetrics.pushedTasks}</td><td>${dateMetrics.syncFailedTasks}</td><td>${dateMetrics.processingTasks}</td><td>${dateMetrics.handledTasks}</td><td>${dateMetrics.returnedCalls}</td><td>${dateMetrics.pendingCalls}</td><td>${dateMetrics.timeoutPendingCalls}</td><td>${dateMetrics.recordingMissingCalls}</td><td>${dateMetrics.connectedCalls}</td><td>${dateMetrics.effectiveCalls}</td><td>${dateMetrics.lineRejectedCalls}</td><td>${dateMetrics.lineUncalledCalls}</td><td>${dateMetrics.assignedAgentsTotal}</td><td>${dateMetrics.assignedAgentsAnswered}</td><td>${dateMetrics.retriggerCalls}</td><td>${dateMetrics.nevDispatchedTasks}</td></tr>`; }).join('') : '<tr><td colspan="18"><div class="empty-state">暂无同步批次数据</div></td></tr>'}</tbody></table></div>
+        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务总量</th><th>已推送任务量</th><th>同步失败量</th><th>任务处理中</th><th>任务已处理</th><th>话单已回传</th><th>话单待回传</th><th>话单超时未回传</th><th>录音丢失量</th><th>外呼接通量</th><th>有效通话量</th><th>线路拒呼</th><th>线路未呼</th><th>首呼接通率</th><th>2~5呼接通率</th><th>呼叫接通时长</th><th>每通呼叫接通时长</th><th>已分配坐席（总数）</th><th>已分配坐席（坐席接听）</th><th>重推触发量</th><th>线索下发量</th></tr></thead><tbody>${pageDates.length ? pageDates.map(date => { const dateTasks = tasks.filter(task => task.syncDate === date); const ids = new Set(dateTasks.map(task => task.id)); const dateCalls = calls.filter(call => ids.has(call.taskId)); const dateMetrics = getPreDialerMetrics(dateTasks, dateCalls); return `<tr><td>${date}</td><td>${dateMetrics.totalTasks}</td><td>${dateMetrics.pushedTasks}</td><td>${dateMetrics.syncFailedTasks}</td><td>${dateMetrics.processingTasks}</td><td>${dateMetrics.handledTasks}</td><td>${dateMetrics.returnedCalls}</td><td>${dateMetrics.pendingCalls}</td><td>${dateMetrics.timeoutPendingCalls}</td><td>${dateMetrics.recordingMissingCalls}</td><td>${dateMetrics.connectedCalls}</td><td>${dateMetrics.effectiveCalls}</td><td>${dateMetrics.lineRejectedCalls}</td><td>${dateMetrics.lineUncalledCalls}</td><td>${dateMetrics.firstCallRate}</td><td>${dateMetrics.nonFirstCallRate}</td><td>${dateMetrics.totalDurationSeconds}秒</td><td>${dateMetrics.avgDurationPerAgent}</td><td>${dateMetrics.assignedAgentsTotal}</td><td>${dateMetrics.assignedAgentsAnswered}</td><td>${dateMetrics.retriggerCalls}</td><td>${dateMetrics.nevDispatchedTasks}</td></tr>`; }).join('') : '<tr><td colspan="22"><div class="empty-state">暂无同步批次数据</div></td></tr>'}</tbody></table></div>
         <div class="pagination">
           <span>共 ${dates.length} 条记录，当前第 ${batchClampedPage} / ${batchTotalPages} 页</span>
           <div class="pagination-btns">
@@ -7171,20 +7192,24 @@ function changePreDialerRetriggerPage(dir) {
 function showPreDialerMetricInfo(metric) {
   const descriptions = {
     '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的去重任务总数。',
-    '已推送任务量': 'DCC培育系统已向预外呼系统发起推送的任务数，不含仍处于待同步/同步失败状态的任务',
+    '已推送任务量': 'DCC培育系统已向预外呼系统发起推送的任务数，不含仍处于待同步/同步失败状态的任务。推送率 = 已推送任务量 ÷ 预外呼任务总量 × 100%',
     '同步失败量': 'DCC培育系统向预外呼系统同步失败的去重任务数，需要结合任务异常原因进行重试或人工处理。',
-    '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。',
-    '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。',
+    '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 预外呼任务总量 × 100%',
+    '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。处理率 = 任务已处理 ÷ 预外呼任务总量 × 100%',
     '话单已回传': '预外呼系统已将外呼结果成功回传至 DCC培育系统的话单数量，按话单统计，不按任务去重。',
     '话单待回传': '已成功推送并被预外呼系统，但尚未收到预外呼系统回传首次话单的去重任务数',
     '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传首次话单的去重任务数，需要核查接口或补偿任务',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
-    '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通会分别计入',
-    '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数',
+    '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通会分别计入。接通率 = 外呼接通量 ÷ 话单总数 × 100%',
+    '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
     '线路未呼': '外呼结果为线路未呼的话单数量，表示预外呼系统已接收任务但线路侧未实际发起呼叫，按话单统计，不按任务去重。',
     '已分配坐席（总数）': '预外呼系统已将外呼结果成功回传，已分配至坐席的去重任务总数',
     '已分配坐席（通话状态为坐席接听）': '预外呼任务人工接管后，已分配至坐席的去重任务总数',
+    '首呼接通率': '已成功推送并被预外呼系统，且回传首次话单结果的外呼次数。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
+    '2~5呼接通率': '已成功推送并被预外呼系统，且回传非首次话单结果的外呼次数。2~5呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
+    '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
+    '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 坐席总人数',
     '线索下发量': '预外呼任务人工接管后，更新线索状态为下发门店的任务总数',
     '同步成功率': 'DCC 成功被预外呼系统接收的任务数 ÷ DCC 发起同步的任务数。用于监控两系统接口接入是否稳定。',
     '首呼及时率': '在同步后 30 分钟内完成首次外呼的任务数 ÷ 已同步任务数。用于衡量预外呼系统的响应效率。',
