@@ -547,7 +547,7 @@
     .referenced-rule-highlight td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
     .policy-reference-status { flex: 0 0 auto; margin: 0 !important; padding: 2px 8px; border-radius: 99px; background: #f1f5f9; color: #64748b !important; font-weight: 700; }
     .policy-reference-status.active { background: #ecfdf5; color: #15803d !important; }
-    #preCallReportPage { width: 100%; max-width: none; margin: 0; }
+    #preCallReportPage { width: 100%; max-width: none; margin: 0; overflow-x: hidden; }
     .predial-report-shell { display: flex; flex-direction: column; gap: 14px; }
     .predial-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 4px 2px 2px; }
     .predial-page-title { color: #0f172a; font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
@@ -564,7 +564,7 @@
     #preCallReportPage .page-hero { order: 1; }
     #preCallReportPage .precall-tab-bar { order: 2; }
     #preCallReportPage .predial-filter-panel { order: 3; }
-    #preCallReportPage .predial-content-slot { display: flex; flex-direction: column; gap: 14px; order: 4; }
+    #preCallReportPage .predial-content-slot { display: flex; flex-direction: column; gap: 14px; order: 4; min-width: 0; max-width: 100%; }
     #preCallReportPage .precall-analysis-grid { display: none; }
     #preCallReportPage .summary-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; overflow: visible; max-width: none; }
     #preCallReportPage .summary-card { min-width: 0; max-width: none; padding: 18px 20px; border: 1px solid #e8eef7; box-shadow: none; }
@@ -597,35 +597,61 @@
     #preCallReportPage .predial-attention-filter { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: -4px; padding: 8px 10px; border-radius: 6px; background: #fff7ed; color: #9a3412; font-size: 12px; }
     #preCallReportPage .predial-attention-filter button { padding: 0; border: 0; background: transparent; color: #9a3412; font: inherit; font-weight: 800; cursor: pointer; text-decoration: underline; }
     #preCallReportPage .predial-overview-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
-    #preCallReportPage .predial-overview-card { min-width: 0; padding: 15px 16px 13px; border: 1px solid #e8eef7; border-top: 3px solid #2563eb; border-radius: 8px; background: #fff; text-align: left; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.025); }
-    #preCallReportPage .predial-overview-card:nth-child(2) { border-top-color: #16a34a; }
-    #preCallReportPage .predial-overview-card:nth-child(3) { border-top-color: #dc2626; }
-    #preCallReportPage .predial-overview-card:nth-child(4) { border-top-color: #16a34a; }
-    #preCallReportPage .predial-overview-card:nth-child(5) { border-top-color: #ea580c; }
-    #preCallReportPage .predial-overview-card:nth-child(6) { border-top-color: #ef4444; }
-    #preCallReportPage .predial-overview-card:nth-child(7) { border-top-color: #dc2626; }
-    #preCallReportPage .predial-overview-card:nth-child(8) { border-top-color: #0891b2; }
-    #preCallReportPage .predial-overview-card:nth-child(9) { border-top-color: #7c3aed; }
-    #preCallReportPage .predial-overview-card:nth-child(10) { border-top-color: #db2777; }
-    #preCallReportPage .predial-overview-card:nth-child(11) { border-top-color: #0f766e; }
+    #preCallReportPage .predial-overview-card { min-width: 0; padding: 15px 16px 13px; border: 1px solid #dbeafe; border-top: 3px solid #60a5fa; border-radius: 8px; background: #fff; text-align: left; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.025); }
     #preCallReportPage .predial-overview-card .metric-label { color: #64748b; font-size: 12px; font-weight: 700; }
     #preCallReportPage .predial-overview-card .metric-value { margin-top: 7px; color: #0f172a; font-size: 24px; font-weight: 800; line-height: 1.1; }
     #preCallReportPage .predial-overview-card .metric-sub { min-height: 16px; margin-top: 7px; color: #94a3b8; font-size: 12px; }
     #preCallReportPage .predial-overview-card .metric-sub strong { color: #475569; font-weight: 800; }
-    #preCallReportPage .predial-overview-card.metric-flow { border-top-color: #2563eb; }
-    #preCallReportPage .predial-overview-card.metric-quality { border-top-color: #16a34a; }
-    #preCallReportPage .predial-overview-card.metric-risk { border-top-color: #ea580c; }
-    #preCallReportPage .predial-overview-card.metric-alert { border-color: #fca5a5; border-top-color: #dc2626; background: #fef2f2; }
-    #preCallReportPage .predial-overview-card.metric-alert .metric-value { color: #991b1b; }
+    #preCallReportPage .predial-overview-card.metric-flow { border-color: #bfdbfe; border-top-color: #2563eb; }
+    #preCallReportPage .predial-overview-card.metric-quality { border-color: #bae6fd; border-top-color: #0891b2; }
+    #preCallReportPage .predial-overview-card.metric-risk { border-color: #e2e8f0; border-top-color: #64748b; }
+    #preCallReportPage .predial-overview-card.metric-alert { border-color: #fed7aa; border-top-color: #ea580c; background: #fff7ed; }
+    #preCallReportPage .predial-overview-card.metric-alert .metric-value { color: #9a3412; }
     @media (max-width: 1080px) { #preCallReportPage .predial-overview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 680px) { #preCallReportPage .predial-overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; } }
     #preCallReportPage .precall-analysis-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 18px; }
     #preCallReportPage .precall-report-panel,
-    #preCallReportPage .card { margin: 0; border-color: #e5edf8; border-radius: 10px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.035); }
+    #preCallReportPage .card { margin: 0; border-color: #e5edf8; border-radius: 10px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.035); min-width: 0; max-width: 100%; overflow: hidden; }
     #preCallReportPage .precall-report-panel { min-height: 236px; padding: 22px; }
     #preCallReportPage .card-title { padding: 16px 18px 12px; }
     #preCallReportPage .data-table th { background: #f8fafc; }
     #preCallReportPage .data-table td { padding-top: 12px; padding-bottom: 12px; }
+    #preCallReportPage .lead-table th,
+    #preCallReportPage .lead-table td,
+    #preDialerTaskModal .lead-table th,
+    #preDialerTaskModal .lead-table td {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #preCallReportPage .lead-table .predial-call-result,
+    #preDialerTaskModal .lead-table .predial-call-result {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #preCallReportPage .lead-table tfoot td { background: #f8fafc; border-top: 1px solid #dbe5f0; color: #334155; font-weight: 800; }
+    #preCallReportPage .lead-table tfoot .batch-summary-label { color: #1d4ed8; }
+    #preCallReportPage .predial-batch-table-wrap { display: block; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overflow-y: hidden; }
+    #preCallReportPage .predial-batch-table { table-layout: fixed; }
+    #preCallReportPage .predial-batch-table th,
+    #preCallReportPage .predial-batch-table td { width: 128px; min-width: 128px; max-width: 128px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #preCallReportPage .predial-batch-table th:first-child,
+    #preCallReportPage .predial-batch-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #fff;
+      box-shadow: 1px 0 0 #e8eef7;
+    }
+    #preCallReportPage .predial-batch-table th:first-child {
+      z-index: 3;
+      background: #f8fafc;
+    }
+    #preCallReportPage .predial-batch-table tfoot td:first-child {
+      background: #f8fafc;
+    }
     @media (max-width: 1180px) { .predial-filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } .predial-filter-actions { grid-column: 1 / -1; } }
     @media (max-width: 760px) { .predial-page-header { flex-direction: column; } .predial-filter-panel { grid-template-columns: 1fr; } .predial-filter-actions { grid-column: auto; flex-wrap: wrap; } #preCallReportPage .summary-strip { grid-template-columns: 1fr; } #preCallReportPage .precall-analysis-grid { grid-template-columns: 1fr; } }
     @media (max-width: 1080px) { .precall-report-grid { grid-template-columns: 1fr; } }
@@ -6347,7 +6373,7 @@ const hitRecords = {
   ],
   2: [
     {
-      leadCode: 'PYXS202605280017', taskCode: 'PYRW202605280047', aiCode: 'AIHF202605280205', callId: 'CALL-20260528-0000327', phone: '137****9096', tag: 'A类客户 / 投诉', audio: '试听', text: '客户为A类线索，但本次通话明确表达投诉诉求，暂停30天外呼。', systemStatus: '已处理', exceptionReason: '冲突任务',
+      leadCode: 'PYXS202605280017', taskCode: 'PYRW202605280047', aiCode: 'AIHF202605280205', callId: 'CALL-20260528-0000327', phone: '137****9096', tag: 'A类客户 / 投诉', audio: '试听', text: '客户为A类线索，但本次通话明确表达投诉诉求，暂停30天外呼。', reviewStatus: '待审核', systemStatus: '已处理', exceptionReason: '冲突任务',
       transcript: {
         duration: '02:35', callType: '人工外呼', result: '投诉',
         tags: ['置换意向', '加微成功', '投诉'],
@@ -6368,7 +6394,7 @@ const hitRecords = {
       }
     },
     {
-      leadCode: 'PYXS202605250066', taskCode: 'PYRW202605250142', aiCode: 'AIHF202605250377', callId: 'CALL-20260525-0000209', phone: '152****7811', tag: '投诉', audio: '试听', text: '客户要求减少联系，坐席标记投诉标签。', systemStatus: '已处理', exceptionReason: '冲突任务',
+      leadCode: 'PYXS202605250066', taskCode: 'PYRW202605250142', aiCode: 'AIHF202605250377', callId: 'CALL-20260525-0000209', phone: '152****7811', tag: '投诉', audio: '试听', text: '客户要求减少联系，坐席标记投诉标签。', reviewStatus: '待审核', systemStatus: '已处理', exceptionReason: '冲突任务',
       transcript: {
         duration: '01:05', callType: '人工外呼', result: '投诉',
         tags: ['投诉'],
@@ -6383,7 +6409,7 @@ const hitRecords = {
   ],
   3: [
     {
-      leadCode: 'PYXS202605240021', taskCode: 'PYRW202605240088', aiCode: 'AIHF202605240144', callId: 'CALL-20260524-0000089', phone: '185****3362', tag: '沉默客户 / 拒接', audio: '试听', text: '客户无有效回应，机器人回访多轮未触达。', systemStatus: '已处理', exceptionReason: '冲突任务',
+      leadCode: 'PYXS202605240021', taskCode: 'PYRW202605240088', aiCode: 'AIHF202605240144', callId: 'CALL-20260524-0000089', phone: '185****3362', tag: '沉默客户 / 拒接', audio: '试听', text: '客户无有效回应，机器人回访多轮未触达。', reviewStatus: '待审核', systemStatus: '已处理', exceptionReason: '冲突任务',
       transcript: {
         duration: '00:22', callType: '机器人外呼', result: '拒接',
         tags: ['沉默客户', '拒接'],
@@ -6396,7 +6422,7 @@ const hitRecords = {
   ],
   4: [
     {
-      leadCode: 'PYXS202605220014', taskCode: 'PYRW202605220063', aiCode: 'AIHF202605220102', callId: 'CALL-20260522-0000056', phone: '139****5188', tag: '投诉', audio: '试听', text: 'IVR回访后客户反馈投诉号码，系统永久拦截。', systemStatus: '已处理', exceptionReason: '冲突任务',
+      leadCode: 'PYXS202605220014', taskCode: 'PYRW202605220063', aiCode: 'AIHF202605220102', callId: 'CALL-20260522-0000056', phone: '139****5188', tag: '投诉', audio: '试听', text: 'IVR回访后客户反馈投诉号码，系统永久拦截。', reviewStatus: '待审核', systemStatus: '已处理', exceptionReason: '冲突任务',
       transcript: {
         duration: '00:38', callType: 'IVR外呼', result: '投诉',
         tags: ['投诉'],
@@ -6718,17 +6744,17 @@ const preDialerTasks = [
   { id: 'PD-20260622-003', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '中止AI外呼任务', updatedAt: '2026-06-22 15:40', overdue: false },
   { id: 'PD-20260621-004', leadId: 'HQ-20260621-095', customer: '王女士', mobile: '137****8096', series: '逍客', syncDate: '2026-06-21', syncTime: '11:25', syncStatus: '同步失败', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-21 14:30', callResult: '线路拒呼', lastResult: '线路拒呼', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-21 17:10', overdue: false },
   { id: 'PD-20260621-005', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '处理完成', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 09:34', callResult: '无人接听', lastResult: '三次未接听，结束处理', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-22 09:35', overdue: false },
-  { id: 'PD-20260620-006', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '15:10', syncStatus: '待同步', systemStatus: '待同步', status: '', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '', updatedAt: '2026-06-22 08:48', overdue: false }
+  { id: 'PD-20260620-006', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '08:18', syncStatus: '待同步', systemStatus: '待同步', status: '', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '', updatedAt: '2026-06-22 08:48', overdue: false },
 ];
 
 const preDialerCallRecords = [
-  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1001', attempt: 1, callTime: '2026-06-22 09:36', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:37', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重推规则', retriggerStatus: '已重推' },
+  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1001', attempt: 1, callTime: '2026-06-22 09:36', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:37', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
   { taskId: 'PD-20260622-001', callId: 'CALL-0622-1007', attempt: 2, callTime: '2026-06-22 10:26', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 10:27', connected: false },
   { taskId: 'PD-20260622-001', callId: 'CALL-0622-1011', attempt: 3, callTime: '2026-06-22 11:05', duration: '0秒', result: '线路未呼', handleStatus: '处理中', returnedAt: '2026-06-22 11:06', connected: false },
   { taskId: 'PD-20260622-002', callId: 'CALL-0622-1014', attempt: 1, callTime: '2026-06-22 09:48', duration: '38秒', result: '用户接通', handleStatus: '已完成', returnedAt: '2026-06-22 09:49', connected: true },
   { taskId: 'PD-20260622-002', callId: 'CALL-0622-1058', attempt: 2, callTime: '2026-06-22 14:12', duration: '56秒', result: '用户接通', handleStatus: '已完成', returnedAt: '2026-06-22 14:15', connected: true },
-  { taskId: 'PD-20260621-005', callId: 'CALL-0621-0934', attempt: 1, callTime: '2026-06-21 14:10', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-21 14:11', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重推规则', retriggerStatus: '已重推' },
-  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0981', attempt: 2, callTime: '2026-06-22 09:02', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:03', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重推规则', retriggerStatus: '已重推' },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0621-0934', attempt: 1, callTime: '2026-06-21 14:10', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-21 14:11', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0981', attempt: 2, callTime: '2026-06-22 09:02', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:03', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
   { taskId: 'PD-20260621-005', callId: 'CALL-0622-0994', attempt: 3, callTime: '2026-06-22 09:34', duration: '0秒', result: '无人接听', handleStatus: '已完成', returnedAt: '2026-06-22 09:35', connected: false },
   { taskId: 'PD-20260621-004', callId: 'CALL-0621-0845', attempt: 1, callTime: '2026-06-21 14:30', duration: '0秒', result: '线路拒呼', handleStatus: '处理中', returnedAt: '', connected: false }
 ];
@@ -6776,15 +6802,18 @@ function getPreDialerMetrics(tasks, calls) {
   const effectiveCalls = connectedCalls.filter(call => Number.parseInt(call.duration, 10) >= 30);
   const lineRejectedCalls = calls.filter(call => call.result === '线路拒呼');
   const lineUncalledCalls = calls.filter(call => call.result === '线路未呼');
-  const assignedAgentsTotal = [...new Set(tasks.map(task => task.id))].length;
+  const assignedAgentsTotal = tasks.length - syncFailedTasks.length;
   const assignedAgentsAnswered = calls.filter(call => call.connected).length;
   const firstCalls = calls.filter(call => call.attempt === 1);
   const firstCallConnected = firstCalls.filter(call => call.connected);
   const nonFirstCalls = calls.filter(call => call.attempt > 1);
   const nonFirstCallConnected = nonFirstCalls.filter(call => call.connected);
   const totalDurationSeconds = connectedCalls.reduce((sum, call) => sum + (Number.parseInt(call.duration, 10) || 0), 0);
+  const dailyAvgLoad = connectedCalls.length ? (pushedTasks.length / connectedCalls.length).toFixed(1) : '0.0';
   const retriggerCalls = calls.filter(call => call.retriggerRequired);
   const nevDispatchedTasks = tasks.filter(task => task.nevDispatched);
+  const nevDispatchedSeatAnsweredTasks = nevDispatchedTasks.filter(task => getTaskCallRecords(task.id).some(call => call.connected));
+  const nevDispatchedNonSeatAnsweredTasks = nevDispatchedTasks.filter(task => !getTaskCallRecords(task.id).some(call => call.connected));
   return {
     totalTasks: tasks.length,
     pushedTasks: pushedTasks.length,
@@ -6808,9 +6837,12 @@ function getPreDialerMetrics(tasks, calls) {
     nonFirstCallConnected: nonFirstCallConnected.length,
     nonFirstCallRate: nonFirstCalls.length ? `${(nonFirstCallConnected.length / nonFirstCalls.length * 100).toFixed(1)}%` : '0.0%',
     totalDurationSeconds: totalDurationSeconds,
-    avgDurationPerAgent: assignedAgentsTotal ? `${Math.round(totalDurationSeconds / assignedAgentsTotal)}秒` : '0秒',
+    avgDurationPerAgent: connectedCalls.length ? `${Math.round(totalDurationSeconds / connectedCalls.length)}秒` : '0秒',
+    dailyAvgLoad: dailyAvgLoad,
     retriggerCalls: retriggerCalls.length,
-    nevDispatchedTasks: nevDispatchedTasks.length
+    nevDispatchedTasks: nevDispatchedTasks.length,
+    nevDispatchedSeatAnsweredTasks: nevDispatchedSeatAnsweredTasks.length,
+    nevDispatchedNonSeatAnsweredTasks: nevDispatchedNonSeatAnsweredTasks.length
   };
 }
 
@@ -6820,6 +6852,181 @@ function renderPreDialerMetricCard(name, value, subtitle, category) {
   const catClass = category ? ` metric-${category}` : '';
   const alertClass = needsAlert ? ' metric-alert' : '';
   return `<button class="predial-overview-card predial-metric-card${catClass}${alertClass}" type="button" onclick="showPreDialerMetricInfo('${name}')"><div class="metric-label">${name}</div><div class="metric-value">${value}</div><div class="metric-sub">${subtitle}</div></button>`;
+}
+
+function getPreDialerBatchMetricColumns(group = 'all') {
+  const flowColumns = [
+    { label: '预外呼任务总量', value: metrics => metrics.totalTasks },
+    { label: '已推送任务量', value: metrics => metrics.pushedTasks },
+    { label: '同步失败量', value: metrics => metrics.syncFailedTasks },
+    { label: '已分配坐席（总量）', value: metrics => metrics.assignedAgentsTotal },
+    { label: '已分配坐席（通话状态 = 坐席接听）', value: metrics => metrics.assignedAgentsAnswered },
+    { label: '线索下发量', value: metrics => metrics.nevDispatchedTasks },
+    { label: '线索下发量（通话状态 = 坐席接听）', value: metrics => metrics.nevDispatchedSeatAnsweredTasks },
+    { label: '线索下发量（通话状态 ≠ 坐席接听）', value: metrics => metrics.nevDispatchedNonSeatAnsweredTasks },
+    { label: '重推触发量', value: metrics => metrics.retriggerCalls }
+  ];
+  const callColumns = [
+    { label: '任务处理中', value: metrics => metrics.processingTasks },
+    { label: '任务已处理', value: metrics => metrics.handledTasks },
+    { label: '话单已回传', value: metrics => metrics.returnedCalls },
+    { label: '话单待回传', value: metrics => metrics.pendingCalls },
+    { label: '话单超时未回传', value: metrics => metrics.timeoutPendingCalls },
+    { label: '录音丢失量', value: metrics => metrics.recordingMissingCalls },
+    { label: '外呼接通量', value: metrics => metrics.connectedCalls },
+    { label: '有效通话量', value: metrics => metrics.effectiveCalls },
+    { label: '首呼接通率', value: metrics => metrics.firstCallRate },
+    { label: '2~N呼接通率', value: metrics => metrics.nonFirstCallRate },
+    { label: '线路拒呼', value: metrics => metrics.lineRejectedCalls },
+    { label: '线路未呼', value: metrics => metrics.lineUncalledCalls },
+    { label: '呼叫接通时长', value: metrics => `${metrics.totalDurationSeconds}秒` },
+    { label: '每通呼叫接通时长', value: metrics => metrics.avgDurationPerAgent },
+    { label: '日人均承载量', value: metrics => metrics.dailyAvgLoad }
+  ];
+  if (group === 'call') return callColumns;
+  if (group === 'all') return [...flowColumns, ...callColumns];
+  return flowColumns;
+}
+
+function renderPreDialerBatchTable(pageDates, dates, tasks, calls) {
+  const columns = getPreDialerBatchMetricColumns('all');
+  const totalMetrics = getPreDialerMetrics(tasks, calls);
+  const header = `<tr><th title="同步日期">同步日期</th>${columns.map(column => `<th title="${escapeAttr(column.label)}">${column.label}</th>`).join('')}</tr>`;
+  const body = pageDates.length ? pageDates.map(date => {
+    const dateTasks = tasks.filter(task => task.syncDate === date);
+    const ids = new Set(dateTasks.map(task => task.id));
+    const dateCalls = calls.filter(call => ids.has(call.taskId));
+    const dateMetrics = getPreDialerMetrics(dateTasks, dateCalls);
+    return `<tr><td title="${escapeAttr(date)}">${date}</td>${columns.map(column => { const value = column.value(dateMetrics); return `<td title="${escapeAttr(value)}">${value}</td>`; }).join('')}</tr>`;
+  }).join('') : `<tr><td colspan="${columns.length + 1}"><div class="empty-state">暂无同步批次数据</div></td></tr>`;
+  const foot = dates.length ? `<tfoot><tr class="batch-summary-row"><td class="batch-summary-label" title="统计">统计</td>${columns.map(column => { const value = column.value(totalMetrics); return `<td title="${escapeAttr(value)}">${value}</td>`; }).join('')}</tr></tfoot>` : '';
+  return `<div class="lead-table-wrap predial-batch-table-wrap"><table class="lead-table predial-batch-table" style="width:${(columns.length + 1) * 128}px"><thead>${header}</thead><tbody>${body}</tbody>${foot}</table></div>`;
+}
+
+function getPreDialerExportRangeText() {
+  const { startDate, endDate } = preDialerReportFilters;
+  return startDate || endDate ? `${startDate || '全部'}_${endDate || '全部'}` : new Date().toISOString().slice(0, 10);
+}
+
+function getPreDialerTaskExportRows(tasks) {
+  return tasks.map(task => {
+    const taskCalls = getTaskCallRecords(task.id);
+    const latestCall = getLatestTaskCallRecord(task.id);
+    const returnedCalls = taskCalls.filter(call => call.returnedAt);
+    const pendingCalls = taskCalls.filter(call => !call.returnedAt);
+    const timeoutPendingCalls = pendingCalls.filter(() => task.overdue);
+    const recordingMissingCalls = returnedCalls.filter(call => call.recordingAvailable === false);
+    const retriggerCalls = taskCalls.filter(call => call.retriggerRequired);
+    const taskStatus = task.status ? (task.overdue ? '处理中（超时）' : task.status) : '';
+    const callDetail = taskCalls.map(call => `${call.callId || '-'}｜第${call.attempt}次｜${call.callTime || '-'}｜${call.duration || '-'}｜${call.result || '-'}｜${call.returnedAt || '待回传'}｜${call.retriggerRequired ? `重推：${call.retriggerReason || '-'}` : '未重推'}`).join('；');
+    return [
+      formatPreDialerDisplayDate(task.syncDate),
+      task.syncTime || '',
+      task.id,
+      task.leadId,
+      task.customer,
+      task.mobile,
+      task.series,
+      task.syncStatus || '',
+      task.systemStatus || '',
+      task.systemExceptionReason || '',
+      taskStatus,
+      taskCalls.length,
+      latestCall?.result || '',
+      latestCall?.callId || '',
+      latestCall?.callTime || '',
+      latestCall?.duration || '',
+      returnedCalls.length,
+      recordingMissingCalls.length,
+      retriggerCalls.length,
+      retriggerCalls.map(call => call.retriggerReason).filter(Boolean).join('；'),
+      task.nevDispatched ? '是' : '否',
+      task.nevDispatchedAt || '',
+      task.updatedAt || '',
+      callDetail
+    ];
+  });
+}
+
+function exportPreDialerTasks() {
+  const tasks = getFilteredPreDialerTasks();
+  if (!tasks.length) {
+    showToast('当前筛选条件下暂无可导出的预外呼任务', false);
+    return;
+  }
+  const columns = [
+    '同步日期',
+    '同步时间',
+    '预外呼任务ID',
+    '总部线索ID',
+    '客户',
+    '手机号',
+    '意向车系',
+    '同步状态',
+    '任务系统状态',
+    '任务异常原因',
+    '预外呼任务状态',
+    '外呼次数',
+    '最新外呼结果',
+    '最新话单ID',
+    '最新外呼时间',
+    '最新通话时长',
+    '话单已回传数',
+    '录音丢失量',
+    '重推触发量',
+    '重拨触发原因',
+    '已下发线索',
+    '线索下发时间',
+    '更新时间',
+    '外呼话单明细'
+  ];
+  const rows = getPreDialerTaskExportRows(tasks);
+  const taskIds = new Set(tasks.map(task => task.id));
+  const callRecords = preDialerCallRecords.filter(record => taskIds.has(record.taskId)).sort((a, b) => a.callTime.localeCompare(b.callTime));
+  const callColumns = ['话单ID', '预外呼任务ID', '第几次外呼', '外呼时间', '通话时长', '外呼结果', '预外呼处理状态', '回传时间', '是否接通', '是否重拨', '重拨触发原因', '重拨状态'];
+  const callRows = callRecords.map(call => {
+    const task = preDialerTasks.find(item => item.id === call.taskId);
+    return [
+      call.callId, call.taskId, `第 ${call.attempt} 次`, call.callTime, call.duration, call.result,
+      call.handleStatus, call.returnedAt || '待回传', call.connected ? '是' : '否',
+      call.retriggerRequired ? '是' : '否', call.retriggerReason || '', call.retriggerStatus || ''
+    ];
+  });
+  const csvRows = [
+    columns.map(csvEscape).join(','),
+    ...rows.map(row => row.map(csvEscape).join(',')),
+    '', '',
+    `外呼话单明细（共 ${callRecords.length} 条）`,
+    callColumns.map(csvEscape).join(','),
+    ...callRows.map(row => row.map(csvEscape).join(','))
+  ];
+  downloadCsvFile(`明细列表_${getPreDialerExportRangeText()}.csv`, csvRows, `已导出 ${rows.length} 条任务 + ${callRecords.length} 条话单`);
+}
+
+function exportPreDialerBatchSummary() {
+  const tasks = getFilteredPreDialerTasks();
+  const taskIds = new Set(tasks.map(task => task.id));
+  const calls = preDialerCallRecords.filter(record => taskIds.has(record.taskId));
+  const dates = [...new Set(tasks.map(task => task.syncDate))].sort().reverse();
+  if (!dates.length) {
+    showToast('当前筛选条件下暂无可导出的同步批次数据', false);
+    return;
+  }
+  const columns = getPreDialerBatchMetricColumns('all');
+  const rows = dates.map(date => {
+    const dateTasks = tasks.filter(task => task.syncDate === date);
+    const ids = new Set(dateTasks.map(task => task.id));
+    const dateCalls = calls.filter(call => ids.has(call.taskId));
+    const dateMetrics = getPreDialerMetrics(dateTasks, dateCalls);
+    return [formatPreDialerDisplayDate(date), ...columns.map(column => column.value(dateMetrics))];
+  });
+  const totalMetrics = getPreDialerMetrics(tasks, calls);
+  rows.push(['统计', ...columns.map(column => column.value(totalMetrics))]);
+  const csvRows = [
+    ['同步日期', ...columns.map(column => column.label)].map(csvEscape).join(','),
+    ...rows.map(row => row.map(csvEscape).join(','))
+  ];
+  downloadCsvFile(`同步批次汇总_${getPreDialerExportRangeText()}.csv`, csvRows, `已导出 ${dates.length} 条同步批次汇总数据`);
 }
 
 function formatPreDialerDisplayDate(value) {
@@ -6860,6 +7067,7 @@ function openPreDialerTaskDetail(taskId) {
     </div>
   `;
   document.getElementById('preDialerTaskModal').classList.add('show');
+  enhancePreDialerOverflowTitles(document.getElementById('preDialerTaskModal'));
 }
 
 function renderPreDialerReportPage(page) {
@@ -6886,13 +7094,13 @@ function renderPreDialerReportPage(page) {
         <div class="predial-filter-field"><label>预外呼任务状态</label><select class="filter-select" id="preDialerStatus"><option value="all">全部状态</option><option value="处理中" ${preDialerReportFilters.status === '处理中' ? 'selected' : ''}>处理中</option><option value="已完成" ${preDialerReportFilters.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
         <div class="predial-filter-field"><label>最新外呼结果</label><select class="filter-select" id="preDialerCallResult"><option value="all">全部最新外呼结果</option><option value="空号" ${preDialerReportFilters.callResult === '空号' ? 'selected' : ''}>空号</option><option value="停机" ${preDialerReportFilters.callResult === '停机' ? 'selected' : ''}>停机</option><option value="忙音" ${preDialerReportFilters.callResult === '忙音' ? 'selected' : ''}>忙音</option><option value="不在服务区" ${preDialerReportFilters.callResult === '不在服务区' ? 'selected' : ''}>不在服务区</option><option value="无人接听" ${preDialerReportFilters.callResult === '无人接听' ? 'selected' : ''}>无人接听</option><option value="关机" ${preDialerReportFilters.callResult === '关机' ? 'selected' : ''}>关机</option><option value="用户接通" ${preDialerReportFilters.callResult === '用户接通' ? 'selected' : ''}>用户接通</option><option value="线路拒呼" ${preDialerReportFilters.callResult === '线路拒呼' ? 'selected' : ''}>线路拒呼</option><option value="线路未呼" ${preDialerReportFilters.callResult === '线路未呼' ? 'selected' : ''}>线路未呼</option></select></div>
         <div class="predial-filter-actions"><button class="btn-add" type="button" onclick="queryPreDialerReport()">查询</button><button class="btn-secondary" type="button" onclick="resetPreDialerReportFilters()">重置</button><button class="btn-secondary" type="button" onclick="refreshPreDialerReport()">刷新</button></div>
-        ${preDialerReportFilters.attentionFocus ? `<div class="predial-attention-filter">正在查看：${({ 'sync-failed': '同步失败任务', 'timeout-pending': '超时未回传任务', 'recording-missing': '录音丢失任务' })[preDialerReportFilters.attentionFocus] || '异常任务'}<button type="button" onclick="clearPreDialerAttentionFocus()">清除定位</button></div>` : ''}
+        ${preDialerReportFilters.attentionFocus ? `<div class="predial-attention-filter">正在查看：${({ 'sync-failed': '同步失败任务', 'timeout-pending': '超时未回传任务', 'recording-missing': '录音丢失任务' })[preDialerReportFilters.attentionFocus] || '异常任务'}<button type="button" onclick="preDialerReportFilters.attentionFocus=\'\';preDialerTaskCurrentPage=1;renderPreCallReportPage()">清除定位</button></div>` : ''}
       </section>
       ` : ''}
 
       <nav class="precall-tab-bar" aria-label="预外呼监控内容">
         <button class="precall-tab ${preDialerListActiveTab === 'overview' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('overview')">数据概览</button>
-        <button class="precall-tab ${preDialerListActiveTab === 'task' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('task')">预外呼列表</button>
+        <button class="precall-tab ${preDialerListActiveTab === 'task' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('task')">明细列表</button>
         <button class="precall-tab ${preDialerListActiveTab === 'batch' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('batch')">同步批次汇总</button>
         <button class="precall-tab ${preDialerListActiveTab === 'retrigger' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('retrigger')">重推触发明细</button>
         <button class="precall-tab ${preDialerListActiveTab === 'alert' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('alert')">预警管理</button>
@@ -6902,7 +7110,7 @@ function renderPreDialerReportPage(page) {
       <div class="predial-content-slot">
       ${preDialerListActiveTab === 'overview' ? `
       <section class="card">
-        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">数据概览</div><span class="table-count">当前筛选范围内的预外呼核心指标</span></div></div>
+        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">数据概览</div><span class="table-count">追踪 DCC培育系统同步至预外呼系统的预外呼核心指标</span></div></div>
         <div class="predial-overview-groups">
           <section class="predial-overview-group">
             <div class="predial-overview-group-title">任务流转与坐席分配<span>关注任务同步、重推和后续线索承接</span></div>
@@ -6910,10 +7118,12 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('预外呼任务总量', metrics.totalTasks, '需推送至预外呼', 'flow')}
               ${renderPreDialerMetricCard('已推送任务量', metrics.pushedTasks, `推送率 <strong>${rate(metrics.pushedTasks, metrics.totalTasks)}</strong>`, 'flow')}
               ${renderPreDialerMetricCard('同步失败量', metrics.syncFailedTasks, '任务同步异常', 'flow')}
-              ${renderPreDialerMetricCard('重推触发量', metrics.retriggerCalls, '已回传且命中重推规则', 'flow')}
-              ${renderPreDialerMetricCard('已分配坐席（总数）', metrics.assignedAgentsTotal, '坐席接听去重', 'flow')}
-              ${renderPreDialerMetricCard('已分配坐席（通话状态为坐席接听）', metrics.assignedAgentsAnswered, '坐席接听去重', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（总量）', metrics.assignedAgentsTotal, '坐席接听去重', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（通话状态 = 坐席接听）', metrics.assignedAgentsAnswered, '坐席接听去重', 'flow')}
               ${renderPreDialerMetricCard('线索下发量', metrics.nevDispatchedTasks, '已下发至 NEV线索中台', 'flow')}
+              ${renderPreDialerMetricCard('线索下发量（通话状态 = 坐席接听）', metrics.nevDispatchedSeatAnsweredTasks, '坐席接听后下发', 'flow')}
+              ${renderPreDialerMetricCard('线索下发量（通话状态 ≠ 坐席接听）', metrics.nevDispatchedNonSeatAnsweredTasks, '非坐席接听后下发', 'flow')}
+              ${renderPreDialerMetricCard('重推触发量', metrics.retriggerCalls, '已回传且命中重推规则', 'flow')}
             </div>
           </section>
           <section class="predial-overview-group">
@@ -6927,19 +7137,20 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音', 'risk')}
               ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, calls.length)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('有效通话量', metrics.effectiveCalls, `有效通话率 <strong>${rate(metrics.effectiveCalls, metrics.connectedCalls)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('首呼接通率', metrics.firstCallRate, `首次接通 ${metrics.firstCallConnected} / ${metrics.firstCallTotal}`, 'quality')}
+              ${renderPreDialerMetricCard('2~N呼接通率', metrics.nonFirstCallRate, `非首次接通 ${metrics.nonFirstCallConnected} / ${metrics.nonFirstCallTotal}`, 'quality')}
               ${renderPreDialerMetricCard('线路拒呼', metrics.lineRejectedCalls, '按话单统计', 'risk')}
               ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
-              ${renderPreDialerMetricCard('首呼接通率', metrics.firstCallRate, `首次接通 ${metrics.firstCallConnected} / ${metrics.firstCallTotal}`, 'quality')}
-              ${renderPreDialerMetricCard('2~5呼接通率', metrics.nonFirstCallRate, `非首次接通 ${metrics.nonFirstCallConnected} / ${metrics.nonFirstCallTotal}`, 'quality')}
               ${renderPreDialerMetricCard('呼叫接通时长', `${metrics.totalDurationSeconds}秒`, '接通通话总时长', 'quality')}
-              ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 坐席总人数', 'quality')}
+              ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 外呼接通量', 'quality')}
+              ${renderPreDialerMetricCard('日人均承载量', metrics.dailyAvgLoad, '已推送任务量 ÷ 外呼接通量', 'quality')}
             </div>
           </section>
         </div>
       </section>
       ` : preDialerListActiveTab === 'task' ? (() => { const taskTotalPages = Math.max(1, Math.ceil(tasks.length / preDialerTaskPageSize)); const taskClampedPage = Math.min(preDialerTaskCurrentPage, taskTotalPages); const taskStart = (taskClampedPage - 1) * preDialerTaskPageSize; const pageTasks = tasks.slice(taskStart, taskStart + preDialerTaskPageSize); return `
       <section class="card">
-        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">预外呼列表</div><span class="table-count">${tasks.length} 条任务</span></div></div>
+        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">明细列表</div><span class="table-count">${tasks.length} 条任务</span></div><div class="lead-toolbar-right"><button class="btn-secondary" type="button" onclick="exportPreDialerTasks()">导出数据</button></div></div>
         <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>意向车系</th><th>任务系统状态</th><th>任务异常原因</th><th>外呼次数</th><th>预外呼任务状态</th><th>最新外呼结果</th><th>更新时间</th><th>已下发线索</th><th>操作</th></tr></thead><tbody>${pageTasks.length ? pageTasks.map(task => { const attempts = getTaskCallRecords(task.id).length; const attemptText = attempts ? `${attempts}${attempts > 1 ? ' <span class="precall-status-badge warn">多次</span>' : ''}` : ''; const taskStatus = task.status ? `<span class="predial-task-status ${task.status === '已完成' ? 'complete' : task.overdue ? 'overdue' : ''}">${task.overdue ? '处理中（超时）' : task.status}</span>` : ''; const latestResult = getLatestTaskCallRecord(task.id)?.result || ''; return `<tr><td>${formatPreDialerDisplayDate(task.syncDate)}</td><td>${task.id}</td><td>${task.leadId}</td><td>${task.customer}<div class="predial-call-result">${task.mobile}</div></td><td>${task.series}</td><td>${task.systemStatus}</td><td>${task.systemExceptionReason}</td><td>${attemptText}</td><td>${taskStatus}</td><td>${latestResult}</td><td>${formatPreDialerDisplayDate(task.updatedAt)}</td><td>${task.nevDispatched ? '是' : '否'}</td><td><button class="action-btn view" type="button" onclick="openPreDialerTaskDetail('${task.id}')">查看</button></td></tr>`; }).join('') : '<tr><td colspan="13"><div class="empty-state">当前筛选条件下暂无预外呼任务</div></td></tr>'}</tbody></table></div>
         <div class="pagination">
           <span id="preDialerTaskPageInfo">共 ${tasks.length} 条记录，当前第 ${taskClampedPage} / ${taskTotalPages} 页</span>
@@ -6958,8 +7169,8 @@ function renderPreDialerReportPage(page) {
       </section>
       `; })() : preDialerListActiveTab === 'batch' ? (() => { const batchTotalPages = Math.max(1, Math.ceil(dates.length / preDialerBatchPageSize)); const batchClampedPage = Math.min(preDialerBatchCurrentPage, batchTotalPages); const batchStart = (batchClampedPage - 1) * preDialerBatchPageSize; const pageDates = dates.slice(batchStart, batchStart + preDialerBatchPageSize); return `
       <section class="card">
-        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">同步批次汇总</div><span class="table-count">按同步日期统计，与概览指标口径一致</span></div></div>
-        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务总量</th><th>已推送任务量</th><th>同步失败量</th><th>任务处理中</th><th>任务已处理</th><th>话单已回传</th><th>话单待回传</th><th>话单超时未回传</th><th>录音丢失量</th><th>外呼接通量</th><th>有效通话量</th><th>线路拒呼</th><th>线路未呼</th><th>首呼接通率</th><th>2~5呼接通率</th><th>呼叫接通时长</th><th>每通呼叫接通时长</th><th>已分配坐席（总数）</th><th>已分配坐席（坐席接听）</th><th>重推触发量</th><th>线索下发量</th></tr></thead><tbody>${pageDates.length ? pageDates.map(date => { const dateTasks = tasks.filter(task => task.syncDate === date); const ids = new Set(dateTasks.map(task => task.id)); const dateCalls = calls.filter(call => ids.has(call.taskId)); const dateMetrics = getPreDialerMetrics(dateTasks, dateCalls); return `<tr><td>${date}</td><td>${dateMetrics.totalTasks}</td><td>${dateMetrics.pushedTasks}</td><td>${dateMetrics.syncFailedTasks}</td><td>${dateMetrics.processingTasks}</td><td>${dateMetrics.handledTasks}</td><td>${dateMetrics.returnedCalls}</td><td>${dateMetrics.pendingCalls}</td><td>${dateMetrics.timeoutPendingCalls}</td><td>${dateMetrics.recordingMissingCalls}</td><td>${dateMetrics.connectedCalls}</td><td>${dateMetrics.effectiveCalls}</td><td>${dateMetrics.lineRejectedCalls}</td><td>${dateMetrics.lineUncalledCalls}</td><td>${dateMetrics.firstCallRate}</td><td>${dateMetrics.nonFirstCallRate}</td><td>${dateMetrics.totalDurationSeconds}秒</td><td>${dateMetrics.avgDurationPerAgent}</td><td>${dateMetrics.assignedAgentsTotal}</td><td>${dateMetrics.assignedAgentsAnswered}</td><td>${dateMetrics.retriggerCalls}</td><td>${dateMetrics.nevDispatchedTasks}</td></tr>`; }).join('') : '<tr><td colspan="22"><div class="empty-state">暂无同步批次数据</div></td></tr>'}</tbody></table></div>
+        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">同步批次汇总</div><span class="table-count">按同步日期统计，与概览指标口径一致</span></div><div class="lead-toolbar-right"><button class="btn-secondary" type="button" onclick="exportPreDialerBatchSummary()">导出数据</button></div></div>
+        ${renderPreDialerBatchTable(pageDates, dates, tasks, calls)}
         <div class="pagination">
           <span>共 ${dates.length} 条记录，当前第 ${batchClampedPage} / ${batchTotalPages} 页</span>
           <div class="pagination-btns">
@@ -6978,7 +7189,7 @@ function renderPreDialerReportPage(page) {
       `; })() : preDialerListActiveTab === 'retrigger' ? (() => { const retriggerCalls = calls.filter(call => call.retriggerRequired); const retriggerTotalPages = Math.max(1, Math.ceil(retriggerCalls.length / preDialerRetriggerPageSize)); const retriggerClampedPage = Math.min(preDialerRetriggerCurrentPage, retriggerTotalPages); const retriggerStart = (retriggerClampedPage - 1) * preDialerRetriggerPageSize; const pageRetriggerCalls = retriggerCalls.slice(retriggerStart, retriggerStart + preDialerRetriggerPageSize); return `
       <section class="card">
         <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">重推触发明细</div><span class="table-count">${retriggerCalls.length} 条已回传话单命中重推规则</span></div></div>
-        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>话单ID</th><th>第几次外呼</th><th>外呼时间</th><th>外呼结果</th><th>回传时间</th><th>重推触发原因</th><th>重推状态</th></tr></thead><tbody>${pageRetriggerCalls.length ? pageRetriggerCalls.map(call => { const task = preDialerTasks.find(item => item.id === call.taskId); return `<tr><td>${formatPreDialerDisplayDate(task?.syncDate)}</td><td>${call.taskId}</td><td>${task?.leadId || ''}</td><td>${task?.customer || ''}<div class="predial-call-result">${task?.mobile || ''}</div></td><td>${call.callId}</td><td>第 ${call.attempt} 次</td><td>${formatPreDialerDisplayDate(call.callTime)}</td><td>${call.result}</td><td>${formatPreDialerDisplayDate(call.returnedAt)}</td><td>${call.retriggerReason}</td><td><span class="predial-task-status complete">${call.retriggerStatus}</span></td></tr>`; }).join('') : '<tr><td colspan="11"><div class="empty-state">当前筛选条件下暂无重推触发记录</div></td></tr>'}</tbody></table></div>
+        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>话单ID</th><th>第几次外呼</th><th>外呼时间</th><th>外呼结果</th><th>回传时间</th><th>重拨触发原因</th><th>重拨状态</th></tr></thead><tbody>${pageRetriggerCalls.length ? pageRetriggerCalls.map(call => { const task = preDialerTasks.find(item => item.id === call.taskId); return `<tr><td>${formatPreDialerDisplayDate(task?.syncDate)}</td><td>${call.taskId}</td><td>${task?.leadId || ''}</td><td>${task?.customer || ''}<div class="predial-call-result">${task?.mobile || ''}</div></td><td>${call.callId}</td><td>第 ${call.attempt} 次</td><td>${formatPreDialerDisplayDate(call.callTime)}</td><td>${call.result}</td><td>${formatPreDialerDisplayDate(call.returnedAt)}</td><td>${call.retriggerReason || '-'}</td><td><span class="predial-task-status complete">${call.retriggerStatus || '-'}</span></td></tr>`; }).join('') : '<tr><td colspan="11"><div class="empty-state">当前筛选条件下暂无重推触发记录</div></td></tr>'}</tbody></table></div>
         <div class="pagination">
           <span>共 ${retriggerCalls.length} 条记录，当前第 ${retriggerClampedPage} / ${retriggerTotalPages} 页</span>
           <div class="pagination-btns">
@@ -6998,6 +7209,19 @@ function renderPreDialerReportPage(page) {
       </div>
     </div>
   `;
+  enhancePreDialerOverflowTitles(page);
+}
+
+function enhancePreDialerOverflowTitles(scope) {
+  if (!scope) return;
+  scope.querySelectorAll('.lead-table th, .lead-table td').forEach(cell => {
+    const text = cell.innerText.replace(/\s+/g, ' ').trim();
+    if (text) cell.setAttribute('title', text);
+  });
+  scope.querySelectorAll('.lead-table .predial-call-result').forEach(item => {
+    const text = item.innerText.replace(/\s+/g, ' ').trim();
+    if (text) item.setAttribute('title', text);
+  });
 }
 
 function switchPreDialerListTab(tab) {
@@ -7191,7 +7415,7 @@ function changePreDialerRetriggerPage(dir) {
 
 function showPreDialerMetricInfo(metric) {
   const descriptions = {
-    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的去重任务总数。',
+    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的任务总数。（包含重推触发量）',
     '已推送任务量': 'DCC培育系统已向预外呼系统发起推送的任务数，不含仍处于待同步/同步失败状态的任务。推送率 = 已推送任务量 ÷ 预外呼任务总量 × 100%',
     '同步失败量': 'DCC培育系统向预外呼系统同步失败的去重任务数，需要结合任务异常原因进行重试或人工处理。',
     '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 预外呼任务总量 × 100%',
@@ -7204,13 +7428,15 @@ function showPreDialerMetricInfo(metric) {
     '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
     '线路未呼': '外呼结果为线路未呼的话单数量，表示预外呼系统已接收任务但线路侧未实际发起呼叫，按话单统计，不按任务去重。',
-    '已分配坐席（总数）': '预外呼系统已将外呼结果成功回传，已分配至坐席的去重任务总数',
-    '已分配坐席（通话状态为坐席接听）': '预外呼任务人工接管后，已分配至坐席的去重任务总数',
-    '首呼接通率': '已成功推送并被预外呼系统，且回传首次话单结果的外呼次数。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
-    '2~5呼接通率': '已成功推送并被预外呼系统，且回传非首次话单结果的外呼次数。2~5呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
+    '已分配坐席（总量）': '预外呼任务总量中剔除同步失败后的去重任务总数；同步失败任务未进入有效坐席承接，不计入该指标。',
+    '已分配坐席（通话状态 = 坐席接听）': '预外呼任务人工接管后，已分配至坐席的去重任务总数',
+    '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，且最新/历史话单中存在坐席接听记录的去重任务数。',
+    '线索下发量（通话状态 ≠ 坐席接听）': '已下发至 NEV线索中台，但未出现坐席接听记录的去重任务数，用于识别非接听场景下的下发量。',
+    '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
+    '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
     '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
-    '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 坐席总人数',
-    '线索下发量': '预外呼任务人工接管后，更新线索状态为下发门店的任务总数',
+    '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 外呼接通量',
+    '日人均承载量': '日人均承载量 = 已推送任务量 ÷ 外呼接通量',
     '同步成功率': 'DCC 成功被预外呼系统接收的任务数 ÷ DCC 发起同步的任务数。用于监控两系统接口接入是否稳定。',
     '首呼及时率': '在同步后 30 分钟内完成首次外呼的任务数 ÷ 已同步任务数。用于衡量预外呼系统的响应效率。',
     '任务完成率': '处理状态为“已完成”的任务数 ÷ 已同步任务数。处理中、超时任务不计入完成。',
