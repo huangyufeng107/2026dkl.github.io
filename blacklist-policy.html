@@ -2524,10 +2524,19 @@
       background-color: #f8fafc;
       font-size: 13px; color: #262626; outline: none; cursor: pointer;
       min-width: 160px;
+    }
+    select.filter-select {
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238c8c8c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 8px center;
+    }
+    input.filter-select {
+      appearance: auto;
+      -webkit-appearance: auto;
+      background-image: none;
+      padding-right: 11px;
+      color-scheme: light;
     }
     .filter-select:focus { border-color: #2563eb; background-color: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
     .policy-rule-note {
@@ -2566,6 +2575,113 @@
       line-height: 1.5;
       white-space: nowrap;
     }
+    .policy-content.filter-row {
+      display: grid;
+      grid-template-columns: max-content minmax(150px, 180px) max-content minmax(130px, 160px) max-content minmax(130px, 160px) auto;
+      align-items: center;
+      gap: 10px 12px;
+    }
+    .policy-content.filter-row .filter-label {
+      line-height: 34px;
+      white-space: nowrap;
+    }
+    .policy-content.filter-row .filter-select {
+      width: 100%;
+      min-width: 0;
+    }
+    .policy-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .policy-table {
+      min-width: 1120px;
+      table-layout: fixed;
+    }
+    .policy-table th,
+    .policy-table td {
+      overflow: hidden;
+    }
+    .policy-table th:nth-child(1),
+    .policy-table td:nth-child(1) { width: 54px; }
+    .policy-table th:nth-child(2),
+    .policy-table td:nth-child(2) { width: 220px; }
+    .policy-table th:nth-child(3),
+    .policy-table td:nth-child(3) { width: 72px; }
+    .policy-table th:nth-child(4),
+    .policy-table td:nth-child(4) { width: 124px; }
+    .policy-table th:nth-child(5),
+    .policy-table td:nth-child(5) { width: 260px; }
+    .policy-table th:nth-child(6),
+    .policy-table td:nth-child(6) { width: 116px; }
+    .policy-table th:nth-child(7),
+    .policy-table td:nth-child(7) { width: 112px; }
+    .policy-table th:nth-child(8),
+    .policy-table td:nth-child(8) { width: 104px; }
+    .policy-table th:nth-child(9),
+    .policy-table td:nth-child(9) { width: 88px; }
+    .policy-table th:nth-child(10),
+    .policy-table td:nth-child(10) { width: 148px; }
+    .policy-table .col-field {
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .policy-row-desc {
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .policy-table .policy-plain-text {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    .policy-table td:nth-child(5) .policy-plain-text {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .policy-table .action-btns {
+      flex-wrap: nowrap;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .policy-table .action-btn {
+      min-width: 38px;
+      height: 28px;
+      padding: 0 8px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-weight: 700;
+      line-height: 26px;
+      background: transparent;
+    }
+    .policy-table .action-btn.view {
+      border-color: #ccfbf1;
+      background: #f0fdfa;
+      color: #0f766e;
+    }
+    .policy-table .action-btn.edit {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .policy-table .action-btn.delete {
+      border-color: #fecaca;
+      background: #fff1f2;
+      color: #dc2626;
+    }
+    .policy-table .action-btn.view:hover { background: #ccfbf1; }
+    .policy-table .action-btn.edit:hover { background: #dbeafe; }
+    .policy-table .action-btn.delete:hover { background: #ffe4e6; }
     .assignment-dimension-tabs {
       display: flex;
       align-items: center;
@@ -3382,6 +3498,123 @@
       background: #2563eb;
       color: #fff;
       box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+    }
+    .policy-rule-modal {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .policy-rule-modal .modal-header {
+      padding: 16px 22px;
+      border-bottom-color: #e8eef7;
+      background: #fbfdff;
+    }
+    .policy-rule-modal .modal-title {
+      color: #0f172a;
+      font-weight: 800;
+    }
+    .policy-rule-modal .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      color: #64748b;
+    }
+    .policy-rule-modal .modal-body {
+      padding: 18px 22px 20px;
+    }
+    .policy-rule-modal .form-label,
+    .policy-rule-modal .toggle-label {
+      color: #334155;
+      font-weight: 800;
+    }
+    .policy-rule-modal .form-input,
+    .policy-rule-modal .form-textarea,
+    .policy-rule-modal .validity-input,
+    .policy-rule-modal .validity-unit,
+    .policy-rule-modal .account-select-trigger {
+      border-color: #d5deea;
+      border-radius: 7px;
+      background-color: #f8fafc;
+      color: #111827;
+      font-size: 13px;
+    }
+    .policy-rule-modal .form-input,
+    .policy-rule-modal .validity-input,
+    .policy-rule-modal .validity-unit,
+    .policy-rule-modal .account-select-trigger {
+      min-height: 36px;
+    }
+    .policy-rule-modal .form-input:focus,
+    .policy-rule-modal .form-textarea:focus,
+    .policy-rule-modal .validity-input:focus,
+    .policy-rule-modal .validity-unit:focus {
+      border-color: #2563eb;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .policy-rule-modal .form-hint {
+      color: #64748b;
+      line-height: 1.55;
+    }
+    .policy-rule-modal .condition-row {
+      grid-template-columns: max-content max-content minmax(0, 1fr);
+      margin-top: 10px;
+      border-color: #e8eef7;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+    .policy-rule-modal .condition-toggle {
+      border-color: #d5deea;
+      border-radius: 7px;
+    }
+    .policy-rule-modal .condition-btn {
+      height: 34px;
+      min-width: 78px;
+      color: #475569;
+      font-weight: 800;
+    }
+    .policy-rule-modal .condition-btn.active {
+      background: #2563eb;
+      color: #fff;
+    }
+    .policy-rule-modal .validity-section.show {
+      display: grid;
+      grid-template-columns: 92px 96px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+    }
+    .policy-rule-modal .notification-fields.show {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .policy-rule-modal .notification-fields .form-group {
+      min-width: 0;
+    }
+    .policy-rule-modal .modal-footer {
+      position: sticky;
+      bottom: 0;
+      padding: 12px 22px;
+      border-top-color: #e8eef7;
+      background: #fff;
+    }
+    .policy-rule-modal .btn-cancel,
+    .policy-rule-modal .btn-save {
+      min-width: 76px;
+      height: 34px;
+      padding: 0 16px;
+      border-radius: 7px;
+      font-weight: 800;
+    }
+    .policy-rule-modal .btn-cancel:hover {
+      color: #2563eb;
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .policy-rule-modal .btn-save {
+      background: #2563eb;
+    }
+    .policy-rule-modal .btn-save:hover {
+      background: #1d4ed8;
     }
     @media (max-width: 1100px) {
       .dispatch-form-grid {
@@ -4699,6 +4932,9 @@
       .page-hero {
         flex-direction: column;
       }
+      .policy-content.filter-row {
+        grid-template-columns: repeat(3, max-content minmax(130px, 1fr)) auto;
+      }
       .summary-strip {
         width: 100%;
         justify-content: flex-start;
@@ -4779,6 +5015,18 @@
       .filter-row {
         align-items: stretch;
       }
+      .policy-content.filter-row {
+        grid-template-columns: 1fr;
+      }
+      .policy-content.filter-row .filter-label {
+        width: auto;
+        line-height: 1.2;
+        margin-top: 2px;
+      }
+      .policy-content.filter-row .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
       .filter-label {
         width: 100%;
       }
@@ -4851,6 +5099,17 @@
       }
       .data-table {
         min-width: 900px;
+      }
+      .policy-table {
+        min-width: 1080px;
+      }
+      .policy-rule-modal .condition-row,
+      .policy-rule-modal .validity-section.show,
+      .policy-rule-modal .notification-fields.show {
+        grid-template-columns: 1fr;
+      }
+      .policy-rule-modal .condition-desc {
+        white-space: normal;
       }
     }
 
@@ -5143,23 +5402,25 @@
         <button class="btn-add strategy-add-btn" type="button" onclick="openModal('add')">新增策略</button>
       </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th class="col-num">#</th>
-            <th>策略名称</th>
-            <th>权重</th>
-            <th>关联外呼类型</th>
-            <th>外呼标签</th>
-            <th>黑名单期限</th>
-            <th>审核机制</th>
-            <th>拦截次数</th>
-            <th>状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+      <div class="policy-table-wrap">
+        <table class="data-table policy-table">
+          <thead>
+            <tr>
+              <th class="col-num">#</th>
+              <th>策略名称</th>
+              <th>权重</th>
+              <th>关联外呼类型</th>
+              <th>外呼标签</th>
+              <th>黑名单期限</th>
+              <th>审核机制</th>
+              <th>拦截次数</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
 
       <div class="pagination">
         <span id="paginationInfo">共 0 条记录，当前第 1 / 1 页</span>
@@ -6759,7 +7020,7 @@ const preDialerCallRecords = [
   { taskId: 'PD-20260621-004', callId: 'CALL-0621-0845', attempt: 1, callTime: '2026-06-21 14:30', duration: '0秒', result: '线路拒呼', handleStatus: '处理中', returnedAt: '', connected: false }
 ];
 
-let preDialerReportFilters = { startDate: '2026-06-20', endDate: '2026-06-22', status: 'all', systemStatus: 'all', exceptionReason: 'all', callResult: 'all', keyword: '', attentionFocus: '' };
+let preDialerReportFilters = { startDate: '2026-06-20T00:00', endDate: '2026-06-22T23:59', status: 'all', systemStatus: 'all', exceptionReason: 'all', callResult: 'all', keyword: '', attentionFocus: '' };
 let preDialerListActiveTab = 'overview';
 let preDialerTaskCurrentPage = 1;
 let preDialerTaskPageSize = 10;
@@ -6777,7 +7038,9 @@ function getFilteredPreDialerTasks() {
       || (attentionFocus === 'sync-failed' && task.syncStatus === '同步失败')
       || (attentionFocus === 'timeout-pending' && taskCalls.some(call => !call.returnedAt && task.overdue))
       || (attentionFocus === 'recording-missing' && taskCalls.some(call => call.returnedAt && call.recordingAvailable === false));
-    return task.syncDate >= startDate && task.syncDate <= endDate && (status === 'all' || task.status === status) && (systemStatus === 'all' || task.systemStatus === systemStatus) && (exceptionReason === 'all' || task.systemExceptionReason === exceptionReason) && (callResult === 'all' || getLatestTaskCallRecord(task.id)?.result === callResult) && matchesAttention && (!query || [task.id, task.leadId, task.customer, task.mobile].join(' ').toLowerCase().includes(query));
+    const filterStart = startDate.slice(0, 10);
+    const filterEnd = endDate.slice(0, 10);
+    return task.syncDate >= filterStart && task.syncDate <= filterEnd && (status === 'all' || task.status === status) && (systemStatus === 'all' || task.systemStatus === systemStatus) && (exceptionReason === 'all' || task.systemExceptionReason === exceptionReason) && (callResult === 'all' || getLatestTaskCallRecord(task.id)?.result === callResult) && matchesAttention && (!query || [task.id, task.leadId, task.customer, task.mobile].join(' ').toLowerCase().includes(query));
   });
 }
 
@@ -6802,6 +7065,7 @@ function getPreDialerMetrics(tasks, calls) {
   const effectiveCalls = connectedCalls.filter(call => Number.parseInt(call.duration, 10) >= 30);
   const lineRejectedCalls = calls.filter(call => call.result === '线路拒呼');
   const lineUncalledCalls = calls.filter(call => call.result === '线路未呼');
+  const effectiveOutboundCalls = tasks.length;
   const assignedAgentsTotal = tasks.length - syncFailedTasks.length;
   const assignedAgentsAnswered = calls.filter(call => call.connected).length;
   const firstCalls = calls.filter(call => call.attempt === 1);
@@ -6826,6 +7090,7 @@ function getPreDialerMetrics(tasks, calls) {
     recordingMissingCalls: recordingMissingCalls.length,
     connectedCalls: connectedCalls.length,
     effectiveCalls: effectiveCalls.length,
+    effectiveOutboundCalls: effectiveOutboundCalls,
     lineRejectedCalls: lineRejectedCalls.length,
     lineUncalledCalls: lineUncalledCalls.length,
     assignedAgentsTotal: assignedAgentsTotal,
@@ -6869,6 +7134,7 @@ function getPreDialerBatchMetricColumns(group = 'all') {
   const callColumns = [
     { label: '任务处理中', value: metrics => metrics.processingTasks },
     { label: '任务已处理', value: metrics => metrics.handledTasks },
+    { label: '有效任务量', value: metrics => metrics.effectiveOutboundCalls },
     { label: '话单已回传', value: metrics => metrics.returnedCalls },
     { label: '话单待回传', value: metrics => metrics.pendingCalls },
     { label: '话单超时未回传', value: metrics => metrics.timeoutPendingCalls },
@@ -6905,7 +7171,8 @@ function renderPreDialerBatchTable(pageDates, dates, tasks, calls) {
 
 function getPreDialerExportRangeText() {
   const { startDate, endDate } = preDialerReportFilters;
-  return startDate || endDate ? `${startDate || '全部'}_${endDate || '全部'}` : new Date().toISOString().slice(0, 10);
+  const fmt = (v) => v ? v.slice(0, 10) : '全部';
+  return startDate || endDate ? `${fmt(startDate)}_${fmt(endDate)}` : new Date().toISOString().slice(0, 10);
 }
 
 function getPreDialerTaskExportRows(tasks) {
@@ -6977,10 +7244,9 @@ function exportPreDialerTasks() {
     '重拨触发原因',
     '已下发线索',
     '线索下发时间',
-    '更新时间',
-    '外呼话单明细'
+    '更新时间'
   ];
-  const rows = getPreDialerTaskExportRows(tasks);
+  const rows = getPreDialerTaskExportRows(tasks).map(row => row.slice(0, columns.length));
   const taskIds = new Set(tasks.map(task => task.id));
   const callRecords = preDialerCallRecords.filter(record => taskIds.has(record.taskId)).sort((a, b) => a.callTime.localeCompare(b.callTime));
   const callColumns = ['话单ID', '预外呼任务ID', '第几次外呼', '外呼时间', '通话时长', '外呼结果', '预外呼处理状态', '回传时间', '是否接通', '是否重拨', '重拨触发原因', '重拨状态'];
@@ -6992,15 +7258,14 @@ function exportPreDialerTasks() {
       call.retriggerRequired ? '是' : '否', call.retriggerReason || '', call.retriggerStatus || ''
     ];
   });
-  const csvRows = [
-    columns.map(csvEscape).join(','),
-    ...rows.map(row => row.map(csvEscape).join(',')),
-    '', '',
-    `外呼话单明细（共 ${callRecords.length} 条）`,
-    callColumns.map(csvEscape).join(','),
-    ...callRows.map(row => row.map(csvEscape).join(','))
-  ];
-  downloadCsvFile(`明细列表_${getPreDialerExportRangeText()}.csv`, csvRows, `已导出 ${rows.length} 条任务 + ${callRecords.length} 条话单`);
+  downloadExcelWorkbookFile(
+    `明细列表_${getPreDialerExportRangeText()}.xls`,
+    [
+      { name: '预外呼任务明细', columns, rows },
+      { name: '外呼话单明细', columns: callColumns, rows: callRows }
+    ],
+    `已导出 ${rows.length} 条任务 + ${callRecords.length} 条话单，外呼话单明细已写入独立 Sheet`
+  );
 }
 
 function exportPreDialerBatchSummary() {
@@ -7031,7 +7296,9 @@ function exportPreDialerBatchSummary() {
 
 function formatPreDialerDisplayDate(value) {
   if (!value) return '';
-  const [date, time] = String(value).split(' ');
+  const str = String(value);
+  const sep = str.includes('T') ? 'T' : ' ';
+  const [date, time] = str.split(sep);
   const [year, month, day] = date.split('-');
   const formatted = month && day ? `${year}/${Number(month)}/${Number(day)}` : date;
   return time ? `${formatted} ${time}` : formatted;
@@ -7088,7 +7355,7 @@ function renderPreDialerReportPage(page) {
 
       ${['task', 'batch', 'retrigger'].includes(preDialerListActiveTab) ? `
       <section class="predial-filter-panel">
-        <div class="predial-filter-field"><label>同步日期</label><div class="predial-date-range"><input class="filter-select" id="preDialerStartDate" type="date" value="${preDialerReportFilters.startDate}"><span>至</span><input class="filter-select" id="preDialerEndDate" type="date" value="${preDialerReportFilters.endDate}"></div></div>
+        <div class="predial-filter-field"><label>同步日期</label><div class="predial-date-range"><input class="filter-select" id="preDialerStartDate" type="datetime-local" value="${preDialerReportFilters.startDate}"><span>至</span><input class="filter-select" id="preDialerEndDate" type="datetime-local" value="${preDialerReportFilters.endDate}"></div></div>
         <div class="predial-filter-field"><label>任务系统状态</label><select class="filter-select" id="preDialerSystemStatus"><option value="all">全部任务系统状态</option><option value="待同步" ${preDialerReportFilters.systemStatus === '待同步' ? 'selected' : ''}>待同步</option><option value="同步失败" ${preDialerReportFilters.systemStatus === '同步失败' ? 'selected' : ''}>同步失败</option><option value="已同步" ${preDialerReportFilters.systemStatus === '已同步' ? 'selected' : ''}>已同步</option><option value="处理完成" ${preDialerReportFilters.systemStatus === '处理完成' ? 'selected' : ''}>处理完成</option></select></div>
         <div class="predial-filter-field"><label>任务异常原因</label><select class="filter-select" id="preDialerExceptionReason"><option value="all">全部任务异常原因</option><option value="无异常" ${preDialerReportFilters.exceptionReason === '无异常' ? 'selected' : ''}>无异常</option><option value="中止AI外呼任务" ${preDialerReportFilters.exceptionReason === '中止AI外呼任务' ? 'selected' : ''}>中止AI外呼任务</option><option value="手机号码黑名单" ${preDialerReportFilters.exceptionReason === '手机号码黑名单' ? 'selected' : ''}>手机号码黑名单</option><option value="店端跟进冲突" ${preDialerReportFilters.exceptionReason === '店端跟进冲突' ? 'selected' : ''}>店端跟进冲突</option></select></div>
         <div class="predial-filter-field"><label>预外呼任务状态</label><select class="filter-select" id="preDialerStatus"><option value="all">全部状态</option><option value="处理中" ${preDialerReportFilters.status === '处理中' ? 'selected' : ''}>处理中</option><option value="已完成" ${preDialerReportFilters.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
@@ -7131,6 +7398,7 @@ function renderPreDialerReportPage(page) {
             <div class="predial-overview-grid">
               ${renderPreDialerMetricCard('任务处理中', metrics.processingTasks, `占比 ${rate(metrics.processingTasks, metrics.totalTasks)}`, 'quality')}
               ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.totalTasks)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('有效任务量', metrics.effectiveOutboundCalls, '剔除无效与待回传任务', 'quality')}
               ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, '不按任务去重', 'quality')}
               ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '不按任务去重', 'quality')}
               ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传', 'risk')}
@@ -7143,7 +7411,7 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
               ${renderPreDialerMetricCard('呼叫接通时长', `${metrics.totalDurationSeconds}秒`, '接通通话总时长', 'quality')}
               ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 外呼接通量', 'quality')}
-              ${renderPreDialerMetricCard('日人均承载量', metrics.dailyAvgLoad, '已推送任务量 ÷ 外呼接通量', 'quality')}
+              ${renderPreDialerMetricCard('日人均承载量', metrics.dailyAvgLoad, '有效任务量 ÷ 外呼接通量', 'quality')}
             </div>
           </section>
         </div>
@@ -7415,7 +7683,7 @@ function changePreDialerRetriggerPage(dir) {
 
 function showPreDialerMetricInfo(metric) {
   const descriptions = {
-    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的任务总数。（包含重推触发量）',
+    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的任务总数。（含重推触发量）',
     '已推送任务量': 'DCC培育系统已向预外呼系统发起推送的任务数，不含仍处于待同步/同步失败状态的任务。推送率 = 已推送任务量 ÷ 预外呼任务总量 × 100%',
     '同步失败量': 'DCC培育系统向预外呼系统同步失败的去重任务数，需要结合任务异常原因进行重试或人工处理。',
     '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 预外呼任务总量 × 100%',
@@ -7424,19 +7692,20 @@ function showPreDialerMetricInfo(metric) {
     '话单待回传': '已成功推送并被预外呼系统，但尚未收到预外呼系统回传首次话单的去重任务数',
     '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传首次话单的去重任务数，需要核查接口或补偿任务',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
-    '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通会分别计入。接通率 = 外呼接通量 ÷ 话单总数 × 100%',
+    '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通去重计入。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
+    '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼 + 线路未呼 + 话单待回传 + 任务中止且话单待回传 + 用户黑名单且话单待回传）',
     '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
     '线路未呼': '外呼结果为线路未呼的话单数量，表示预外呼系统已接收任务但线路侧未实际发起呼叫，按话单统计，不按任务去重。',
-    '已分配坐席（总量）': '预外呼任务总量中剔除同步失败后的去重任务总数；同步失败任务未进入有效坐席承接，不计入该指标。',
+    '已分配坐席（总量）': '待同步/同步失败状态未进入有效坐席承接，不计入该指标。',
     '已分配坐席（通话状态 = 坐席接听）': '预外呼任务人工接管后，已分配至坐席的去重任务总数',
-    '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，且最新/历史话单中存在坐席接听记录的去重任务数。',
+    '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，出现坐席接听记录的去重任务数，用于识别接听场景下的下发量。',
     '线索下发量（通话状态 ≠ 坐席接听）': '已下发至 NEV线索中台，但未出现坐席接听记录的去重任务数，用于识别非接听场景下的下发量。',
     '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
     '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
     '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
     '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 外呼接通量',
-    '日人均承载量': '日人均承载量 = 已推送任务量 ÷ 外呼接通量',
+    '日人均承载量': '日人均承载量 = 有效任务量 ÷ 外呼接通量',
     '同步成功率': 'DCC 成功被预外呼系统接收的任务数 ÷ DCC 发起同步的任务数。用于监控两系统接口接入是否稳定。',
     '首呼及时率': '在同步后 30 分钟内完成首次外呼的任务数 ÷ 已同步任务数。用于衡量预外呼系统的响应效率。',
     '任务完成率': '处理状态为“已完成”的任务数 ÷ 已同步任务数。处理中、超时任务不计入完成。',
@@ -7462,7 +7731,7 @@ function showPreDialerMetricInfo(metric) {
   document.querySelectorAll('#preCallReportPage .predial-metric-card').forEach(card => card.classList.remove('metric-info-active'));
   trigger.classList.add('metric-info-active');
   const action = metric === '重推触发量' ? '<button class="metric-info-popover-action" type="button" onclick="openPreDialerRetriggerList()">查看重推明细</button>' : '';
-  popover.innerHTML = `<div class="metric-info-popover-head"><div class="metric-info-popover-title">${prefix} · 指标说明</div><button class="metric-info-popover-close" type="button" aria-label="关闭指标说明" onclick="closePreDialerMetricInfo()">×</button></div><div class="metric-info-popover-body">${descriptions[metric] || '用于监控预外呼运营表现，请结合任务、话单及商机转化口径综合判断。'}</div>${action}`;
+  popover.innerHTML = `<div class="metric-info-popover-head"><div class="metric-info-popover-title">${prefix} · 指标说明</div><button class="metric-info-popover-close" type="button" aria-label="关闭指标说明" onclick="closePreDialerMetricInfo()">×</button></div><div class="metric-info-popover-body">${descriptions[metric] || '已下发至 NEV线索中台'}</div>${action}`;
   popover.classList.add('show');
   const rect = trigger.getBoundingClientRect();
   const width = Math.min(360, window.innerWidth - 32);
@@ -7532,7 +7801,7 @@ function queryPreDialerReport() {
 }
 
 function resetPreDialerReportFilters() {
-  preDialerReportFilters = { startDate: '2026-06-20', endDate: '2026-06-22', status: 'all', systemStatus: 'all', exceptionReason: 'all', callResult: 'all', keyword: '', attentionFocus: '' };
+  preDialerReportFilters = { startDate: '2026-06-20T00:00', endDate: '2026-06-22T23:59', status: 'all', systemStatus: 'all', exceptionReason: 'all', callResult: 'all', keyword: '', attentionFocus: '' };
   preDialerTaskCurrentPage = 1;
   preDialerBatchCurrentPage = 1;
   preDialerRetriggerCurrentPage = 1;
@@ -14663,6 +14932,46 @@ function downloadCsvFile(fileName, csvRows, successMessage) {
   showToast(successMessage, true);
 }
 
+function downloadExcelWorkbookFile(fileName, sheets, successMessage) {
+  const workbookXml = `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Styles>
+  <Style ss:ID="header"><Font ss:Bold="1"/><Interior ss:Color="#D9D9D9" ss:Pattern="Solid"/></Style>
+  <Style ss:ID="text"><NumberFormat ss:Format="@"/></Style>
+ </Styles>
+ ${sheets.map(sheet => `
+ <Worksheet ss:Name="${excelXmlEscape(sheet.name).slice(0, 31)}">
+  <Table>
+   <Row>${sheet.columns.map(col => `<Cell ss:StyleID="header"><Data ss:Type="String">${excelXmlEscape(col)}</Data></Cell>`).join('')}</Row>
+   ${sheet.rows.map(row => `<Row>${row.map(cell => `<Cell ss:StyleID="text"><Data ss:Type="String">${excelXmlEscape(cell ?? '')}</Data></Cell>`).join('')}</Row>`).join('')}
+  </Table>
+ </Worksheet>`).join('')}
+</Workbook>`;
+  const blob = new Blob(['\ufeff' + workbookXml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showToast(successMessage, true);
+}
+
+function excelXmlEscape(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 function csvEscape(value) {
   const text = String(value).replace(/"/g, '""');
   return /[",\n]/.test(text) ? `"${text}"` : text;
@@ -14736,7 +15045,7 @@ function renderTable() {
     return `
       <tr>
         <td class="col-num">${start + idx + 1}</td>
-        <td class="col-field">${p.name}${pendingBadge}<div style="font-size:12px;color:#8c8c8c;margin-top:2px">${p.desc || '—'}</div></td>
+        <td class="col-field">${p.name}${pendingBadge}<div class="policy-row-desc">${p.desc || '—'}</div></td>
         <td><span class="policy-plain-text">P${p.priority || 10}</span></td>
         <td>${callTypeHtml}</td>
         <td>${tagHtml}</td>
