@@ -3616,6 +3616,97 @@
     .policy-rule-modal .btn-save:hover {
       background: #1d4ed8;
     }
+    #leadDispatchRuleModal .cold-lead-policy-modal {
+      width: min(980px, calc(100vw - 40px));
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #e8eef7;
+      background: #fff;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .modal-title {
+      color: #0f172a;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .modal-body {
+      display: grid;
+      gap: 20px;
+      padding: 22px 24px 30px;
+      background: #fff;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .dispatch-rule-form {
+      gap: 0;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .dispatch-form-section {
+      display: grid;
+      gap: 18px;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .dispatch-section-title {
+      margin: 0;
+      padding-left: 10px;
+      border-left: 4px solid #2563eb;
+      color: #0f172a;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .dispatch-section-title::before {
+      display: none;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .dispatch-form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px 18px;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-label {
+      margin-bottom: 8px;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-input,
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-textarea {
+      min-height: 38px;
+      border-color: #d5deea;
+      border-radius: 7px;
+      background-color: #f8fafc;
+      color: #111827;
+      font-size: 13px;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-textarea {
+      min-height: 92px;
+      padding-top: 9px;
+      line-height: 1.6;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-input:focus,
+    #leadDispatchRuleModal .cold-lead-policy-modal .form-textarea:focus {
+      border-color: #2563eb;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .modal-footer {
+      position: sticky;
+      bottom: 0;
+      padding: 12px 24px;
+      border-top: 1px solid #e8eef7;
+      background: #fff;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .btn-cancel,
+    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save {
+      min-width: 76px;
+      height: 34px;
+      padding: 0 16px;
+      border-radius: 7px;
+      font-weight: 800;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save {
+      background: #2563eb;
+    }
+    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save:hover {
+      background: #1d4ed8;
+    }
     @media (max-width: 1100px) {
       .dispatch-form-grid {
         grid-template-columns: 1fr;
@@ -5325,9 +5416,12 @@
   <div class="content">
     <div class="strategy-config-tabs show" id="strategyConfigTabs">
       <button type="button" class="strategy-config-tab active" data-tab="policy" onclick="switchStrategyConfigTab('policy')">黑名单策略</button>
+      <button type="button" class="strategy-config-tab" data-tab="call-status-policy" onclick="switchStrategyConfigTab('call-status-policy')">话单状态策略</button>
       <button type="button" class="strategy-config-tab" data-tab="lead-dispatch" onclick="switchStrategyConfigTab('lead-dispatch')">线索下发策略</button>
       <button type="button" class="strategy-config-tab" data-tab="sms-dispatch" onclick="switchStrategyConfigTab('sms-dispatch')">短信下发策略</button>
+      <button type="button" class="strategy-config-tab" data-tab="cold-lead-definition" onclick="switchStrategyConfigTab('cold-lead-definition')">门店冷线索策略</button>
       <button type="button" class="strategy-config-tab" data-tab="allocation-policy" onclick="switchStrategyConfigTab('allocation-policy')">分配比例策略</button>
+      <button type="button" class="strategy-config-tab" data-tab="contact-mutex-policy" onclick="switchStrategyConfigTab('contact-mutex-policy')">联络互斥策略</button>
     </div>
     <div class="page-hero policy-content">
       <div>
@@ -6214,8 +6308,11 @@
     </div>
 
     <div class="lead-page" id="leadAssignmentConfigPage"></div>
+    <div class="lead-page" id="callStatusPolicyPage"></div>
     <div class="lead-page" id="leadDispatchConfigPage"></div>
     <div class="lead-page" id="smsDispatchPolicyPage"></div>
+    <div class="lead-page" id="coldLeadDefinitionPage"></div>
+    <div class="lead-page" id="contactMutexPolicyPage"></div>
     <div class="lead-page" id="preCallReportPage"></div>
 
     <div class="design-stage" id="designStage">
@@ -6989,7 +7086,7 @@ function setPolicyContentVisible(visible) {
 }
 
 function hideLeadPages() {
-  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage', 'preCallReportPage'].forEach(id => {
+  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'callStatusPolicyPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage', 'coldLeadDefinitionPage', 'contactMutexPolicyPage', 'preCallReportPage'].forEach(id => {
     document.getElementById(id)?.classList.remove('show');
   });
 }
@@ -7000,22 +7097,22 @@ function renderPreCallReportPage() {
   renderPreDialerReportPage(page);
 }
 const preDialerTasks = [
-  { id: 'PD-20260622-001', leadId: 'HQ-20260622-018', customer: '陈先生', mobile: '138****1298', series: 'N6', syncDate: '2026-06-22', syncTime: '09:08', syncStatus: '已同步', systemStatus: '已同步', status: '处理中', lastCall: '2026-06-22 11:05', callResult: '线路未呼', lastResult: '线路未呼，待回传', systemExceptionReason: '无异常', updatedAt: '2026-06-23 11:05', overdue: true },
-  { id: 'PD-20260622-002', leadId: 'HQ-20260622-024', customer: '林女士', mobile: '139****4821', series: '轩逸', syncDate: '2026-06-22', syncTime: '09:16', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 14:12', callResult: '用户接通', lastResult: '已建联，预约到店', systemExceptionReason: '无异常', updatedAt: '2026-06-22 14:15', overdue: false, nevDispatched: true, nevDispatchedAt: '2026-06-22 14:18' },
-  { id: 'PD-20260622-003', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '中止AI外呼任务', updatedAt: '2026-06-22 15:40', overdue: false },
-  { id: 'PD-20260621-004', leadId: 'HQ-20260621-095', customer: '王女士', mobile: '137****8096', series: '逍客', syncDate: '2026-06-21', syncTime: '11:25', syncStatus: '同步失败', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-21 14:30', callResult: '线路拒呼', lastResult: '线路拒呼', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-21 17:10', overdue: false },
-  { id: 'PD-20260621-005', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '处理完成', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 09:34', callResult: '无人接听', lastResult: '三次未接听，结束处理', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-22 09:35', overdue: false },
-  { id: 'PD-20260620-006', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '08:18', syncStatus: '待同步', systemStatus: '待同步', status: '', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '', updatedAt: '2026-06-22 08:48', overdue: false },
+  { id: 'PD-20260622-001', manualTaskCode: 'RG-20260622-018', leadId: 'HQ-20260622-018', customer: '陈先生', mobile: '138****1298', series: 'N6', syncDate: '2026-06-22', syncTime: '09:08', syncStatus: '已同步', systemStatus: '已同步', status: '处理中', lastCall: '2026-06-22 11:05', callResult: '线路未呼', lastResult: '线路未呼，待回传', systemExceptionReason: '无异常', updatedAt: '2026-06-23 11:05', overdue: true },
+  { id: 'PD-20260622-002', manualTaskCode: 'RG-20260622-024', leadId: 'HQ-20260622-024', customer: '林女士', mobile: '139****4821', series: '轩逸', syncDate: '2026-06-22', syncTime: '09:16', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 14:12', callResult: '用户接通', lastResult: '已建联，预约到店', systemExceptionReason: '无异常', updatedAt: '2026-06-22 14:15', overdue: false, nevDispatched: true, nevDispatchedAt: '2026-06-22 14:18' },
+  { id: 'PD-20260622-003', manualTaskCode: 'RG-20260622-031', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '中止外呼任务', updatedAt: '2026-06-22 15:40', overdue: false },
+  { id: 'PD-20260621-004', manualTaskCode: 'RG-20260621-095', leadId: 'HQ-20260621-095', customer: '王女士', mobile: '137****8096', series: '逍客', syncDate: '2026-06-21', syncTime: '11:25', syncStatus: '同步失败', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-21 14:30', callResult: '线路拒呼', lastResult: '线路拒呼', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-21 17:10', overdue: false },
+  { id: 'PD-20260621-005', manualTaskCode: 'RG-20260621-106', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '处理完成', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 09:34', callResult: '无人接听', lastResult: '三次未接听，结束处理', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-22 09:35', overdue: false },
+  { id: 'PD-20260620-006', manualTaskCode: 'RG-20260620-213', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '08:18', syncStatus: '待同步', systemStatus: '待同步', status: '', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '', updatedAt: '2026-06-22 08:48', overdue: false },
 ];
 
 const preDialerCallRecords = [
-  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1001', attempt: 1, callTime: '2026-06-22 09:36', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:37', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
+  { taskId: 'PD-20260622-001', callId: 'CALL-0622-1001', attempt: 1, callTime: '2026-06-22 09:36', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:37', connected: false },
   { taskId: 'PD-20260622-001', callId: 'CALL-0622-1007', attempt: 2, callTime: '2026-06-22 10:26', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 10:27', connected: false },
   { taskId: 'PD-20260622-001', callId: 'CALL-0622-1011', attempt: 3, callTime: '2026-06-22 11:05', duration: '0秒', result: '线路未呼', handleStatus: '处理中', returnedAt: '2026-06-22 11:06', connected: false },
   { taskId: 'PD-20260622-002', callId: 'CALL-0622-1014', attempt: 1, callTime: '2026-06-22 09:48', duration: '38秒', result: '用户接通', handleStatus: '已完成', returnedAt: '2026-06-22 09:49', connected: true },
   { taskId: 'PD-20260622-002', callId: 'CALL-0622-1058', attempt: 2, callTime: '2026-06-22 14:12', duration: '56秒', result: '用户接通', handleStatus: '已完成', returnedAt: '2026-06-22 14:15', connected: true },
-  { taskId: 'PD-20260621-005', callId: 'CALL-0621-0934', attempt: 1, callTime: '2026-06-21 14:10', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-21 14:11', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
-  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0981', attempt: 2, callTime: '2026-06-22 09:02', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:03', connected: false, retriggerRequired: true, retriggerReason: '无人接听，满足重拨规则', retriggerStatus: '已重拨' },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0621-0934', attempt: 1, callTime: '2026-06-21 14:10', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-21 14:11', connected: false },
+  { taskId: 'PD-20260621-005', callId: 'CALL-0622-0981', attempt: 2, callTime: '2026-06-22 09:02', duration: '0秒', result: '无人接听', handleStatus: '处理中', returnedAt: '2026-06-22 09:03', connected: false },
   { taskId: 'PD-20260621-005', callId: 'CALL-0622-0994', attempt: 3, callTime: '2026-06-22 09:34', duration: '0秒', result: '无人接听', handleStatus: '已完成', returnedAt: '2026-06-22 09:35', connected: false },
   { taskId: 'PD-20260621-004', callId: 'CALL-0621-0845', attempt: 1, callTime: '2026-06-21 14:30', duration: '0秒', result: '线路拒呼', handleStatus: '处理中', returnedAt: '', connected: false }
 ];
@@ -7026,8 +7123,6 @@ let preDialerTaskCurrentPage = 1;
 let preDialerTaskPageSize = 10;
 let preDialerBatchCurrentPage = 1;
 let preDialerBatchPageSize = 10;
-let preDialerRetriggerCurrentPage = 1;
-let preDialerRetriggerPageSize = 10;
 
 function getFilteredPreDialerTasks() {
   const { startDate, endDate, status, systemStatus, exceptionReason, callResult, keyword, attentionFocus } = preDialerReportFilters;
@@ -7074,7 +7169,6 @@ function getPreDialerMetrics(tasks, calls) {
   const nonFirstCallConnected = nonFirstCalls.filter(call => call.connected);
   const totalDurationSeconds = connectedCalls.reduce((sum, call) => sum + (Number.parseInt(call.duration, 10) || 0), 0);
   const dailyAvgLoad = connectedCalls.length ? (pushedTasks.length / connectedCalls.length).toFixed(1) : '0.0';
-  const retriggerCalls = calls.filter(call => call.retriggerRequired);
   const nevDispatchedTasks = tasks.filter(task => task.nevDispatched);
   const nevDispatchedSeatAnsweredTasks = nevDispatchedTasks.filter(task => getTaskCallRecords(task.id).some(call => call.connected));
   const nevDispatchedNonSeatAnsweredTasks = nevDispatchedTasks.filter(task => !getTaskCallRecords(task.id).some(call => call.connected));
@@ -7104,7 +7198,6 @@ function getPreDialerMetrics(tasks, calls) {
     totalDurationSeconds: totalDurationSeconds,
     avgDurationPerAgent: connectedCalls.length ? `${Math.round(totalDurationSeconds / connectedCalls.length)}秒` : '0秒',
     dailyAvgLoad: dailyAvgLoad,
-    retriggerCalls: retriggerCalls.length,
     nevDispatchedTasks: nevDispatchedTasks.length,
     nevDispatchedSeatAnsweredTasks: nevDispatchedSeatAnsweredTasks.length,
     nevDispatchedNonSeatAnsweredTasks: nevDispatchedNonSeatAnsweredTasks.length
@@ -7128,8 +7221,7 @@ function getPreDialerBatchMetricColumns(group = 'all') {
     { label: '已分配坐席（通话状态 = 坐席接听）', value: metrics => metrics.assignedAgentsAnswered },
     { label: '线索下发量', value: metrics => metrics.nevDispatchedTasks },
     { label: '线索下发量（通话状态 = 坐席接听）', value: metrics => metrics.nevDispatchedSeatAnsweredTasks },
-    { label: '线索下发量（通话状态 ≠ 坐席接听）', value: metrics => metrics.nevDispatchedNonSeatAnsweredTasks },
-    { label: '重推触发量', value: metrics => metrics.retriggerCalls }
+    { label: '线索下发量（通话状态 ≠ 坐席接听）', value: metrics => metrics.nevDispatchedNonSeatAnsweredTasks }
   ];
   const callColumns = [
     { label: '任务处理中', value: metrics => metrics.processingTasks },
@@ -7183,12 +7275,12 @@ function getPreDialerTaskExportRows(tasks) {
     const pendingCalls = taskCalls.filter(call => !call.returnedAt);
     const timeoutPendingCalls = pendingCalls.filter(() => task.overdue);
     const recordingMissingCalls = returnedCalls.filter(call => call.recordingAvailable === false);
-    const retriggerCalls = taskCalls.filter(call => call.retriggerRequired);
     const taskStatus = task.status ? (task.overdue ? '处理中（超时）' : task.status) : '';
-    const callDetail = taskCalls.map(call => `${call.callId || '-'}｜第${call.attempt}次｜${call.callTime || '-'}｜${call.duration || '-'}｜${call.result || '-'}｜${call.returnedAt || '待回传'}｜${call.retriggerRequired ? `重推：${call.retriggerReason || '-'}` : '未重推'}`).join('；');
+    const callDetail = taskCalls.map(call => `${call.callId || '-'}｜第${call.attempt}次｜${call.callTime || '-'}｜${call.duration || '-'}｜${call.result || '-'}｜${call.returnedAt || '待回传'}`).join('；');
     return [
       formatPreDialerDisplayDate(task.syncDate),
       task.syncTime || '',
+      task.manualTaskCode || '',
       task.id,
       task.leadId,
       task.customer,
@@ -7196,7 +7288,7 @@ function getPreDialerTaskExportRows(tasks) {
       task.series,
       task.syncStatus || '',
       task.systemStatus || '',
-      task.systemExceptionReason || '',
+      formatPreDialerExceptionReason(task.systemExceptionReason, ''),
       taskStatus,
       taskCalls.length,
       latestCall?.result || '',
@@ -7205,8 +7297,6 @@ function getPreDialerTaskExportRows(tasks) {
       latestCall?.duration || '',
       returnedCalls.length,
       recordingMissingCalls.length,
-      retriggerCalls.length,
-      retriggerCalls.map(call => call.retriggerReason).filter(Boolean).join('；'),
       task.nevDispatched ? '是' : '否',
       task.nevDispatchedAt || '',
       task.updatedAt || '',
@@ -7224,6 +7314,7 @@ function exportPreDialerTasks() {
   const columns = [
     '同步日期',
     '同步时间',
+    '人工任务编码',
     '预外呼任务ID',
     '总部线索ID',
     '客户',
@@ -7240,8 +7331,6 @@ function exportPreDialerTasks() {
     '最新通话时长',
     '话单已回传数',
     '录音丢失量',
-    '重推触发量',
-    '重拨触发原因',
     '已下发线索',
     '线索下发时间',
     '更新时间'
@@ -7249,13 +7338,12 @@ function exportPreDialerTasks() {
   const rows = getPreDialerTaskExportRows(tasks).map(row => row.slice(0, columns.length));
   const taskIds = new Set(tasks.map(task => task.id));
   const callRecords = preDialerCallRecords.filter(record => taskIds.has(record.taskId)).sort((a, b) => a.callTime.localeCompare(b.callTime));
-  const callColumns = ['话单ID', '预外呼任务ID', '第几次外呼', '外呼时间', '通话时长', '外呼结果', '预外呼处理状态', '回传时间', '是否接通', '是否重拨', '重拨触发原因', '重拨状态'];
+  const callColumns = ['话单ID', '预外呼任务ID', '第几次外呼', '外呼时间', '通话时长', '外呼结果', '预外呼处理状态', '回传时间', '是否接通'];
   const callRows = callRecords.map(call => {
     const task = preDialerTasks.find(item => item.id === call.taskId);
     return [
       call.callId, call.taskId, `第 ${call.attempt} 次`, call.callTime, call.duration, call.result,
-      call.handleStatus, call.returnedAt || '待回传', call.connected ? '是' : '否',
-      call.retriggerRequired ? '是' : '否', call.retriggerReason || '', call.retriggerStatus || ''
+      call.handleStatus, call.returnedAt || '待回传', call.connected ? '是' : '否'
     ];
   });
   downloadExcelWorkbookFile(
@@ -7304,6 +7392,10 @@ function formatPreDialerDisplayDate(value) {
   return time ? `${formatted} ${time}` : formatted;
 }
 
+function formatPreDialerExceptionReason(value, emptyText = '—') {
+  return (!value || value === '无异常') ? emptyText : value;
+}
+
 function openPreDialerTaskDetail(taskId) {
   const task = preDialerTasks.find(item => item.id === taskId);
   if (!task) return showToast('未找到该预外呼任务', false);
@@ -7317,6 +7409,7 @@ function openPreDialerTaskDetail(taskId) {
     <div class="detail-section" style="margin:0 0 16px">
       <div class="detail-section-title">任务信息</div>
       <div class="lead-detail-grid">
+        <div class="lead-detail-item"><div class="lead-detail-label">人工任务编码</div><div class="lead-detail-value">${task.manualTaskCode || '—'}</div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">总部线索ID</div><div class="lead-detail-value">${task.leadId}</div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">客户</div><div class="lead-detail-value">${task.customer} ${task.mobile}</div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">意向车系</div><div class="lead-detail-value">${task.series}</div></div>
@@ -7324,7 +7417,7 @@ function openPreDialerTaskDetail(taskId) {
         <div class="lead-detail-item"><div class="lead-detail-label">预外呼任务状态</div><div class="lead-detail-value"><span class="predial-task-status ${task.status === '已完成' ? 'complete' : task.overdue ? 'overdue' : ''}">${task.overdue ? '处理中（超时）' : task.status}</span></div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">最新外呼结果</div><div class="lead-detail-value">${latestCall?.result || ''}</div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">任务系统状态</div><div class="lead-detail-value">${task.systemStatus}</div></div>
-        <div class="lead-detail-item"><div class="lead-detail-label">任务异常原因</div><div class="lead-detail-value">${task.systemExceptionReason}</div></div>
+        <div class="lead-detail-item"><div class="lead-detail-label">任务异常原因</div><div class="lead-detail-value">${formatPreDialerExceptionReason(task.systemExceptionReason)}</div></div>
         <div class="lead-detail-item"><div class="lead-detail-label">已下发线索</div><div class="lead-detail-value">${task.nevDispatched ? `是<div class="predial-call-result">更新时间：${task.nevDispatchedAt || ''}</div>` : '否'}</div></div>
       </div>
     </div>
@@ -7353,11 +7446,11 @@ function renderPreDialerReportPage(page) {
         </div>
       </section>
 
-      ${['task', 'batch', 'retrigger'].includes(preDialerListActiveTab) ? `
+      ${['task', 'batch'].includes(preDialerListActiveTab) ? `
       <section class="predial-filter-panel">
         <div class="predial-filter-field"><label>同步日期</label><div class="predial-date-range"><input class="filter-select" id="preDialerStartDate" type="datetime-local" value="${preDialerReportFilters.startDate}"><span>至</span><input class="filter-select" id="preDialerEndDate" type="datetime-local" value="${preDialerReportFilters.endDate}"></div></div>
         <div class="predial-filter-field"><label>任务系统状态</label><select class="filter-select" id="preDialerSystemStatus"><option value="all">全部任务系统状态</option><option value="待同步" ${preDialerReportFilters.systemStatus === '待同步' ? 'selected' : ''}>待同步</option><option value="同步失败" ${preDialerReportFilters.systemStatus === '同步失败' ? 'selected' : ''}>同步失败</option><option value="已同步" ${preDialerReportFilters.systemStatus === '已同步' ? 'selected' : ''}>已同步</option><option value="处理完成" ${preDialerReportFilters.systemStatus === '处理完成' ? 'selected' : ''}>处理完成</option></select></div>
-        <div class="predial-filter-field"><label>任务异常原因</label><select class="filter-select" id="preDialerExceptionReason"><option value="all">全部任务异常原因</option><option value="无异常" ${preDialerReportFilters.exceptionReason === '无异常' ? 'selected' : ''}>无异常</option><option value="中止AI外呼任务" ${preDialerReportFilters.exceptionReason === '中止AI外呼任务' ? 'selected' : ''}>中止AI外呼任务</option><option value="手机号码黑名单" ${preDialerReportFilters.exceptionReason === '手机号码黑名单' ? 'selected' : ''}>手机号码黑名单</option><option value="店端跟进冲突" ${preDialerReportFilters.exceptionReason === '店端跟进冲突' ? 'selected' : ''}>店端跟进冲突</option></select></div>
+        <div class="predial-filter-field"><label>任务异常原因</label><select class="filter-select" id="preDialerExceptionReason"><option value="all">全部任务异常原因</option><option value="中止外呼任务" ${preDialerReportFilters.exceptionReason === '中止外呼任务' ? 'selected' : ''}>中止外呼任务</option><option value="手机号码黑名单" ${preDialerReportFilters.exceptionReason === '手机号码黑名单' ? 'selected' : ''}>手机号码黑名单</option><option value="店端跟进冲突" ${preDialerReportFilters.exceptionReason === '店端跟进冲突' ? 'selected' : ''}>店端跟进冲突</option></select></div>
         <div class="predial-filter-field"><label>预外呼任务状态</label><select class="filter-select" id="preDialerStatus"><option value="all">全部状态</option><option value="处理中" ${preDialerReportFilters.status === '处理中' ? 'selected' : ''}>处理中</option><option value="已完成" ${preDialerReportFilters.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
         <div class="predial-filter-field"><label>最新外呼结果</label><select class="filter-select" id="preDialerCallResult"><option value="all">全部最新外呼结果</option><option value="空号" ${preDialerReportFilters.callResult === '空号' ? 'selected' : ''}>空号</option><option value="停机" ${preDialerReportFilters.callResult === '停机' ? 'selected' : ''}>停机</option><option value="忙音" ${preDialerReportFilters.callResult === '忙音' ? 'selected' : ''}>忙音</option><option value="不在服务区" ${preDialerReportFilters.callResult === '不在服务区' ? 'selected' : ''}>不在服务区</option><option value="无人接听" ${preDialerReportFilters.callResult === '无人接听' ? 'selected' : ''}>无人接听</option><option value="关机" ${preDialerReportFilters.callResult === '关机' ? 'selected' : ''}>关机</option><option value="用户接通" ${preDialerReportFilters.callResult === '用户接通' ? 'selected' : ''}>用户接通</option><option value="线路拒呼" ${preDialerReportFilters.callResult === '线路拒呼' ? 'selected' : ''}>线路拒呼</option><option value="线路未呼" ${preDialerReportFilters.callResult === '线路未呼' ? 'selected' : ''}>线路未呼</option></select></div>
         <div class="predial-filter-actions"><button class="btn-add" type="button" onclick="queryPreDialerReport()">查询</button><button class="btn-secondary" type="button" onclick="resetPreDialerReportFilters()">重置</button><button class="btn-secondary" type="button" onclick="refreshPreDialerReport()">刷新</button></div>
@@ -7369,7 +7462,6 @@ function renderPreDialerReportPage(page) {
         <button class="precall-tab ${preDialerListActiveTab === 'overview' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('overview')">数据概览</button>
         <button class="precall-tab ${preDialerListActiveTab === 'task' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('task')">明细列表</button>
         <button class="precall-tab ${preDialerListActiveTab === 'batch' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('batch')">同步批次汇总</button>
-        <button class="precall-tab ${preDialerListActiveTab === 'retrigger' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('retrigger')">重推触发明细</button>
         <button class="precall-tab ${preDialerListActiveTab === 'alert' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('alert')">预警管理</button>
         <button class="precall-tab ${preDialerListActiveTab === 'automation' ? 'active' : ''}" type="button" onclick="switchPreDialerListTab('automation')">自动化运维与响应</button>
       </nav>
@@ -7380,7 +7472,7 @@ function renderPreDialerReportPage(page) {
         <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">数据概览</div><span class="table-count">追踪 DCC培育系统同步至预外呼系统的预外呼核心指标</span></div></div>
         <div class="predial-overview-groups">
           <section class="predial-overview-group">
-            <div class="predial-overview-group-title">任务流转与坐席分配<span>关注任务同步、重推和后续线索承接</span></div>
+            <div class="predial-overview-group-title">任务流转与坐席分配<span>关注任务同步和后续线索承接</span></div>
             <div class="predial-overview-grid">
               ${renderPreDialerMetricCard('预外呼任务总量', metrics.totalTasks, '需推送至预外呼', 'flow')}
               ${renderPreDialerMetricCard('已推送任务量', metrics.pushedTasks, `推送率 <strong>${rate(metrics.pushedTasks, metrics.totalTasks)}</strong>`, 'flow')}
@@ -7390,17 +7482,16 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('线索下发量', metrics.nevDispatchedTasks, '已下发至 NEV线索中台', 'flow')}
               ${renderPreDialerMetricCard('线索下发量（通话状态 = 坐席接听）', metrics.nevDispatchedSeatAnsweredTasks, '坐席接听后下发', 'flow')}
               ${renderPreDialerMetricCard('线索下发量（通话状态 ≠ 坐席接听）', metrics.nevDispatchedNonSeatAnsweredTasks, '非坐席接听后下发', 'flow')}
-              ${renderPreDialerMetricCard('重推触发量', metrics.retriggerCalls, '已回传且命中重推规则', 'flow')}
             </div>
           </section>
           <section class="predial-overview-group">
             <div class="predial-overview-group-title">外呼与回传监控<span>关注预外呼处理进度、话单回传及通话质量</span></div>
             <div class="predial-overview-grid">
-              ${renderPreDialerMetricCard('任务处理中', metrics.processingTasks, `占比 ${rate(metrics.processingTasks, metrics.totalTasks)}`, 'quality')}
-              ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.totalTasks)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('任务处理中', metrics.processingTasks, `占比 ${rate(metrics.processingTasks, metrics.pushedTasks)}`, 'quality')}
+              ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.pushedTasks)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('有效任务量', metrics.effectiveOutboundCalls, '剔除无效与待回传任务', 'quality')}
               ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, '不按任务去重', 'quality')}
-              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '不按任务去重', 'quality')}
+              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '按任务去重', 'quality')}
               ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传', 'risk')}
               ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音', 'risk')}
               ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, calls.length)}</strong>`, 'quality')}
@@ -7411,7 +7502,6 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
               ${renderPreDialerMetricCard('呼叫接通时长', `${metrics.totalDurationSeconds}秒`, '接通通话总时长', 'quality')}
               ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 外呼接通量', 'quality')}
-              ${renderPreDialerMetricCard('日人均承载量', metrics.dailyAvgLoad, '有效任务量 ÷ 外呼接通量', 'quality')}
             </div>
           </section>
         </div>
@@ -7419,7 +7509,7 @@ function renderPreDialerReportPage(page) {
       ` : preDialerListActiveTab === 'task' ? (() => { const taskTotalPages = Math.max(1, Math.ceil(tasks.length / preDialerTaskPageSize)); const taskClampedPage = Math.min(preDialerTaskCurrentPage, taskTotalPages); const taskStart = (taskClampedPage - 1) * preDialerTaskPageSize; const pageTasks = tasks.slice(taskStart, taskStart + preDialerTaskPageSize); return `
       <section class="card">
         <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">明细列表</div><span class="table-count">${tasks.length} 条任务</span></div><div class="lead-toolbar-right"><button class="btn-secondary" type="button" onclick="exportPreDialerTasks()">导出数据</button></div></div>
-        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>意向车系</th><th>任务系统状态</th><th>任务异常原因</th><th>外呼次数</th><th>预外呼任务状态</th><th>最新外呼结果</th><th>更新时间</th><th>已下发线索</th><th>操作</th></tr></thead><tbody>${pageTasks.length ? pageTasks.map(task => { const attempts = getTaskCallRecords(task.id).length; const attemptText = attempts ? `${attempts}${attempts > 1 ? ' <span class="precall-status-badge warn">多次</span>' : ''}` : ''; const taskStatus = task.status ? `<span class="predial-task-status ${task.status === '已完成' ? 'complete' : task.overdue ? 'overdue' : ''}">${task.overdue ? '处理中（超时）' : task.status}</span>` : ''; const latestResult = getLatestTaskCallRecord(task.id)?.result || ''; return `<tr><td>${formatPreDialerDisplayDate(task.syncDate)}</td><td>${task.id}</td><td>${task.leadId}</td><td>${task.customer}<div class="predial-call-result">${task.mobile}</div></td><td>${task.series}</td><td>${task.systemStatus}</td><td>${task.systemExceptionReason}</td><td>${attemptText}</td><td>${taskStatus}</td><td>${latestResult}</td><td>${formatPreDialerDisplayDate(task.updatedAt)}</td><td>${task.nevDispatched ? '是' : '否'}</td><td><button class="action-btn view" type="button" onclick="openPreDialerTaskDetail('${task.id}')">查看</button></td></tr>`; }).join('') : '<tr><td colspan="13"><div class="empty-state">当前筛选条件下暂无预外呼任务</div></td></tr>'}</tbody></table></div>
+        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>人工任务编码</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>意向车系</th><th>任务系统状态</th><th>任务异常原因</th><th>外呼次数</th><th>预外呼任务状态</th><th>最新外呼结果</th><th>更新时间</th><th>已下发线索</th><th>操作</th></tr></thead><tbody>${pageTasks.length ? pageTasks.map(task => { const attempts = getTaskCallRecords(task.id).length; const attemptText = attempts ? `${attempts}${attempts > 1 ? ' <span class="precall-status-badge warn">多次</span>' : ''}` : ''; const taskStatus = task.status ? `<span class="predial-task-status ${task.status === '已完成' ? 'complete' : task.overdue ? 'overdue' : ''}">${task.overdue ? '处理中（超时）' : task.status}</span>` : ''; const latestResult = getLatestTaskCallRecord(task.id)?.result || ''; return `<tr><td>${formatPreDialerDisplayDate(task.syncDate)}</td><td>${task.manualTaskCode || '—'}</td><td>${task.id}</td><td>${task.leadId}</td><td>${task.customer}<div class="predial-call-result">${task.mobile}</div></td><td>${task.series}</td><td>${task.systemStatus}</td><td>${formatPreDialerExceptionReason(task.systemExceptionReason)}</td><td>${attemptText}</td><td>${taskStatus}</td><td>${latestResult}</td><td>${formatPreDialerDisplayDate(task.updatedAt)}</td><td>${task.nevDispatched ? '是' : '否'}</td><td><button class="action-btn view" type="button" onclick="openPreDialerTaskDetail('${task.id}')">查看</button></td></tr>`; }).join('') : '<tr><td colspan="14"><div class="empty-state">当前筛选条件下暂无预外呼任务</div></td></tr>'}</tbody></table></div>
         <div class="pagination">
           <span id="preDialerTaskPageInfo">共 ${tasks.length} 条记录，当前第 ${taskClampedPage} / ${taskTotalPages} 页</span>
           <div class="pagination-btns">
@@ -7454,25 +7544,6 @@ function renderPreDialerReportPage(page) {
           </div>
         </div>
       </section>
-      `; })() : preDialerListActiveTab === 'retrigger' ? (() => { const retriggerCalls = calls.filter(call => call.retriggerRequired); const retriggerTotalPages = Math.max(1, Math.ceil(retriggerCalls.length / preDialerRetriggerPageSize)); const retriggerClampedPage = Math.min(preDialerRetriggerCurrentPage, retriggerTotalPages); const retriggerStart = (retriggerClampedPage - 1) * preDialerRetriggerPageSize; const pageRetriggerCalls = retriggerCalls.slice(retriggerStart, retriggerStart + preDialerRetriggerPageSize); return `
-      <section class="card">
-        <div class="lead-toolbar"><div class="lead-toolbar-left"><div class="section-title">重推触发明细</div><span class="table-count">${retriggerCalls.length} 条已回传话单命中重推规则</span></div></div>
-        <div class="lead-table-wrap"><table class="lead-table"><thead><tr><th>同步日期</th><th>预外呼任务ID</th><th>总部线索ID</th><th>客户</th><th>话单ID</th><th>第几次外呼</th><th>外呼时间</th><th>外呼结果</th><th>回传时间</th><th>重拨触发原因</th><th>重拨状态</th></tr></thead><tbody>${pageRetriggerCalls.length ? pageRetriggerCalls.map(call => { const task = preDialerTasks.find(item => item.id === call.taskId); return `<tr><td>${formatPreDialerDisplayDate(task?.syncDate)}</td><td>${call.taskId}</td><td>${task?.leadId || ''}</td><td>${task?.customer || ''}<div class="predial-call-result">${task?.mobile || ''}</div></td><td>${call.callId}</td><td>第 ${call.attempt} 次</td><td>${formatPreDialerDisplayDate(call.callTime)}</td><td>${call.result}</td><td>${formatPreDialerDisplayDate(call.returnedAt)}</td><td>${call.retriggerReason || '-'}</td><td><span class="predial-task-status complete">${call.retriggerStatus || '-'}</span></td></tr>`; }).join('') : '<tr><td colspan="11"><div class="empty-state">当前筛选条件下暂无重推触发记录</div></td></tr>'}</tbody></table></div>
-        <div class="pagination">
-          <span>共 ${retriggerCalls.length} 条记录，当前第 ${retriggerClampedPage} / ${retriggerTotalPages} 页</span>
-          <div class="pagination-btns">
-            <select class="hit-page-size" onchange="changePreDialerRetriggerPageSize(this.value)">
-              <option value="5" ${preDialerRetriggerPageSize === 5 ? 'selected' : ''}>每页 5 条</option>
-              <option value="10" ${preDialerRetriggerPageSize === 10 ? 'selected' : ''}>每页 10 条</option>
-              <option value="20" ${preDialerRetriggerPageSize === 20 ? 'selected' : ''}>每页 20 条</option>
-              <option value="50" ${preDialerRetriggerPageSize === 50 ? 'selected' : ''}>每页 50 条</option>
-            </select>
-            <button class="page-btn" type="button" onclick="changePreDialerRetriggerPage(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-            <select class="hit-page-size" onchange="selectPreDialerRetriggerPage(this.value)">${Array.from({ length: retriggerTotalPages }, (_, idx) => `<option value="${idx + 1}" ${idx + 1 === retriggerClampedPage ? 'selected' : ''}>第 ${idx + 1} 页</option>`).join('')}</select>
-            <button class="page-btn" type="button" onclick="changePreDialerRetriggerPage(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          </div>
-        </div>
-      </section>
       `; })() : renderPreDialerOperationsTab(preDialerListActiveTab)}
       </div>
     </div>
@@ -7496,14 +7567,12 @@ function switchPreDialerListTab(tab) {
   preDialerListActiveTab = tab;
   preDialerTaskCurrentPage = 1;
   preDialerBatchCurrentPage = 1;
-  preDialerRetriggerCurrentPage = 1;
   renderPreCallReportPage();
 }
 
 let preDialerAlerts = [
   { id: 'ALT-20260622-001', level: 'P1', type: '话单回传超时', target: 'PD-20260622-003', triggerAt: '2026-06-22 16:05', status: '待确认', owner: '系统运维', action: '已发起话单补拉' },
-  { id: 'ALT-20260622-002', level: 'P2', type: '同步失败', target: 'PD-20260621-004', triggerAt: '2026-06-22 15:42', status: '处理中', owner: 'DCC运营', action: '已自动重试 2 次' },
-  { id: 'ALT-20260622-003', level: 'P2', type: '重推异常', target: 'PD-20260621-005', triggerAt: '2026-06-22 09:36', status: '已关闭', owner: '系统运维', action: '已限制重推并完成对账' }
+  { id: 'ALT-20260622-002', level: 'P2', type: '同步失败', target: 'PD-20260621-004', triggerAt: '2026-06-22 15:42', status: '处理中', owner: 'DCC运营', action: '已自动重试 2 次' }
 ];
 
 let preDialerAutomationJobs = [
@@ -7660,40 +7729,19 @@ function changePreDialerBatchPage(dir) {
   renderPreCallReportPage();
 }
 
-function changePreDialerRetriggerPageSize(value) {
-  preDialerRetriggerPageSize = Number(value) || 10;
-  preDialerRetriggerCurrentPage = 1;
-  renderPreCallReportPage();
-}
-
-function selectPreDialerRetriggerPage(value) {
-  preDialerRetriggerCurrentPage = Number(value) || 1;
-  renderPreCallReportPage();
-}
-
-function changePreDialerRetriggerPage(dir) {
-  const filteredTasks = getFilteredPreDialerTasks();
-  const taskIds = new Set(filteredTasks.map(task => task.id));
-  const calls = preDialerCallRecords.filter(record => taskIds.has(record.taskId));
-  const retriggerCalls = calls.filter(call => call.retriggerRequired);
-  const totalPages = Math.max(1, Math.ceil(retriggerCalls.length / preDialerRetriggerPageSize));
-  preDialerRetriggerCurrentPage = Math.max(1, Math.min(totalPages, preDialerRetriggerCurrentPage + dir));
-  renderPreCallReportPage();
-}
-
 function showPreDialerMetricInfo(metric) {
   const descriptions = {
-    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的任务总数。（含重推触发量）',
+    '预外呼任务总量': '截止至今 DCC培育系统分配至人工客服，且分配至预外呼系统的任务总数。',
     '已推送任务量': 'DCC培育系统已向预外呼系统发起推送的任务数，不含仍处于待同步/同步失败状态的任务。推送率 = 已推送任务量 ÷ 预外呼任务总量 × 100%',
     '同步失败量': 'DCC培育系统向预外呼系统同步失败的去重任务数，需要结合任务异常原因进行重试或人工处理。',
-    '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 预外呼任务总量 × 100%',
-    '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。处理率 = 任务已处理 ÷ 预外呼任务总量 × 100%',
+    '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 推送任务量 × 100%',
+    '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。处理率 = 任务已处理 ÷ 推送任务量 × 100%',
     '话单已回传': '预外呼系统已将外呼结果成功回传至 DCC培育系统的话单数量，按话单统计，不按任务去重。',
     '话单待回传': '已成功推送并被预外呼系统，但尚未收到预外呼系统回传首次话单的去重任务数',
     '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传首次话单的去重任务数，需要核查接口或补偿任务',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
     '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通去重计入。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
-    '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼 + 线路未呼 + 话单待回传 + 任务中止且话单待回传 + 用户黑名单且话单待回传）',
+    '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼且外呼已完成 + 线路未呼且外呼已完成 + 话单待回传 + 任务中止 + 用户黑名单）',
     '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
     '线路未呼': '外呼结果为线路未呼的话单数量，表示预外呼系统已接收任务但线路侧未实际发起呼叫，按话单统计，不按任务去重。',
@@ -7705,7 +7753,7 @@ function showPreDialerMetricInfo(metric) {
     '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
     '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
     '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 外呼接通量',
-    '日人均承载量': '日人均承载量 = 有效任务量 ÷ 外呼接通量',
+    '日人均承载量': '日人均承载量 = 有效任务量 ÷ 坐席人数（需去重）',
     '同步成功率': 'DCC 成功被预外呼系统接收的任务数 ÷ DCC 发起同步的任务数。用于监控两系统接口接入是否稳定。',
     '首呼及时率': '在同步后 30 分钟内完成首次外呼的任务数 ÷ 已同步任务数。用于衡量预外呼系统的响应效率。',
     '任务完成率': '处理状态为“已完成”的任务数 ÷ 已同步任务数。处理中、超时任务不计入完成。',
@@ -7715,7 +7763,6 @@ function showPreDialerMetricInfo(metric) {
     '同步任务': '统计周期内由 DCC 成功同步至预外呼系统的去重任务数。',
     '已完成任务': '预外呼系统已完成处理并回传最终状态的去重任务数。',
     '平均外呼次数': '已发起外呼话单总数 ÷ 已同步任务数，用于观察任务重试频次。',
-    '重推触发量': '预外呼系统已将外呼结果成功回传，命中重推至预外呼系统的任务总数',
     '多次外呼任务': '存在 2 次及以上外呼话单的去重任务数，需要结合建联结果评估重试价值与骚扰风险。',
     '建联成功任务': '至少有一条话单标识为成功建联的去重任务数。',
     '有效通话次数': '建联成功且通话时长不少于 30 秒的外呼话单数。',
@@ -7730,7 +7777,7 @@ function showPreDialerMetricInfo(metric) {
   if (!popover || !trigger) return;
   document.querySelectorAll('#preCallReportPage .predial-metric-card').forEach(card => card.classList.remove('metric-info-active'));
   trigger.classList.add('metric-info-active');
-  const action = metric === '重推触发量' ? '<button class="metric-info-popover-action" type="button" onclick="openPreDialerRetriggerList()">查看重推明细</button>' : '';
+  const action = '';
   popover.innerHTML = `<div class="metric-info-popover-head"><div class="metric-info-popover-title">${prefix} · 指标说明</div><button class="metric-info-popover-close" type="button" aria-label="关闭指标说明" onclick="closePreDialerMetricInfo()">×</button></div><div class="metric-info-popover-body">${descriptions[metric] || '已下发至 NEV线索中台'}</div>${action}`;
   popover.classList.add('show');
   const rect = trigger.getBoundingClientRect();
@@ -7773,11 +7820,6 @@ function showWorryFreeMetricInfo(metric) {
   popover.style.top = `${top}px`;
 }
 
-function openPreDialerRetriggerList() {
-  closePreDialerMetricInfo();
-  switchPreDialerListTab('retrigger');
-}
-
 document.addEventListener('click', event => {
   const popover = document.getElementById('metricInfoPopover');
   if (!popover?.classList.contains('show')) return;
@@ -7796,7 +7838,6 @@ function queryPreDialerReport() {
   preDialerReportFilters = { startDate, endDate, status: document.getElementById('preDialerStatus').value, systemStatus: document.getElementById('preDialerSystemStatus').value, exceptionReason: document.getElementById('preDialerExceptionReason').value, callResult: document.getElementById('preDialerCallResult').value, keyword: '', attentionFocus: '' };
   preDialerTaskCurrentPage = 1;
   preDialerBatchCurrentPage = 1;
-  preDialerRetriggerCurrentPage = 1;
   renderPreCallReportPage();
 }
 
@@ -7804,7 +7845,6 @@ function resetPreDialerReportFilters() {
   preDialerReportFilters = { startDate: '2026-06-20T00:00', endDate: '2026-06-22T23:59', status: 'all', systemStatus: 'all', exceptionReason: 'all', callResult: 'all', keyword: '', attentionFocus: '' };
   preDialerTaskCurrentPage = 1;
   preDialerBatchCurrentPage = 1;
-  preDialerRetriggerCurrentPage = 1;
   renderPreCallReportPage();
 }
 
@@ -8676,9 +8716,12 @@ function showStrategyConfigPage(defaultTab = 'policy') {
 function switchStrategyConfigTab(tab) {
   const labels = {
     policy: '黑名单策略',
+    'call-status-policy': '话单状态策略',
     'lead-dispatch': '线索下发策略',
     'sms-dispatch': '短信下发策略',
-    'allocation-policy': '分配比例策略'
+    'cold-lead-definition': '门店冷线索策略',
+    'allocation-policy': '分配比例策略',
+    'contact-mutex-policy': '联络互斥策略'
   };
   setStrategyConfigTabsVisible(true);
   setStrategyConfigTabActive(tab);
@@ -8689,7 +8732,10 @@ function switchStrategyConfigTab(tab) {
   if (tab === 'policy') {
     schedulePolicyRuleNoteAutoHide('blacklistPolicyRuleNote');
   }
-  if (tab === 'lead-dispatch') {
+  if (tab === 'call-status-policy') {
+    document.getElementById('callStatusPolicyPage').classList.add('show');
+    renderCallStatusPolicyPage();
+  } else if (tab === 'lead-dispatch') {
     document.getElementById('leadDispatchConfigPage').classList.add('show');
     renderLeadDispatchConfigPage();
     schedulePolicyRuleNoteAutoHide('leadDispatchRuleNote');
@@ -8697,9 +8743,15 @@ function switchStrategyConfigTab(tab) {
     document.getElementById('smsDispatchPolicyPage').classList.add('show');
     renderSmsDispatchPolicyPage();
     schedulePolicyRuleNoteAutoHide('smsDispatchRuleNote');
+  } else if (tab === 'cold-lead-definition') {
+    document.getElementById('coldLeadDefinitionPage').classList.add('show');
+    renderColdLeadDefinitionPage();
   } else if (tab === 'allocation-policy') {
     document.getElementById('leadAssignmentConfigPage').classList.add('show');
     renderAllocationPolicyTemplatePage();
+  } else if (tab === 'contact-mutex-policy') {
+    document.getElementById('contactMutexPolicyPage').classList.add('show');
+    renderContactMutexPolicyPage();
   }
 }
 
@@ -9088,7 +9140,7 @@ function getAllocationPolicyById(id) {
 }
 
 function getAllocationPolicyCallTypes(policy = {}) {
-  const allocations = policy.byCity === '是'
+  const allocations = getAllocationPolicyScope(policy) !== 'none'
     ? [
         ...(policy.cityAllocations || []).flatMap(item => item.allocations || []),
         ...((policy.fallbackCityAllocation || {}).allocations || [])
@@ -9098,13 +9150,45 @@ function getAllocationPolicyCallTypes(policy = {}) {
 }
 
 function getAllocationPolicySummary(policy = {}) {
-  if (policy.byCity === '是') {
+  const scope = getAllocationPolicyScope(policy);
+  if (scope !== 'none') {
+    const config = getAllocationAreaConfig(scope);
     return [
       ...(policy.cityAllocations || []).map(item => `${item.city}：${renderCityAllocationSummary(item)}`),
-      `兜底城市：${renderCityAllocationSummary(policy.fallbackCityAllocation || {})}`
+      `${config.fallbackLabel}：${renderCityAllocationSummary(policy.fallbackCityAllocation || {})}`
     ].join('；');
   }
   return renderCityAllocationSummary(policy);
+}
+
+function getAllocationPolicyScope(policy = {}) {
+  if (policy.allocationScope) return policy.allocationScope;
+  return policy.byCity === '是' ? 'city' : 'none';
+}
+
+function getAllocationPolicyScopeLabel(scopeOrPolicy = {}) {
+  const scope = typeof scopeOrPolicy === 'string' ? scopeOrPolicy : getAllocationPolicyScope(scopeOrPolicy);
+  if (scope === 'city') return '关联城市';
+  if (scope === 'province') return '关联省份';
+  return '不按区域';
+}
+
+function getAllocationAreaConfig(scope = 'city') {
+  const isProvince = scope === 'province';
+  return {
+    scope,
+    valueLabel: isProvince ? '关联省份' : '关联城市',
+    fallbackLabel: isProvince ? '兜底省份' : '兜底城市',
+    addLabel: isProvince ? '添加省份' : '添加城市',
+    hint: isProvince
+      ? '关联省份时，先匹配省份；未命中省份时进入兜底省份。每个省份和兜底省份均按类型比例分配。'
+      : '关联城市时，先匹配城市；未命中城市时进入兜底城市。每个城市和兜底城市均按类型比例分配。',
+    options: isProvince ? assignmentProvinceOptions : assignmentCityOptions,
+    defaultValue: isProvince ? assignmentProvinceOptions[0] : assignmentCityOptions[0],
+    defaultRows: isProvince
+      ? [{ city: '广东省', allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }]
+      : [{ city: '广州', allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }]
+  };
 }
 
 function renderAllocationPolicyTemplatePage() {
@@ -9168,7 +9252,7 @@ function openAllocationPolicyReferenceRule(dimensionKey, ruleId) {
 
 function renderAllocationPolicySummary() {
   const enabledCount = leadAllocationPolicies.filter(item => item.status === '启用').length;
-  const cityCount = leadAllocationPolicies.filter(item => item.byCity === '是').length;
+  const areaCount = leadAllocationPolicies.filter(item => getAllocationPolicyScope(item) !== 'none').length;
   const callTypeCount = new Set(leadAllocationPolicies.flatMap(policy => getAllocationPolicyCallTypes(policy))).size;
   const referencedCount = leadAssignmentDimensions.reduce((sum, dimension) => {
     return sum + dimension.rules.filter(rule => rule.allocationPolicyId).length;
@@ -9177,7 +9261,7 @@ function renderAllocationPolicySummary() {
     <div class="summary-strip">
       <div class="summary-card"><div class="summary-label">策略总数</div><div class="summary-value">${leadAllocationPolicies.length}</div></div>
       <div class="summary-card"><div class="summary-label">启用策略</div><div class="summary-value">${enabledCount}</div></div>
-      <div class="summary-card"><div class="summary-label">按城市策略</div><div class="summary-value">${cityCount}</div></div>
+      <div class="summary-card"><div class="summary-label">区域策略</div><div class="summary-value">${areaCount}</div></div>
       <div class="summary-card"><div class="summary-label">外呼类型</div><div class="summary-value">${callTypeCount}</div></div>
       <div class="summary-card"><div class="summary-label">引用规则</div><div class="summary-value">${referencedCount}</div></div>
     </div>
@@ -9191,7 +9275,7 @@ function renderAllocationPolicyPanel(targetId = 'leadAssignmentDimensionPanel') 
     <div class="page-hero allocation-policy-inline-hero">
       <div>
         <div class="page-title">分配比例策略</div>
-        <div class="page-desc">用于统一维护按比例分配的公共策略，支持按城市、兜底城市、外呼类型比例和独立推送时间配置。启用后的策略可被多类分配规则复用，避免重复配置比例和推送时段，保证线索分配口径一致、可追踪。</div>
+        <div class="page-desc">用于统一维护按比例分配的公共策略，支持关联城市、关联省份、兜底区域、外呼类型比例和独立推送时间配置。启用后的策略可被多类分配规则复用，避免重复配置比例和推送时段，保证线索分配口径一致、可追踪。</div>
       </div>
       ${renderAllocationPolicySummary()}
     </div>
@@ -9201,11 +9285,12 @@ function renderAllocationPolicyPanel(targetId = 'leadAssignmentDimensionPanel') 
         <option value="">全部</option>
         ${[...new Set(leadAllocationPolicies.flatMap(policy => getAllocationPolicyCallTypes(policy)))].map(type => `<option value="${type}">${type}</option>`).join('')}
       </select>
-      <span class="filter-label">是否按城市：</span>
+      <span class="filter-label">关联区域：</span>
       <select class="filter-select" id="allocationPolicyCityFilter" onchange="filterAllocationPolicyTable()">
         <option value="">全部</option>
-        <option value="是">是</option>
-        <option value="否">否</option>
+        <option value="none">不按区域</option>
+        <option value="city">关联城市</option>
+        <option value="province">关联省份</option>
       </select>
       <span class="filter-label">状态：</span>
       <select class="filter-select" id="allocationPolicyStatusFilter" onchange="filterAllocationPolicyTable()">
@@ -9229,7 +9314,7 @@ function renderAllocationPolicyPanel(targetId = 'leadAssignmentDimensionPanel') 
           <tr>
             <th style="width:70px">#</th>
             <th>策略名称</th>
-            <th style="width:110px">是否按城市</th>
+            <th style="width:110px">关联区域</th>
             <th>分配规则</th>
             <th>关联外呼类型</th>
             <th style="min-width:200px">引用关系</th>
@@ -9264,7 +9349,7 @@ function getFilteredAllocationPolicies() {
   const status = document.getElementById('allocationPolicyStatusFilter')?.value || '';
   return leadAllocationPolicies.filter(policy => {
     if (callType && !getAllocationPolicyCallTypes(policy).includes(callType)) return false;
-    if (byCity && (policy.byCity || '否') !== byCity) return false;
+    if (byCity && getAllocationPolicyScope(policy) !== byCity) return false;
     if (status && policy.status !== status) return false;
     return true;
   });
@@ -9296,7 +9381,7 @@ function renderAllocationPolicyTable() {
           <div class="rule-muted">策略ID：${policy.id}</div>
         </div>
       </td>
-      <td>${policy.byCity || '否'}</td>
+      <td>${getAllocationPolicyScopeLabel(policy)}</td>
       <td>${renderClampedCellText(getAllocationPolicySummary(policy))}</td>
       <td>${renderClampedCellText(getAllocationPolicyCallTypes(policy).join('、'))}</td>
       <td>${renderAllocationPolicyReferenceSummary(policy.id)}</td>
@@ -9468,7 +9553,7 @@ function renderAllocationPolicyDetail(policy) {
       <div class="rule-detail-section">
         <div class="rule-detail-title">分配规则</div>
         <div class="rule-detail-body">
-          <div class="rule-detail-field"><div class="rule-detail-label">是否按城市</div><div class="rule-detail-value">${detailValue(policy.byCity || '否')}</div></div>
+          <div class="rule-detail-field"><div class="rule-detail-label">关联区域</div><div class="rule-detail-value">${detailValue(getAllocationPolicyScopeLabel(policy))}</div></div>
           <div class="rule-detail-field wide"><div class="rule-detail-label">规则内容</div><div class="rule-detail-value">${detailValue(getAllocationPolicySummary(policy))}</div></div>
           <div class="rule-detail-field"><div class="rule-detail-label">关联外呼类型</div><div class="rule-detail-value">${detailValue(getAllocationPolicyCallTypes(policy).join('、'))}</div></div>
         </div>
@@ -9482,7 +9567,7 @@ function renderAllocationPolicyDetail(policy) {
 }
 
 function renderAllocationPolicyForm(policy = {}) {
-  const byCity = policy.byCity || '否';
+  const allocationScope = getAllocationPolicyScope(policy);
   const allocations = getSeriesAllocation(policy);
   return `
     <div class="section-heading">基础信息</div>
@@ -9501,14 +9586,17 @@ function renderAllocationPolicyForm(policy = {}) {
     <div class="section-heading">分配动作</div>
     <div class="series-action-box">
       <div class="form-group">
-        <div class="form-label">是否按城市 <span class="required">*</span></div>
-        <input type="hidden" id="allocationPolicyByCity" value="${byCity === '是' ? '是' : '否'}" />
-        <div class="series-mode-toggle allocation-city-toggle">
-          <button class="duration-tab ${byCity !== '是' ? 'active' : ''}" type="button" data-allocation-city-mode="否" onclick="switchAllocationPolicyCityMode(this, '否')">不按城市</button>
-          <button class="duration-tab ${byCity === '是' ? 'active' : ''}" type="button" data-allocation-city-mode="是" onclick="switchAllocationPolicyCityMode(this, '是')">按城市</button>
-        </div>
+        <div class="form-label">关联区域 <span class="required">*</span></div>
+        <input type="hidden" id="allocationPolicyByCity" value="${allocationScope === 'none' ? '否' : '是'}" />
+        <input type="hidden" id="allocationPolicyScope" value="${allocationScope}" />
+        <select class="form-input" id="allocationPolicyScopeSelect" onchange="switchAllocationPolicyCityMode(this.value)">
+          <option value="none" ${allocationScope === 'none' ? 'selected' : ''}>不按区域</option>
+          <option value="city" ${allocationScope === 'city' ? 'selected' : ''}>关联城市</option>
+          <option value="province" ${allocationScope === 'province' ? 'selected' : ''}>关联省份</option>
+        </select>
+        <div class="form-hint">可按全国统一比例分配，也可按城市或省份分别配置比例与兜底规则。</div>
       </div>
-      <div id="allocationPolicyDefaultAllocationPanel" style="${byCity === '是' ? 'display:none' : ''}">
+      <div id="allocationPolicyDefaultAllocationPanel" style="${allocationScope !== 'none' ? 'display:none' : ''}">
         <div class="form-group">
           <div class="form-label">类型比例 <span class="required">*</span></div>
           <div class="assignment-allocation-panel" id="seriesAllocationRows">
@@ -9518,9 +9606,9 @@ function renderAllocationPolicyForm(policy = {}) {
           <div class="series-form-hint">分配比例策略默认按比例处理，各关联外呼类型比例合计必须为 100%。</div>
         </div>
       </div>
-      <div class="form-group" id="allocationPolicyCityAllocationPanel" style="${byCity === '是' ? '' : 'display:none'}">
-        <div class="form-label">城市分配配置 <span class="required">*</span></div>
-        ${renderSmartCodeCityAllocationPanel(policy)}
+      <div class="form-group" id="allocationPolicyCityAllocationPanel" style="${allocationScope !== 'none' ? '' : 'display:none'}">
+        <div class="form-label" id="allocationPolicyAreaPanelLabel">${getAllocationPolicyScopeLabel(allocationScope)}配置 <span class="required">*</span></div>
+        <div id="allocationPolicyAreaAllocationContent">${renderSmartCodeCityAllocationPanel(policy, allocationScope)}</div>
       </div>
     </div>
   `;
@@ -9544,7 +9632,7 @@ function openAllocationPolicyModal(mode, id = null) {
 }
 
 function switchAllocationPolicyCityMode(triggerOrValue, maybeValue) {
-  const value = maybeValue || triggerOrValue;
+  const value = maybeValue || (triggerOrValue === '是' ? 'city' : triggerOrValue === '否' ? 'none' : triggerOrValue);
   if (maybeValue && triggerOrValue) {
     const group = triggerOrValue.closest('.allocation-city-toggle');
     group?.querySelectorAll('.duration-tab').forEach(tab => {
@@ -9552,26 +9640,37 @@ function switchAllocationPolicyCityMode(triggerOrValue, maybeValue) {
     });
   }
   const hiddenInput = document.getElementById('allocationPolicyByCity');
-  if (hiddenInput) hiddenInput.value = value;
+  if (hiddenInput) hiddenInput.value = value === 'none' ? '否' : '是';
+  const scopeInput = document.getElementById('allocationPolicyScope');
+  if (scopeInput) scopeInput.value = value;
+  const scopeSelect = document.getElementById('allocationPolicyScopeSelect');
+  if (scopeSelect) scopeSelect.value = value;
   const cityPanel = document.getElementById('allocationPolicyCityAllocationPanel');
   const defaultPanel = document.getElementById('allocationPolicyDefaultAllocationPanel');
-  if (cityPanel) cityPanel.style.display = value === '是' ? '' : 'none';
-  if (defaultPanel) defaultPanel.style.display = value === '是' ? 'none' : '';
+  if (cityPanel) cityPanel.style.display = value !== 'none' ? '' : 'none';
+  if (defaultPanel) defaultPanel.style.display = value !== 'none' ? 'none' : '';
+  const label = document.getElementById('allocationPolicyAreaPanelLabel');
+  if (label && value !== 'none') label.innerHTML = `${getAllocationPolicyScopeLabel(value)}配置 <span class="required">*</span>`;
+  const content = document.getElementById('allocationPolicyAreaAllocationContent');
+  if (content && value !== 'none') content.innerHTML = renderSmartCodeCityAllocationPanel({}, value);
 }
 
 function saveAllocationPolicy() {
   const name = document.getElementById('allocationPolicyName')?.value.trim() || '';
-  const byCity = document.getElementById('allocationPolicyByCity')?.value || '否';
+  const allocationScope = document.getElementById('allocationPolicyScope')?.value || (document.getElementById('allocationPolicyByCity')?.value === '是' ? 'city' : 'none');
+  const byCity = allocationScope === 'none' ? '否' : '是';
   if (!name) { showToast('请填写策略名称', false); return; }
   let payload = {
     name,
     byCity,
+    allocationScope,
     status: document.getElementById('allocationPolicyStatus')?.value || '启用',
     updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
   };
-  if (byCity === '是') {
-    const cityResult = collectSmartCodeCityAllocations();
+  if (allocationScope !== 'none') {
+    const cityResult = collectSmartCodeCityAllocations(allocationScope);
     if (!cityResult.ok) { showToast(cityResult.message, false); return; }
+    const config = getAllocationAreaConfig(allocationScope);
     payload = {
       ...payload,
       ...cityResult.value,
@@ -9579,7 +9678,7 @@ function saveAllocationPolicy() {
       allocations: [],
       action: [
         ...cityResult.value.cityAllocations.map(item => `${item.city}：${renderCityAllocationSummary(item)}`),
-        `兜底城市：${renderCityAllocationSummary(cityResult.value.fallbackCityAllocation)}`
+        `${config.fallbackLabel}：${renderCityAllocationSummary(cityResult.value.fallbackCityAllocation)}`
       ].join('；')
     };
   } else {
@@ -9590,6 +9689,7 @@ function saveAllocationPolicy() {
       ...payload,
       allocationMode: 'ratio',
       allocations,
+      allocationScope: 'none',
       cityAllocations: [],
       fallbackCityAllocation: null,
       action: renderCityAllocationSummary({ allocationMode: 'ratio', allocations })
@@ -9621,6 +9721,275 @@ function deleteAllocationPolicy(id) {
   if (index > -1) leadAllocationPolicies.splice(index, 1);
   showToast('分配比例策略已删除', true);
   renderAllocationPolicyTemplatePage();
+}
+
+// ===== Contact Mutex Policy Config =====
+let contactMutexPolicies = [
+  {
+    id: 'CMP-001',
+    name: '试驾回访优先联络策略',
+    customerKey: '手机号 + 厂家客户ID',
+    mutexTasks: ['试驾排程回访工单', '培育待建联任务', 'AI外呼任务', '人工客服外呼任务'],
+    priority: ['试驾排程回访工单', '人工客服外呼任务', 'AI外呼任务', '培育待建联任务'],
+    waitAction: '新任务进入联络等待队列',
+    releaseConditions: ['工单完成', '工单取消', '连续3次未接通', '等待超时'],
+    maxWaitHours: 48,
+    timeoutAction: '转人工判断',
+    manualOverride: '允许',
+    status: '启用',
+    updatedAt: '2026-06-30 10:20'
+  },
+  {
+    id: 'CMP-002',
+    name: '同客户AI外呼串行策略',
+    customerKey: '手机号',
+    mutexTasks: ['AI外呼任务', '培育待建联任务'],
+    priority: ['创建时间优先', '人工任务优先'],
+    waitAction: '排队等待上一任务释放',
+    releaseConditions: ['外呼完成', '任务取消', '等待超时'],
+    maxWaitHours: 24,
+    timeoutAction: '继续进入AI外呼',
+    manualOverride: '不允许',
+    status: '启用',
+    updatedAt: '2026-06-28 15:42'
+  }
+];
+let editingContactMutexPolicyId = null;
+
+const contactMutexTaskOptions = ['试驾排程回访工单', '培育待建联任务', 'AI外呼任务', '人工客服外呼任务', '到店/试驾后回访'];
+const contactMutexReleaseOptions = ['工单完成', '工单取消', '外呼完成', '任务取消', '连续3次未接通', '等待超时', '人工手动释放'];
+
+const contactMutexQueueSamples = [
+  { customer: '陈先生', mobile: '138****1298', activeTask: '试驾排程回访工单', waitingTask: '培育待建联任务', waitTime: '3小时12分', nextAction: '回访工单完成后激活培育任务', status: '联络等待中' },
+  { customer: '林女士', mobile: '139****4821', activeTask: '人工客服外呼任务', waitingTask: 'AI培育外呼任务', waitTime: '38分钟', nextAction: '人工任务结束后释放AI外呼', status: '联络等待中' },
+  { customer: '周先生', mobile: '136****2675', activeTask: '无', waitingTask: '培育待建联任务', waitTime: '0分钟', nextAction: '可立即外呼', status: '可外呼' }
+];
+
+function renderContactMutexPolicyPage() {
+  const page = document.getElementById('contactMutexPolicyPage');
+  if (!page) return;
+  page.innerHTML = `
+    <div class="page-hero">
+      <div>
+        <div class="page-title">联络互斥策略</div>
+        <div class="page-desc">按客户维度控制试驾回访工单、培育任务、AI外呼和人工外呼的执行顺序。新培育线索正常生成任务，但同一客户已有进行中联络时进入等待队列，避免重复打扰客户。</div>
+      </div>
+      ${renderContactMutexSummary()}
+    </div>
+    <div class="policy-rule-note" id="contactMutexRuleNote">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+      <div>
+        <strong>执行口径：</strong>先生成业务任务，再按客户唯一标识进入联络互斥判断；同一客户同一时间仅允许一个联络任务执行，其余任务进入等待队列，直到高优先级任务完成、取消、失败或超时释放。
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">联络互斥策略列表</div>
+        <button class="btn-add strategy-add-btn" type="button" onclick="openContactMutexPolicyModal('add')">新增策略</button>
+      </div>
+      <table class="data-table assignment-rule-table">
+        <thead>
+          <tr>
+            <th style="width:76px">#</th>
+            <th>策略名称</th>
+            <th>客户识别</th>
+            <th>互斥对象</th>
+            <th>优先级规则</th>
+            <th>释放条件</th>
+            <th style="width:90px">最长等待</th>
+            <th style="width:80px">状态</th>
+            <th style="width:190px">操作</th>
+          </tr>
+        </thead>
+        <tbody id="contactMutexPolicyTableBody"></tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="section-header">
+        <div class="section-title">联络等待队列示例</div>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>客户</th>
+            <th>当前执行任务</th>
+            <th>等待任务</th>
+            <th>等待时长</th>
+            <th>下一步动作</th>
+            <th style="width:110px">状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${contactMutexQueueSamples.map(item => `
+            <tr>
+              <td><div class="rule-text-stack"><div class="rule-text-main">${item.customer}</div><div class="rule-muted">${item.mobile}</div></div></td>
+              <td>${item.activeTask}</td>
+              <td>${item.waitingTask}</td>
+              <td>${item.waitTime}</td>
+              <td>${item.nextAction}</td>
+              <td>${item.status === '可外呼' ? '<span class="tag-chip green">可外呼</span>' : '<span class="tag-chip orange">联络等待中</span>'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  renderContactMutexPolicyTable();
+}
+
+function renderContactMutexSummary() {
+  const enabled = contactMutexPolicies.filter(item => item.status === '启用').length;
+  const waitCount = contactMutexQueueSamples.filter(item => item.status === '联络等待中').length;
+  const items = [
+    { label: '策略总数', value: contactMutexPolicies.length },
+    { label: '启用策略', value: enabled },
+    { label: '等待任务', value: waitCount },
+    { label: '最长等待', value: `${Math.max(...contactMutexPolicies.map(item => Number(item.maxWaitHours) || 0))}h` }
+  ];
+  return `<div class="summary-strip">${items.map(item => `<div class="summary-card"><div class="summary-label">${item.label}</div><div class="summary-value">${item.value}</div></div>`).join('')}</div>`;
+}
+
+function renderContactMutexPolicyTable() {
+  const body = document.getElementById('contactMutexPolicyTableBody');
+  if (!body) return;
+  body.innerHTML = contactMutexPolicies.map((policy, index) => `
+    <tr>
+      <td class="row-index">${index + 1}</td>
+      <td><div class="rule-text-stack"><div class="rule-text-main">${escapeHtml(policy.name)}</div><div class="rule-muted">策略ID：${escapeHtml(policy.id)}</div></div></td>
+      <td>${escapeHtml(policy.customerKey)}</td>
+      <td>${renderRuleChipList(policy.mutexTasks, 'blue', 2)}</td>
+      <td>${renderClampedCellText((policy.priority || []).join(' > '))}</td>
+      <td>${renderRuleChipList(policy.releaseConditions, 'green', 2)}</td>
+      <td>${policy.maxWaitHours}小时</td>
+      <td>${policy.status === '启用' ? '<span class="col-status-on">● 启用</span>' : '<span class="col-status-off">● 停用</span>'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn view" type="button" onclick="openContactMutexPolicyModal('view', '${policy.id}')">查看</button>
+          <button class="action-btn edit" type="button" onclick="openContactMutexPolicyModal('edit', '${policy.id}')">编辑</button>
+          <button class="action-btn delete" type="button" onclick="deleteContactMutexPolicy('${policy.id}')">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderContactMutexPolicyDetail(policy) {
+  if (!policy) return '<div class="empty-state">未找到联络互斥策略</div>';
+  const fields = [
+    ['策略名称', policy.name],
+    ['客户识别方式', policy.customerKey],
+    ['互斥对象', (policy.mutexTasks || []).join('、')],
+    ['优先级规则', (policy.priority || []).join(' > ')],
+    ['等待动作', policy.waitAction],
+    ['释放条件', (policy.releaseConditions || []).join('、')],
+    ['最长等待', `${policy.maxWaitHours}小时`],
+    ['超时动作', policy.timeoutAction],
+    ['人工强制外呼', policy.manualOverride],
+    ['状态', policy.status],
+    ['更新时间', policy.updatedAt]
+  ];
+  return `<div class="rule-detail-layout"><section class="rule-detail-section"><div class="rule-detail-title">策略详情</div><div class="rule-detail-body">${fields.map(([label, value]) => `<div class="rule-detail-field"><div class="rule-detail-label">${label}</div><div class="rule-detail-value">${detailValue(value)}</div></div>`).join('')}</div></section></div>`;
+}
+
+function renderContactMutexCheckboxes(name, values, selected = []) {
+  return `<div class="tag-grid">${values.map(value => `<label class="tag-option ${selected.includes(value) ? 'selected' : ''}"><input type="checkbox" name="${name}" value="${escapeAttr(value)}" ${selected.includes(value) ? 'checked' : ''} onchange="this.closest('.tag-option').classList.toggle('selected', this.checked)" />${escapeHtml(value)}</label>`).join('')}</div>`;
+}
+
+function renderContactMutexPolicyForm(policy = {}) {
+  const target = {
+    name: '',
+    customerKey: '手机号 + 厂家客户ID',
+    mutexTasks: ['试驾排程回访工单', '培育待建联任务'],
+    priority: ['试驾排程回访工单', '人工客服外呼任务', 'AI外呼任务', '培育待建联任务'],
+    waitAction: '新任务进入联络等待队列',
+    releaseConditions: ['工单完成', '工单取消', '等待超时'],
+    maxWaitHours: 48,
+    timeoutAction: '转人工判断',
+    manualOverride: '允许',
+    status: '启用',
+    ...policy
+  };
+  return `
+    <div class="dispatch-rule-form">
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">基础信息</div>
+        <div class="dispatch-form-grid">
+          <div class="form-group wide"><div class="form-label">策略名称 <span class="required">*</span></div><input class="form-input" id="contactMutexName" value="${escapeAttr(target.name)}" placeholder="例：试驾回访优先联络策略" /></div>
+          <div class="form-group"><div class="form-label">客户识别方式</div><select class="form-input" id="contactMutexCustomerKey">${['手机号', '厂家客户ID', '手机号 + 厂家客户ID', '客户ID'].map(item => `<option value="${item}" ${target.customerKey === item ? 'selected' : ''}>${item}</option>`).join('')}</select></div>
+          <div class="form-group"><div class="form-label">状态</div><select class="form-input" id="contactMutexStatus">${['启用', '停用'].map(item => `<option value="${item}" ${target.status === item ? 'selected' : ''}>${item}</option>`).join('')}</select></div>
+        </div>
+      </section>
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">互斥规则</div>
+        <div class="form-group"><div class="form-label">互斥对象 <span class="required">*</span></div>${renderContactMutexCheckboxes('contactMutexTasks', contactMutexTaskOptions, target.mutexTasks || [])}</div>
+        <div class="dispatch-form-grid">
+          <div class="form-group wide"><div class="form-label">优先级规则 <span class="required">*</span></div><input class="form-input" id="contactMutexPriority" value="${escapeAttr((target.priority || []).join(' > '))}" placeholder="例：试驾排程回访工单 > 人工客服外呼任务 > AI外呼任务 > 培育待建联任务" /><div class="form-hint">用“>”表示先后顺序；同优先级默认按创建时间先来先执行。</div></div>
+          <div class="form-group"><div class="form-label">等待动作</div><select class="form-input" id="contactMutexWaitAction">${['新任务进入联络等待队列', '排队等待上一任务释放', '合并到已有工单备注', '转人工判断'].map(item => `<option value="${item}" ${target.waitAction === item ? 'selected' : ''}>${item}</option>`).join('')}</select></div>
+          <div class="form-group"><div class="form-label">最长等待（小时）</div><input class="form-input" id="contactMutexMaxWaitHours" type="number" min="1" max="168" value="${target.maxWaitHours}" /></div>
+          <div class="form-group"><div class="form-label">超时动作</div><select class="form-input" id="contactMutexTimeoutAction">${['转人工判断', '继续进入AI外呼', '关闭等待任务', '低频外呼'].map(item => `<option value="${item}" ${target.timeoutAction === item ? 'selected' : ''}>${item}</option>`).join('')}</select></div>
+          <div class="form-group"><div class="form-label">人工强制外呼</div><select class="form-input" id="contactMutexManualOverride">${['允许', '不允许'].map(item => `<option value="${item}" ${target.manualOverride === item ? 'selected' : ''}>${item}</option>`).join('')}</select></div>
+        </div>
+        <div class="form-group"><div class="form-label">释放条件 <span class="required">*</span></div>${renderContactMutexCheckboxes('contactMutexRelease', contactMutexReleaseOptions, target.releaseConditions || [])}</div>
+      </section>
+    </div>
+  `;
+}
+
+function openContactMutexPolicyModal(mode, id = null) {
+  setSharedRuleModalVisual('config');
+  const policy = id ? contactMutexPolicies.find(item => item.id === id) : null;
+  editingContactMutexPolicyId = mode === 'edit' ? id : null;
+  const titleMap = { add: '新增联络互斥策略', edit: '编辑联络互斥策略', view: '查看联络互斥策略' };
+  document.getElementById('leadDispatchRuleModalTitle').textContent = titleMap[mode] || '联络互斥策略';
+  document.getElementById('leadDispatchRuleModalBody').innerHTML = mode === 'view' ? renderContactMutexPolicyDetail(policy) : renderContactMutexPolicyForm(policy || {});
+  document.getElementById('leadDispatchRuleModalFooter').innerHTML = mode === 'view'
+    ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
+    : `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button><button class="btn-save" type="button" onclick="saveContactMutexPolicy()">保存</button>`;
+  document.getElementById('leadDispatchRuleModal').classList.add('show');
+}
+
+function saveContactMutexPolicy() {
+  const name = document.getElementById('contactMutexName')?.value.trim() || '';
+  if (!name) { showToast('请填写策略名称', false); return; }
+  const mutexTasks = Array.from(document.querySelectorAll('input[name="contactMutexTasks"]:checked')).map(input => input.value);
+  if (!mutexTasks.length) { showToast('请至少选择一个互斥对象', false); return; }
+  const releaseConditions = Array.from(document.querySelectorAll('input[name="contactMutexRelease"]:checked')).map(input => input.value);
+  if (!releaseConditions.length) { showToast('请至少选择一个释放条件', false); return; }
+  const priority = (document.getElementById('contactMutexPriority')?.value || '').split('>').map(item => item.trim()).filter(Boolean);
+  if (!priority.length) { showToast('请填写优先级规则', false); return; }
+  const payload = {
+    name,
+    customerKey: document.getElementById('contactMutexCustomerKey')?.value || '手机号',
+    mutexTasks,
+    priority,
+    waitAction: document.getElementById('contactMutexWaitAction')?.value || '新任务进入联络等待队列',
+    releaseConditions,
+    maxWaitHours: Number(document.getElementById('contactMutexMaxWaitHours')?.value || 48),
+    timeoutAction: document.getElementById('contactMutexTimeoutAction')?.value || '转人工判断',
+    manualOverride: document.getElementById('contactMutexManualOverride')?.value || '允许',
+    status: document.getElementById('contactMutexStatus')?.value || '启用',
+    updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
+  };
+  if (editingContactMutexPolicyId) {
+    const index = contactMutexPolicies.findIndex(item => item.id === editingContactMutexPolicyId);
+    if (index > -1) contactMutexPolicies[index] = { ...contactMutexPolicies[index], ...payload };
+    showToast('联络互斥策略已更新', true);
+  } else {
+    const nextNo = contactMutexPolicies.length + 1;
+    contactMutexPolicies.push({ id: `CMP-${String(nextNo).padStart(3, '0')}`, ...payload });
+    showToast('联络互斥策略已新增', true);
+  }
+  closeModal('leadDispatchRuleModal');
+  renderContactMutexPolicyPage();
+}
+
+function deleteContactMutexPolicy(id) {
+  const policy = contactMutexPolicies.find(item => item.id === id);
+  if (!policy) return;
+  if (!confirm(`确认删除联络互斥策略「${policy.name}」？`)) return;
+  contactMutexPolicies = contactMutexPolicies.filter(item => item.id !== id);
+  showToast('联络互斥策略已删除', true);
+  renderContactMutexPolicyPage();
 }
 
 function openLeadAssignmentRuleModal(mode, id = null) {
@@ -9757,6 +10126,7 @@ function renderLeadAssignmentRuleForm(rule, dimension) {
 const seriesIntentOptions = ['N6', '轩逸', '天籁', '逍客', '奇骏', 'ARIYA', '探陆', '其他车系'];
 const assignmentSmartCodeOptions = ['SC-N6-0891', 'SC-GZ-2026', 'SC-SY-0234', 'SC-XK-7712', 'SC-QJ-5520', 'SC-TL-4219', 'SC-OLD-001'];
 const assignmentCityOptions = ['广州', '深圳', '杭州', '上海', '成都'];
+const assignmentProvinceOptions = ['广东省', '浙江省', '上海市', '四川省'];
 const projectNameOptions = ['新能源专项', '置换活动', 'DCC培育项目', '高意向培育', '保客激活', '金融置换专项'];
 const assignmentChannelCodeOptions = ['R1', 'R2', 'R3', 'R4', 'R5', '未知渠道'];
 const assignmentLeadStatusOptions = ['待培育', '已预约', '战败', '无效', '休眠未购', '休眠失联', '重复线索', '已转化'];
@@ -10541,15 +10911,16 @@ function renderCityAllocationRatioRows(allocations = []) {
     .join('');
 }
 
-function renderSmartCodeCityAllocationRow(item = {}, index = 0, isFallback = false) {
+function renderSmartCodeCityAllocationRow(item = {}, index = 0, isFallback = false, scope = 'city') {
+  const config = getAllocationAreaConfig(scope);
   const citySelect = isFallback
-    ? '<input class="form-input city-allocation-city" value="兜底城市" disabled />'
-    : `<select class="form-input city-allocation-city">${assignmentCityOptions.map(city => `<option value="${city}" ${item.city === city ? 'selected' : ''}>${city}</option>`).join('')}</select>`;
+    ? `<input class="form-input city-allocation-city" value="${config.fallbackLabel}" disabled />`
+    : `<select class="form-input city-allocation-city">${config.options.map(value => `<option value="${value}" ${item.city === value ? 'selected' : ''}>${value}</option>`).join('')}</select>`;
   return `
     <div class="city-allocation-row${isFallback ? ' fallback' : ''}" data-fallback="${isFallback ? 'true' : 'false'}">
       <div class="city-allocation-head">
         <div>
-          <div class="form-label">${isFallback ? '兜底城市' : '关联城市'}</div>
+          <div class="form-label">${isFallback ? config.fallbackLabel : config.valueLabel}</div>
           ${citySelect}
         </div>
         <div class="city-allocation-actions">
@@ -10569,16 +10940,20 @@ function renderSmartCodeCityAllocationRow(item = {}, index = 0, isFallback = fal
   `;
 }
 
-function renderSmartCodeCityAllocationPanel(rule = {}) {
+function renderSmartCodeCityAllocationPanel(rule = {}, scope = 'city') {
   const { cityAllocations, fallbackCityAllocation } = getSmartCodeCityAllocations(rule);
-  const rows = cityAllocations.length ? cityAllocations : [{ city: '广州', allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }];
+  const config = getAllocationAreaConfig(scope);
+  const rows = cityAllocations.length ? cityAllocations : config.defaultRows;
+  const fallback = fallbackCityAllocation?.city
+    ? { ...fallbackCityAllocation, city: fallbackCityAllocation.city.startsWith('兜底') ? config.fallbackLabel : fallbackCityAllocation.city }
+    : { city: config.fallbackLabel, allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] };
   return `
-    <div class="city-allocation-panel" id="smartCodeCityAllocationRows">
-      ${rows.map((item, index) => renderSmartCodeCityAllocationRow(item, index)).join('')}
-      ${renderSmartCodeCityAllocationRow(fallbackCityAllocation, rows.length, true)}
+    <div class="city-allocation-panel" id="smartCodeCityAllocationRows" data-allocation-scope="${scope}">
+      ${rows.map((item, index) => renderSmartCodeCityAllocationRow(item, index, false, scope)).join('')}
+      ${renderSmartCodeCityAllocationRow(fallback, rows.length, true, scope)}
     </div>
-    <button class="series-add-channel-btn" type="button" onclick="addSmartCodeCityAllocationRow()">添加城市</button>
-    <div class="series-form-hint">按城市时，先匹配关联城市；未命中城市时进入兜底城市。每个城市和兜底城市均按类型比例分配。</div>
+    <button class="series-add-channel-btn" type="button" onclick="addSmartCodeCityAllocationRow()">${config.addLabel}</button>
+    <div class="series-form-hint">${config.hint}</div>
   `;
 }
 
@@ -10601,7 +10976,9 @@ function addSmartCodeCityAllocationRow() {
   const container = document.getElementById('smartCodeCityAllocationRows');
   const fallback = container?.querySelector('.city-allocation-row[data-fallback="true"]');
   if (!container || !fallback) return;
-  fallback.insertAdjacentHTML('beforebegin', renderSmartCodeCityAllocationRow({ city: assignmentCityOptions[0], allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }));
+  const scope = container.dataset.allocationScope || 'city';
+  const config = getAllocationAreaConfig(scope);
+  fallback.insertAdjacentHTML('beforebegin', renderSmartCodeCityAllocationRow({ city: config.defaultValue, allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }, 0, false, scope));
 }
 
 function removeSmartCodeCityAllocationRow(button) {
@@ -10920,10 +11297,11 @@ function collectSmartCodePushTime() {
   return { ok: true, value: { days, slots: slots.filter(slot => slot.start && slot.end) } };
 }
 
-function collectCityAllocationFromRow(row) {
+function collectCityAllocationFromRow(row, scope = 'city') {
+  const config = getAllocationAreaConfig(scope);
   const isFallback = row.dataset.fallback === 'true';
-  const city = isFallback ? '兜底城市' : row.querySelector('.city-allocation-city')?.value || '';
-  if (!city) return { ok: false, message: '请选择关联城市' };
+  const city = isFallback ? config.fallbackLabel : row.querySelector('.city-allocation-city')?.value || '';
+  if (!city) return { ok: false, message: `请选择${config.valueLabel}` };
   const result = collectAllocationRowsFromPanel(row.querySelector('.city-allocation-ratio-rows'), city);
   if (!result.ok) return result;
   return { ok: true, value: { city, allocationMode: 'ratio', allocations: result.value } };
@@ -10978,22 +11356,23 @@ function collectAllocationPushTimeFromRow(row, label = '当前外呼类型') {
   return { ok: true, value: { days, slots: slots.filter(slot => slot.start && slot.end) } };
 }
 
-function collectSmartCodeCityAllocations() {
+function collectSmartCodeCityAllocations(scope = 'city') {
+  const config = getAllocationAreaConfig(scope);
   const rows = Array.from(document.querySelectorAll('#smartCodeCityAllocationRows .city-allocation-row'));
   const cityRows = rows.filter(row => row.dataset.fallback !== 'true');
   const fallbackRow = rows.find(row => row.dataset.fallback === 'true');
-  if (!cityRows.length) return { ok: false, message: '请至少配置一个关联城市' };
-  if (!fallbackRow) return { ok: false, message: '请配置兜底城市' };
+  if (!cityRows.length) return { ok: false, message: `请至少配置一个${config.valueLabel}` };
+  if (!fallbackRow) return { ok: false, message: `请配置${config.fallbackLabel}` };
   const cityAllocations = [];
   const citySet = new Set();
   for (const row of cityRows) {
-    const result = collectCityAllocationFromRow(row);
+    const result = collectCityAllocationFromRow(row, scope);
     if (!result.ok) return result;
-    if (citySet.has(result.value.city)) return { ok: false, message: `关联城市${result.value.city}重复` };
+    if (citySet.has(result.value.city)) return { ok: false, message: `${config.valueLabel}${result.value.city}重复` };
     citySet.add(result.value.city);
     cityAllocations.push(result.value);
   }
-  const fallbackResult = collectCityAllocationFromRow(fallbackRow);
+  const fallbackResult = collectCityAllocationFromRow(fallbackRow, scope);
   if (!fallbackResult.ok) return fallbackResult;
   return { ok: true, value: { cityAllocations, fallbackCityAllocation: fallbackResult.value } };
 }
@@ -11036,7 +11415,7 @@ function saveSeriesAssignmentRule() {
     if (!allocationPolicyId) { showToast('请选择分配比例策略', false); return; }
     if (!selectedAllocationPolicy) { showToast('所选分配比例策略不存在', false); return; }
     if (selectedAllocationPolicy.status !== '启用') { showToast('所选分配比例策略已停用，请重新选择', false); return; }
-    allocations = selectedAllocationPolicy.byCity === '是'
+    allocations = getAllocationPolicyScope(selectedAllocationPolicy) !== 'none'
       ? [
           ...(selectedAllocationPolicy.cityAllocations || []).flatMap(item => item.allocations || []),
           ...((selectedAllocationPolicy.fallbackCityAllocation || {}).allocations || [])
@@ -11324,6 +11703,7 @@ function renderSmsDispatchConditionSummary(rule) {
 }
 
 function openSmsDispatchRuleModal(mode, id = null) {
+  setSharedRuleModalVisual('config');
   editingSmsDispatchRuleId = mode === 'edit' ? id : null;
   const rule = id ? smsDispatchRules.find(item => item.id === id) : null;
   const titleMap = { add: '新增短信下发策略', edit: '编辑短信下发策略', view: '查看短信下发策略' };
@@ -11828,6 +12208,541 @@ function selectSmsDispatchPage(value) {
 }
 
 
+
+// ===== Call Status Policy Config =====
+const callStatusPolicyCallTypeOptions = [
+  '一知-冷线索',
+  '一知-冷线索（大模型）',
+  '冰兰-新线索',
+  '冰兰-保客',
+  '一知-大模型NEV新线索',
+  '一知-保客'
+];
+const callStatusPolicyStatusOptions = ['2-无人接听', '3-占线', '4-拒接', '5-空号', '6-关机', '7-停机', '8-欠费', '9-无法接通'];
+let callStatusPolicyRules = [
+  { id: 1, name: '冷线索未接通阶段性战败', priority: 1, callTypes: ['一知-冷线索', '一知-冷线索（大模型）'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '5-空号', '6-关机', '7-停机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_DEFEAT_PERIOD-阶段性战败', abnormalReason: '', updateIntentLevel: 'N - N(阶段性战败)', enabled: true },
+  { id: 2, name: '冰兰新线索休眠失联', priority: 2, callTypes: ['冰兰-新线索', '冰兰-保客'], callStatuses: ['2-无人接听', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 3, name: 'NEV新线索未接通休眠失联', priority: 3, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '6-关机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 4, name: 'NEV新线索号码无效', priority: 4, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['5-空号', '7-停机'], statusLogic: '或', updateLeadStatus: 'UOC_INVALID-无效', abnormalReason: '明确空号', updateIntentLevel: '', enabled: true }
+];
+let callStatusPolicyNextId = 5;
+let editingCallStatusPolicyRuleId = null;
+let callStatusPolicyCurrentPage = 1;
+let callStatusPolicyPageSize = 10;
+
+function renderCallStatusPolicyPage() {
+  const page = document.getElementById('callStatusPolicyPage');
+  if (!page) return;
+  page.innerHTML = `
+    <div class="page-hero">
+      <div>
+        <div class="page-title">话单状态策略</div>
+        <div class="page-desc">按外呼类型和话单通话状态配置自动更新规则，话单回传后同步维护线索状态、异常原因与意向级别，作为线索下发策略和后续重推判断的前置状态口径。</div>
+      </div>
+      ${renderCallStatusPolicySummary()}
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">外呼类型：</span>
+      <select class="filter-select" id="callStatusPolicyCallTypeFilter" onchange="filterCallStatusPolicyTable()">
+        <option value="">全部</option>
+        ${callStatusPolicyCallTypeOptions.map(type => `<option value="${type}">${type}</option>`).join('')}
+      </select>
+      <span class="filter-label">通话状态：</span>
+      <select class="filter-select" id="callStatusPolicyStatusFilter" onchange="filterCallStatusPolicyTable()">
+        <option value="">全部</option>
+        ${callStatusPolicyStatusOptions.map(status => `<option value="${status}">${status}</option>`).join('')}
+      </select>
+      <span class="filter-label">更新线索状态：</span>
+      <select class="filter-select" id="callStatusPolicyLeadStatusFilter" onchange="filterCallStatusPolicyTable()">
+        <option value="">全部</option>
+        ${leadDispatchLeadStatusOptions.filter(Boolean).map(status => `<option value="${status}">${status}</option>`).join('')}
+      </select>
+      <span class="filter-label">状态：</span>
+      <select class="filter-select" id="callStatusPolicyEnabledFilter" onchange="filterCallStatusPolicyTable()">
+        <option value="">全部</option>
+        <option value="启用">启用</option>
+        <option value="停用">停用</option>
+      </select>
+      <button class="btn-secondary" type="button" onclick="resetCallStatusPolicyFilters()">重置</button>
+    </div>
+    <div class="policy-rule-note" id="callStatusPolicyRuleNote">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+      <div>
+        <strong>规则执行口径：</strong>话单状态策略先于线索下发策略执行；命中后先更新线索状态、异常原因和意向级别，再进入冷线索策略和线索下发策略判断。
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">话单状态策略列表</div>
+        <button class="btn-add strategy-add-btn" type="button" onclick="openCallStatusPolicyModal('add')">新增策略</button>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:64px">权重</th>
+            <th>策略名称</th>
+            <th>外呼类型</th>
+            <th>通话状态</th>
+            <th>字段更新</th>
+            <th style="width:80px">状态</th>
+            <th style="width:190px">操作</th>
+          </tr>
+        </thead>
+        <tbody id="callStatusPolicyTableBody"></tbody>
+      </table>
+      <div class="pagination">
+        <span id="callStatusPolicyPageInfo">共 0 条记录，当前第 1 / 1 页</span>
+        <div class="pagination-btns">
+          <select class="hit-page-size" id="callStatusPolicyPageSize" onchange="changeCallStatusPolicyPageSize(this.value)">
+            <option value="5">每页 5 条</option>
+            <option value="10">每页 10 条</option>
+            <option value="20">每页 20 条</option>
+          </select>
+          <button class="page-btn" type="button" onclick="changeCallStatusPolicyPage(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <select class="hit-page-size" id="callStatusPolicyPageSelect" onchange="selectCallStatusPolicyPage(this.value)"></select>
+          <button class="page-btn" type="button" onclick="changeCallStatusPolicyPage(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  `;
+  renderCallStatusPolicyTable();
+  schedulePolicyRuleNoteAutoHide('callStatusPolicyRuleNote');
+}
+
+function renderCallStatusPolicySummary() {
+  const enabled = callStatusPolicyRules.filter(rule => rule.enabled).length;
+  const callTypeCount = new Set(callStatusPolicyRules.flatMap(rule => rule.callTypes || [])).size;
+  const statusCount = new Set(callStatusPolicyRules.flatMap(rule => rule.callStatuses || [])).size;
+  const updateStatusCount = new Set(callStatusPolicyRules.map(rule => rule.updateLeadStatus).filter(Boolean)).size;
+  const items = [
+    { label: '规则总数', value: callStatusPolicyRules.length },
+    { label: '启用规则', value: enabled },
+    { label: '覆盖外呼类型', value: callTypeCount },
+    { label: '覆盖通话状态', value: statusCount },
+    { label: '更新状态数', value: updateStatusCount }
+  ];
+  return `<div class="summary-strip">${items.map(item => `<div class="summary-card"><div class="summary-label">${item.label}</div><div class="summary-value">${item.value}</div></div>`).join('')}</div>`;
+}
+
+function getFilteredCallStatusPolicyRules() {
+  const callType = document.getElementById('callStatusPolicyCallTypeFilter')?.value || '';
+  const callStatus = document.getElementById('callStatusPolicyStatusFilter')?.value || '';
+  const leadStatus = document.getElementById('callStatusPolicyLeadStatusFilter')?.value || '';
+  const enabled = document.getElementById('callStatusPolicyEnabledFilter')?.value || '';
+  return callStatusPolicyRules
+    .filter(rule => !callType || rule.callTypes.includes(callType))
+    .filter(rule => !callStatus || rule.callStatuses.includes(callStatus))
+    .filter(rule => !leadStatus || rule.updateLeadStatus === leadStatus)
+    .filter(rule => !enabled || (enabled === '启用' ? rule.enabled : !rule.enabled))
+    .sort((a, b) => (Number(a.priority) || 99) - (Number(b.priority) || 99) || a.id - b.id);
+}
+
+function renderCallStatusPolicyTable() {
+  const body = document.getElementById('callStatusPolicyTableBody');
+  if (!body) return;
+  const rows = getFilteredCallStatusPolicyRules();
+  const totalPages = Math.max(1, Math.ceil(rows.length / callStatusPolicyPageSize));
+  callStatusPolicyCurrentPage = Math.min(callStatusPolicyCurrentPage, totalPages);
+  const start = (callStatusPolicyCurrentPage - 1) * callStatusPolicyPageSize;
+  const pageRows = rows.slice(start, start + callStatusPolicyPageSize);
+  document.getElementById('callStatusPolicyPageInfo').textContent = `共 ${rows.length} 条记录，当前第 ${callStatusPolicyCurrentPage} / ${totalPages} 页`;
+  const pageSelect = document.getElementById('callStatusPolicyPageSelect');
+  if (pageSelect) {
+    pageSelect.innerHTML = Array.from({ length: totalPages }, (_, idx) => `<option value="${idx + 1}">第 ${idx + 1} 页</option>`).join('');
+    pageSelect.value = String(callStatusPolicyCurrentPage);
+  }
+  const pageSizeSelect = document.getElementById('callStatusPolicyPageSize');
+  if (pageSizeSelect) pageSizeSelect.value = String(callStatusPolicyPageSize);
+  body.innerHTML = pageRows.length ? pageRows.map(rule => `
+    <tr>
+      <td><span class="policy-plain-text">P${rule.priority}</span></td>
+      <td><div class="rule-text-stack"><div class="rule-text-main">${rule.name}</div><div class="rule-muted">规则ID：CSP-${String(rule.id).padStart(3, '0')}</div></div></td>
+      <td>${renderRuleChipList(rule.callTypes, 'blue', 2)}</td>
+      <td><div class="rule-text-stack"><div>${rule.statusLogic || '或'}：${(rule.callStatuses || []).join('、') || '不限'}</div></div></td>
+      <td>${renderCallStatusPolicyUpdateSummary(rule)}</td>
+      <td>${rule.enabled ? '<span class="col-status-on">● 启用</span>' : '<span class="col-status-off">● 停用</span>'}</td>
+      <td><div class="action-btns"><button class="action-btn view" type="button" onclick="openCallStatusPolicyModal('view', ${rule.id})">查看</button><button class="action-btn edit" type="button" onclick="openCallStatusPolicyModal('edit', ${rule.id})">编辑</button><button class="action-btn delete" type="button" onclick="deleteCallStatusPolicyRule(${rule.id})">删除</button></div></td>
+    </tr>
+  `).join('') : '<tr><td colspan="7"><div class="empty-state">暂无匹配的话单状态策略</div></td></tr>';
+}
+
+function renderCallStatusPolicyUpdateSummary(rule) {
+  const items = [
+    rule.updateLeadStatus ? `线索状态：${rule.updateLeadStatus}` : '',
+    rule.abnormalReason ? `异常原因：${rule.abnormalReason}` : '',
+    rule.updateIntentLevel ? `意向级别：${rule.updateIntentLevel}` : ''
+  ].filter(Boolean);
+  return `<div class="rule-text-stack">${items.length ? items.map(item => `<div>${item}</div>`).join('') : '<span class="rule-muted">不更新</span>'}</div>`;
+}
+
+function resetCallStatusPolicyFilters() {
+  ['callStatusPolicyCallTypeFilter', 'callStatusPolicyStatusFilter', 'callStatusPolicyLeadStatusFilter', 'callStatusPolicyEnabledFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  callStatusPolicyCurrentPage = 1;
+  renderCallStatusPolicyTable();
+}
+
+function filterCallStatusPolicyTable() {
+  callStatusPolicyCurrentPage = 1;
+  renderCallStatusPolicyTable();
+}
+
+function changeCallStatusPolicyPageSize(value) {
+  callStatusPolicyPageSize = Number(value) || 10;
+  callStatusPolicyCurrentPage = 1;
+  renderCallStatusPolicyTable();
+}
+
+function changeCallStatusPolicyPage(dir) {
+  const rows = getFilteredCallStatusPolicyRules();
+  const totalPages = Math.max(1, Math.ceil(rows.length / callStatusPolicyPageSize));
+  callStatusPolicyCurrentPage = Math.max(1, Math.min(totalPages, callStatusPolicyCurrentPage + dir));
+  renderCallStatusPolicyTable();
+}
+
+function selectCallStatusPolicyPage(value) {
+  callStatusPolicyCurrentPage = Number(value) || 1;
+  renderCallStatusPolicyTable();
+}
+
+function getDefaultCallStatusPolicyRule() {
+  return {
+    name: '',
+    priority: 5,
+    callTypes: [],
+    callStatuses: [],
+    statusLogic: '或',
+    updateLeadStatus: '',
+    abnormalReason: '',
+    updateIntentLevel: '',
+    enabled: true
+  };
+}
+
+function openCallStatusPolicyModal(mode, id = null) {
+  setSharedRuleModalVisual('config');
+  editingCallStatusPolicyRuleId = mode === 'edit' ? id : null;
+  const rule = id ? callStatusPolicyRules.find(item => item.id === id) : null;
+  const titleMap = { add: '新增话单状态策略', edit: '编辑话单状态策略', view: '查看话单状态策略' };
+  document.getElementById('leadDispatchRuleModalTitle').textContent = titleMap[mode] || '话单状态策略';
+  document.getElementById('leadDispatchRuleModalBody').innerHTML = mode === 'view'
+    ? renderCallStatusPolicyDetail(rule)
+    : renderCallStatusPolicyForm(rule || getDefaultCallStatusPolicyRule());
+  document.getElementById('leadDispatchRuleModalFooter').innerHTML = mode === 'view'
+    ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
+    : `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button><button class="btn-save" type="button" onclick="saveCallStatusPolicyRule()">保存</button>`;
+  document.getElementById('leadDispatchRuleModal').classList.add('show');
+}
+
+function renderCallStatusPolicyForm(rule) {
+  return `
+    <div class="dispatch-rule-form">
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">基础信息</div>
+        <div class="dispatch-form-grid">
+          <div class="form-group wide"><div class="form-label">策略名称 <span class="required">*</span></div><input class="form-input" id="callStatusFormName" value="${escapeAttr(rule.name || '')}" placeholder="例：NEV新线索未接通休眠失联" /></div>
+          <div class="form-group"><div class="form-label">权重 <span class="required">*</span></div><input class="form-input" id="callStatusFormPriority" type="number" min="1" max="99" value="${escapeAttr(rule.priority || 5)}" /><div class="series-form-hint">数字越小优先级越高</div></div>
+          <div class="form-group"><div class="form-label">状态</div><select class="form-input" id="callStatusFormEnabled"><option value="启用" ${rule.enabled ? 'selected' : ''}>启用</option><option value="停用" ${!rule.enabled ? 'selected' : ''}>停用</option></select></div>
+        </div>
+      </section>
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">命中条件</div>
+        <div class="dispatch-form-grid">
+          <div class="form-group wide"><div class="form-label">外呼类型 <span class="required">*</span></div><div class="dispatch-form-panel"><div class="check-grid">${callStatusPolicyCallTypeOptions.map(type => `<label class="check-option"><input type="checkbox" name="callStatusPolicyCallType" value="${escapeAttr(type)}" ${(rule.callTypes || []).includes(type) ? 'checked' : ''} />${type}</label>`).join('')}</div></div></div>
+          <div class="form-group wide"><div class="form-label">通话状态 <span class="required">*</span></div><div class="dispatch-form-panel"><div class="check-grid">${callStatusPolicyStatusOptions.map(status => `<label class="check-option"><input type="checkbox" name="callStatusPolicyStatus" value="${escapeAttr(status)}" ${(rule.callStatuses || []).includes(status) ? 'checked' : ''} />${status}</label>`).join('')}</div></div><div class="condition-row"><span class="condition-label">状态判断条件：</span><div class="condition-toggle"><button type="button" class="condition-btn ${rule.statusLogic === '且' ? 'active' : ''}" onclick="setCallStatusPolicyLogic('且')">且 (AND)</button><button type="button" class="condition-btn ${rule.statusLogic !== '且' ? 'active' : ''}" onclick="setCallStatusPolicyLogic('或')">或 (OR)</button></div><span class="condition-desc" id="callStatusPolicyLogicDesc">${rule.statusLogic === '且' ? '命中所有通话状态才触发规则' : '命中任意通话状态即触发规则'}</span></div><select class="form-input" id="callStatusFormLogic" style="display:none"><option value="且" ${rule.statusLogic === '且' ? 'selected' : ''}>且</option><option value="或" ${rule.statusLogic !== '且' ? 'selected' : ''}>或</option></select></div>
+        </div>
+      </section>
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">执行动作</div>
+        <div class="dispatch-action-card">
+          <div class="dispatch-form-grid">
+            <div class="form-group"><div class="form-label">线索状态更新为 <span class="required">*</span></div><select class="form-input" id="callStatusFormLeadStatus" onchange="updateCallStatusPolicyReasonOptions()">${renderLeadDispatchOptionList(leadDispatchLeadStatusOptions, rule.updateLeadStatus || '', '请选择线索状态')}</select></div>
+            <div class="form-group"><div class="form-label">异常原因更新为</div><select class="form-input" id="callStatusFormAbnormalReason">${renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(rule.updateLeadStatus || '', rule.abnormalReason || ''), rule.abnormalReason || '', '不更新')}</select></div>
+            <div class="form-group wide"><div class="form-label">意向级别更新为</div><select class="form-input" id="callStatusFormIntentLevel">${renderLeadDispatchOptionList(leadDispatchIntentLevelOptions, rule.updateIntentLevel || '', '不更新')}</select></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function setCallStatusPolicyLogic(value) {
+  const select = document.getElementById('callStatusFormLogic');
+  if (select) select.value = value;
+  document.querySelectorAll('#leadDispatchRuleModalBody .condition-toggle .condition-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().startsWith(value));
+  });
+  const desc = document.getElementById('callStatusPolicyLogicDesc');
+  if (desc) desc.textContent = value === '且' ? '命中所有通话状态才触发规则' : '命中任意通话状态即触发规则';
+}
+
+function updateCallStatusPolicyReasonOptions() {
+  const statusSelect = document.getElementById('callStatusFormLeadStatus');
+  const reasonSelect = document.getElementById('callStatusFormAbnormalReason');
+  if (!statusSelect || !reasonSelect) return;
+  const options = leadDispatchAbnormalReasonMap[statusSelect.value || ''] || [''];
+  reasonSelect.innerHTML = renderLeadDispatchOptionList(options, '', '不更新');
+}
+
+function renderCallStatusPolicyDetail(rule) {
+  if (!rule) return renderEmptySnapshot('未找到规则');
+  const sections = [
+    { title: '基础信息', fields: [['策略名称', rule.name], ['权重', `P${rule.priority}`], ['状态', rule.enabled ? '启用' : '停用']] },
+    { title: '命中条件', fields: [['外呼类型', rule.callTypes.join('、')], ['通话状态', `${rule.statusLogic || '或'}：${rule.callStatuses.join('、')}`]] },
+    { title: '执行动作', fields: [['线索状态更新为', rule.updateLeadStatus || '不更新'], ['异常原因更新为', rule.abnormalReason || '不更新'], ['意向级别更新为', rule.updateIntentLevel || '不更新']] }
+  ];
+  return `<div class="rule-detail-layout">${sections.map(section => `<section class="rule-detail-section"><div class="rule-detail-title">${section.title}</div><div class="rule-detail-body">${section.fields.map(([label, value]) => `<div class="rule-detail-field"><div class="rule-detail-label">${label}</div><div class="rule-detail-value">${detailValue(value)}</div></div>`).join('')}</div></section>`).join('')}</div>`;
+}
+
+function saveCallStatusPolicyRule() {
+  const payload = {
+    name: document.getElementById('callStatusFormName').value.trim(),
+    priority: Math.min(99, Math.max(1, parseInt(document.getElementById('callStatusFormPriority').value, 10) || 5)),
+    callTypes: collectCheckedValues('callStatusPolicyCallType'),
+    callStatuses: collectCheckedValues('callStatusPolicyStatus'),
+    statusLogic: document.getElementById('callStatusFormLogic').value,
+    updateLeadStatus: document.getElementById('callStatusFormLeadStatus').value.trim(),
+    abnormalReason: document.getElementById('callStatusFormAbnormalReason').value.trim(),
+    updateIntentLevel: document.getElementById('callStatusFormIntentLevel').value.trim(),
+    enabled: document.getElementById('callStatusFormEnabled').value === '启用'
+  };
+  if (!payload.name) { showToast('请填写策略名称', false); return; }
+  if (!payload.callTypes.length) { showToast('请选择外呼类型', false); return; }
+  if (!payload.callStatuses.length) { showToast('请选择通话状态', false); return; }
+  if (!payload.updateLeadStatus) { showToast('请选择线索状态更新值', false); return; }
+  if (editingCallStatusPolicyRuleId) {
+    const index = callStatusPolicyRules.findIndex(rule => rule.id === editingCallStatusPolicyRuleId);
+    if (index > -1) callStatusPolicyRules[index] = { ...callStatusPolicyRules[index], ...payload };
+    showToast('话单状态策略已更新', true);
+  } else {
+    callStatusPolicyRules.push({ id: callStatusPolicyNextId++, ...payload });
+    showToast('话单状态策略已新增', true);
+  }
+  closeModal('leadDispatchRuleModal');
+  renderCallStatusPolicyPage();
+}
+
+function deleteCallStatusPolicyRule(id) {
+  const rule = callStatusPolicyRules.find(item => item.id === id);
+  if (!rule) return;
+  if (!confirm(`确认删除话单状态策略「${rule.name}」？`)) return;
+  callStatusPolicyRules = callStatusPolicyRules.filter(item => item.id !== id);
+  showToast('话单状态策略已删除', true);
+  renderCallStatusPolicyPage();
+}
+
+// ===== Cold Lead Definition Config =====
+let coldLeadDefinitionRules = [
+  { id: 1, leadStatus: 'UOC_UNSALEHIBERNATE-休眠未购', isCold: true, enabled: true, remark: '休眠未购进入门店冷线索池' },
+  { id: 2, leadStatus: 'UOC_UNDELIVER-暂败', isCold: true, enabled: true, remark: '暂败进入门店冷线索池' },
+  { id: 3, leadStatus: 'UOC_OUTCITY-异地', isCold: true, enabled: true, remark: '异地进入门店冷线索池' }
+];
+let coldLeadDefinitionNextId = 4;
+let editingColdLeadDefinitionId = null;
+let coldLeadDefinitionCurrentPage = 1;
+let coldLeadDefinitionPageSize = 10;
+
+function renderColdLeadDefinitionPage() {
+  const page = document.getElementById('coldLeadDefinitionPage');
+  if (!page) return;
+  page.innerHTML = `
+    <div class="page-hero">
+      <div>
+        <div class="page-title">门店冷线索策略</div>
+        <div class="page-desc">维护线索状态与门店冷线索的映射关系。话单状态策略或线索下发策略更新线索状态后，系统按此定义判断是否进入冷线索处理链路。</div>
+      </div>
+      ${renderColdLeadDefinitionSummary()}
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">线索状态：</span>
+      <select class="filter-select" id="coldLeadStatusFilter" onchange="filterColdLeadDefinitionTable()">
+        <option value="">全部</option>
+        ${leadDispatchLeadStatusOptions.filter(Boolean).map(status => `<option value="${status}">${status}</option>`).join('')}
+      </select>
+      <span class="filter-label">是否冷线索：</span>
+      <select class="filter-select" id="coldLeadFlagFilter" onchange="filterColdLeadDefinitionTable()">
+        <option value="">全部</option>
+        <option value="是">是</option>
+        <option value="否">否</option>
+      </select>
+      <span class="filter-label">状态：</span>
+      <select class="filter-select" id="coldLeadEnabledFilter" onchange="filterColdLeadDefinitionTable()">
+        <option value="">全部</option>
+        <option value="启用">启用</option>
+        <option value="停用">停用</option>
+      </select>
+      <button class="btn-secondary" type="button" onclick="resetColdLeadDefinitionFilters()">重置</button>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">门店冷线索策略列表</div>
+        <button class="btn-add strategy-add-btn" type="button" onclick="openColdLeadDefinitionModal('add')">新增策略</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>线索状态</th><th style="width:130px">是否冷线索</th><th>备注</th><th style="width:80px">状态</th><th style="width:190px">操作</th></tr></thead>
+        <tbody id="coldLeadDefinitionTableBody"></tbody>
+      </table>
+      <div class="pagination">
+        <span id="coldLeadDefinitionPageInfo">共 0 条记录，当前第 1 / 1 页</span>
+        <div class="pagination-btns">
+          <select class="hit-page-size" id="coldLeadDefinitionPageSize" onchange="changeColdLeadDefinitionPageSize(this.value)">
+            <option value="5">每页 5 条</option>
+            <option value="10">每页 10 条</option>
+            <option value="20">每页 20 条</option>
+            <option value="50">每页 50 条</option>
+          </select>
+          <button class="page-btn" type="button" onclick="changeColdLeadDefinitionPage(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <select class="hit-page-size" id="coldLeadDefinitionPageSelect" onchange="selectColdLeadDefinitionPage(this.value)"></select>
+          <button class="page-btn" type="button" onclick="changeColdLeadDefinitionPage(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  `;
+  renderColdLeadDefinitionTable();
+}
+
+function renderColdLeadDefinitionSummary() {
+  const enabled = coldLeadDefinitionRules.filter(rule => rule.enabled).length;
+  const coldCount = coldLeadDefinitionRules.filter(rule => rule.isCold).length;
+  const items = [
+    { label: '定义总数', value: coldLeadDefinitionRules.length },
+    { label: '冷线索状态', value: coldCount },
+    { label: '启用定义', value: enabled }
+  ];
+  return `<div class="summary-strip">${items.map(item => `<div class="summary-card"><div class="summary-label">${item.label}</div><div class="summary-value">${item.value}</div></div>`).join('')}</div>`;
+}
+
+function getFilteredColdLeadDefinitionRules() {
+  const leadStatus = document.getElementById('coldLeadStatusFilter')?.value || '';
+  const flag = document.getElementById('coldLeadFlagFilter')?.value || '';
+  const enabled = document.getElementById('coldLeadEnabledFilter')?.value || '';
+  return coldLeadDefinitionRules
+    .filter(rule => !leadStatus || rule.leadStatus === leadStatus)
+    .filter(rule => !flag || (flag === '是' ? rule.isCold : !rule.isCold))
+    .filter(rule => !enabled || (enabled === '启用' ? rule.enabled : !rule.enabled));
+}
+
+function renderColdLeadDefinitionTable() {
+  const body = document.getElementById('coldLeadDefinitionTableBody');
+  if (!body) return;
+  const rows = getFilteredColdLeadDefinitionRules();
+  const totalPages = Math.max(1, Math.ceil(rows.length / coldLeadDefinitionPageSize));
+  coldLeadDefinitionCurrentPage = Math.min(coldLeadDefinitionCurrentPage, totalPages);
+  const start = (coldLeadDefinitionCurrentPage - 1) * coldLeadDefinitionPageSize;
+  const pageRows = rows.slice(start, start + coldLeadDefinitionPageSize);
+  const info = document.getElementById('coldLeadDefinitionPageInfo');
+  if (info) info.textContent = `共 ${rows.length} 条记录，当前第 ${coldLeadDefinitionCurrentPage} / ${totalPages} 页`;
+  const pageSelect = document.getElementById('coldLeadDefinitionPageSelect');
+  if (pageSelect) {
+    pageSelect.innerHTML = Array.from({ length: totalPages }, (_, idx) => `<option value="${idx + 1}">第 ${idx + 1} 页</option>`).join('');
+    pageSelect.value = String(coldLeadDefinitionCurrentPage);
+  }
+  const pageSizeSelect = document.getElementById('coldLeadDefinitionPageSize');
+  if (pageSizeSelect) pageSizeSelect.value = String(coldLeadDefinitionPageSize);
+  body.innerHTML = pageRows.length ? pageRows.map(rule => `
+    <tr>
+      <td><span class="policy-plain-text">${rule.leadStatus}</span></td>
+      <td>${rule.isCold ? '<span class="tag-chip green">是</span>' : '<span class="tag-chip gray">否</span>'}</td>
+      <td><span class="policy-plain-text">${rule.remark || '—'}</span></td>
+      <td>${rule.enabled ? '<span class="col-status-on">● 启用</span>' : '<span class="col-status-off">● 停用</span>'}</td>
+      <td><div class="action-btns"><button class="action-btn view" type="button" onclick="openColdLeadDefinitionModal('view', ${rule.id})">查看</button><button class="action-btn edit" type="button" onclick="openColdLeadDefinitionModal('edit', ${rule.id})">编辑</button><button class="action-btn delete" type="button" onclick="deleteColdLeadDefinition(${rule.id})">删除</button></div></td>
+    </tr>
+  `).join('') : '<tr><td colspan="5"><div class="empty-state">暂无匹配的门店冷线索策略</div></td></tr>';
+}
+
+function resetColdLeadDefinitionFilters() {
+  ['coldLeadStatusFilter', 'coldLeadFlagFilter', 'coldLeadEnabledFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  coldLeadDefinitionCurrentPage = 1;
+  renderColdLeadDefinitionTable();
+}
+
+function filterColdLeadDefinitionTable() {
+  coldLeadDefinitionCurrentPage = 1;
+  renderColdLeadDefinitionTable();
+}
+
+function changeColdLeadDefinitionPageSize(value) {
+  coldLeadDefinitionPageSize = Number(value) || 10;
+  coldLeadDefinitionCurrentPage = 1;
+  renderColdLeadDefinitionTable();
+}
+
+function changeColdLeadDefinitionPage(dir) {
+  const rows = getFilteredColdLeadDefinitionRules();
+  const totalPages = Math.max(1, Math.ceil(rows.length / coldLeadDefinitionPageSize));
+  coldLeadDefinitionCurrentPage = Math.max(1, Math.min(totalPages, coldLeadDefinitionCurrentPage + dir));
+  renderColdLeadDefinitionTable();
+}
+
+function selectColdLeadDefinitionPage(value) {
+  coldLeadDefinitionCurrentPage = Number(value) || 1;
+  renderColdLeadDefinitionTable();
+}
+
+function openColdLeadDefinitionModal(mode, id = null) {
+  setSharedRuleModalVisual('policy');
+  editingColdLeadDefinitionId = mode === 'edit' ? id : null;
+  const rule = id ? coldLeadDefinitionRules.find(item => item.id === id) : null;
+  const target = rule || { leadStatus: '', isCold: true, enabled: true, remark: '' };
+  const titleMap = { add: '新增门店冷线索策略', edit: '编辑门店冷线索策略', view: '查看门店冷线索策略' };
+  document.getElementById('leadDispatchRuleModalTitle').textContent = titleMap[mode] || '门店冷线索策略';
+  document.getElementById('leadDispatchRuleModalBody').innerHTML = mode === 'view' ? `
+    <div class="rule-detail-layout"><section class="rule-detail-section"><div class="rule-detail-title">定义详情</div><div class="rule-detail-body">
+      ${[['线索状态', target.leadStatus], ['是否冷线索', target.isCold ? '是' : '否'], ['状态', target.enabled ? '启用' : '停用'], ['备注', target.remark || '—']].map(([label, value]) => `<div class="rule-detail-field"><div class="rule-detail-label">${label}</div><div class="rule-detail-value">${value}</div></div>`).join('')}
+    </div></section></div>
+  ` : `
+    <div class="dispatch-rule-form">
+      <section class="dispatch-form-section"><div class="dispatch-section-title">基础信息</div><div class="dispatch-form-grid">
+        <div class="form-group wide"><div class="form-label">线索状态 <span class="required">*</span></div><select class="form-input" id="coldLeadFormStatus">${renderLeadDispatchOptionList(leadDispatchLeadStatusOptions, target.leadStatus || '', '请选择线索状态')}</select></div>
+        <div class="form-group"><div class="form-label">是否冷线索 <span class="required">*</span></div><select class="form-input" id="coldLeadFormFlag"><option value="是" ${target.isCold ? 'selected' : ''}>是</option><option value="否" ${!target.isCold ? 'selected' : ''}>否</option></select></div>
+        <div class="form-group"><div class="form-label">状态</div><select class="form-input" id="coldLeadFormEnabled"><option value="启用" ${target.enabled ? 'selected' : ''}>启用</option><option value="停用" ${!target.enabled ? 'selected' : ''}>停用</option></select></div>
+        <div class="form-group wide"><div class="form-label">备注</div><textarea class="form-textarea" id="coldLeadFormRemark" placeholder="填写定义说明">${escapeHtml(target.remark || '')}</textarea></div>
+      </div></section>
+    </div>
+  `;
+  document.getElementById('leadDispatchRuleModalFooter').innerHTML = mode === 'view'
+    ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
+    : `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button><button class="btn-save" type="button" onclick="saveColdLeadDefinition()">保存</button>`;
+  document.getElementById('leadDispatchRuleModal').classList.add('show');
+}
+
+function saveColdLeadDefinition() {
+  const payload = {
+    leadStatus: document.getElementById('coldLeadFormStatus').value.trim(),
+    isCold: document.getElementById('coldLeadFormFlag').value === '是',
+    enabled: document.getElementById('coldLeadFormEnabled').value === '启用',
+    remark: document.getElementById('coldLeadFormRemark').value.trim()
+  };
+  if (!payload.leadStatus) { showToast('请选择线索状态', false); return; }
+  const duplicate = coldLeadDefinitionRules.find(rule => rule.leadStatus === payload.leadStatus && rule.id !== editingColdLeadDefinitionId);
+  if (duplicate) { showToast('该线索状态已存在定义', false); return; }
+  if (editingColdLeadDefinitionId) {
+    const index = coldLeadDefinitionRules.findIndex(rule => rule.id === editingColdLeadDefinitionId);
+    if (index > -1) coldLeadDefinitionRules[index] = { ...coldLeadDefinitionRules[index], ...payload };
+    showToast('门店冷线索策略已更新', true);
+  } else {
+    coldLeadDefinitionRules.push({ id: coldLeadDefinitionNextId++, ...payload });
+    showToast('门店冷线索策略已新增', true);
+  }
+  closeModal('leadDispatchRuleModal');
+  renderColdLeadDefinitionPage();
+}
+
+function deleteColdLeadDefinition(id) {
+  const rule = coldLeadDefinitionRules.find(item => item.id === id);
+  if (!rule) return;
+  if (!confirm(`确认删除门店冷线索策略「${rule.leadStatus}」？`)) return;
+  coldLeadDefinitionRules = coldLeadDefinitionRules.filter(item => item.id !== id);
+  showToast('门店冷线索策略已删除', true);
+  renderColdLeadDefinitionPage();
+}
+
+
 // ===== Lead Dispatch Config =====
 function renderLeadDispatchConfigPage() {
   const page = document.getElementById('leadDispatchConfigPage');
@@ -12047,6 +12962,7 @@ function selectLeadDispatchPage(value) {
 }
 
 function openLeadDispatchRuleModal(mode, id = null) {
+  setSharedRuleModalVisual('config');
   editingLeadDispatchRuleId = mode === 'edit' ? id : null;
   const rule = id ? leadDispatchRules.find(item => item.id === id) : null;
   const titleMap = { add: '新增线索下发策略', edit: '编辑线索下发策略', view: '查看线索下发策略' };
@@ -13638,9 +14554,9 @@ function renderTaskAssignmentSummary(snapshot, task) {
   ];
   if (snapshot.systemStatus === '已处理') {
     items.push(
-      { label: '线索状态', value: detailValue(latestRuleResult.leadStatus) },
-      { label: '异常原因', value: detailValue(latestRuleResult.abnormalReason) },
-      { label: '意向级别', value: detailValue(latestRuleResult.intentLevel) }
+      { label: '任务-线索状态', value: detailValue(latestRuleResult.leadStatus) },
+      { label: '任务-异常原因', value: detailValue(latestRuleResult.abnormalReason) },
+      { label: '任务-意向级别', value: detailValue(latestRuleResult.intentLevel) }
     );
   }
   return `
@@ -13872,6 +14788,7 @@ function renderWorkorderSection(section) {
 function getWorkorderFieldSections(order) {
   const isManualFollow = order.communicationMethod === '人工客服跟进';
   const hasCallResult = !isManualFollow && order.syncStatus !== '待同步';
+  const workorderLeadResult = getWorkorderLeadResult(order);
   const baseTitle = isManualFollow ? '人工跟进工单' : (order.syncStatus === '待同步' ? '预生成工单' : '工单基础');
   const baseFields = [
     { label: '回访工单编码', value: detailValue(order.callbackWorkorderCode) },
@@ -13892,6 +14809,10 @@ function getWorkorderFieldSections(order) {
     { label: '是否有意愿添加企微', value: formatYesNoText(order.willingAddWecom) },
     { label: '企微号', value: detailValue(order.wecomId) },
     { label: '客户意向级别', value: detailValue(order.customerIntentLevel) },
+    { label: '工单-线索状态', value: detailValue(workorderLeadResult.leadStatus) },
+    { label: '工单-异常原因', value: detailValue(workorderLeadResult.abnormalReason) },
+    { label: '工单-意向级别', value: detailValue(workorderLeadResult.intentLevel) },
+    { label: '工单-SmartCode', value: detailValue(workorderLeadResult.smartCode) },
     { label: '外呼标签', value: renderInlineText(order.outboundTags) },
     { label: '录音试听', value: renderWorkorderAudioControl(order), wide: true },
     { label: '录音文本', value: renderWorkorderRecordingText(order.recordingText, order.recordingDialogue), wide: true }
@@ -13907,6 +14828,18 @@ function getWorkorderFieldSections(order) {
     { title: '建联结果', fields: hasCallResult ? callResultFields : [] },
     { title: '技术追溯', fields: isManualFollow ? [] : traceFields }
   ];
+}
+
+function getWorkorderLeadResult(order) {
+  const snapshot = order?.postCallSnapshot || {};
+  const redialPolicy = snapshot.redialPolicy || {};
+  const taskLeadSnapshot = snapshot.taskLeadSnapshot || {};
+  return {
+    leadStatus: order?.workorderLeadStatus || taskLeadSnapshot.leadStatus || redialPolicy.leadStatus || '—',
+    abnormalReason: order?.workorderAbnormalReason || taskLeadSnapshot.abnormalReason || redialPolicy.abnormalReason || '—',
+    intentLevel: order?.workorderIntentLevel || taskLeadSnapshot.intentLevel || redialPolicy.intentLevel || order?.customerIntentLevel || '—',
+    smartCode: order?.smartCode || taskLeadSnapshot.smartCode || snapshot.smartCode || '—'
+  };
 }
 
 function renderPostCallOverview(snapshot) {
@@ -14563,6 +15496,7 @@ function createTaskWorkorderSnapshot(lead, task, assignmentSnapshot, index) {
       taskAbnormalReason: options.taskAbnormalReason || '转人工客服跟进',
       communicationMethod: '人工客服跟进',
       outboundType: '人工外呼',
+      smartCode: task.smartCode || lead.smartCode || taskProfile.smartCode || '—',
       expectedPushTime: options.expectedPushTime || `${lead.createdAt} ${round === 1 ? '16:00:00' : '15:30:00'}`,
       syncStatus,
       actualSyncTime: actualTime,
@@ -14615,6 +15549,7 @@ function createTaskWorkorderSnapshot(lead, task, assignmentSnapshot, index) {
       taskAbnormalReason: options.taskAbnormalReason || '—',
       communicationMethod: 'AI智能外呼',
       outboundType: '一知冷线索',
+      smartCode: task.smartCode || lead.smartCode || taskProfile.smartCode || '—',
       expectedPushTime: options.expectedPushTime || `${lead.createdAt} ${round === 1 ? '09:40:00' : '11:08:00'}`,
       syncStatus: '同步成功',
       actualSyncTime: actualTime,
@@ -14807,6 +15742,13 @@ function createPostCallSnapshot(lead, task, assignmentSnapshot, context) {
     nextFlow: context.nextFlow,
     communicationMethod: context.communicationMethod,
     aiCallType: context.outboundType,
+    smartCode: task.smartCode || lead.smartCode || '—',
+    taskLeadSnapshot: {
+      leadStatus: redialPolicy.leadStatus,
+      abnormalReason: redialPolicy.abnormalReason,
+      intentLevel: redialPolicy.intentLevel,
+      smartCode: task.smartCode || lead.smartCode || '—'
+    },
     callStatus: context.callStatus,
     outboundTagsText: isConnected ? '高意向/有购车意向' : ((context.tags || []).join('/') || '—'),
     redialText: isManual ? '人工跟进，不参与AI重推' : `已用 ${redialPolicy.usedRedialTimes} / ${redialPolicy.totalRedialTimes}`,
@@ -15347,6 +16289,14 @@ function closeModal(id) {
   const modal = document.getElementById(id);
   if (!modal) return;
   modal.classList.remove('show');
+}
+
+function setSharedRuleModalVisual(variant = 'config') {
+  const modal = document.querySelector('#leadDispatchRuleModal .modal');
+  if (!modal) return;
+  modal.className = variant === 'policy'
+    ? 'modal config-modal lead-dispatch-rule-modal policy-rule-modal cold-lead-policy-modal'
+    : 'modal config-modal lead-dispatch-rule-modal';
 }
 
 function closeViewModal() {
