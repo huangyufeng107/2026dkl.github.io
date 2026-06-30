@@ -344,7 +344,7 @@
             <td>GET</td>
             <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/tasks</td>
             <td>startDate, endDate, status, systemStatus, exceptionReason, callResult, keyword, attentionFocus, page, pageSize</td>
-            <td>total, page, pageSize, list[]：id, leadId, customer, mobile, series, syncDate, syncTime, syncStatus, systemStatus, status, lastCall, callResult, lastResult, systemExceptionReason, updatedAt, overdue, nevDispatched, nevDispatchedAt</td>
+            <td>total, page, pageSize, list[]：id, leadId, customer, mobile, series, syncDate, syncTime, syncStatus, systemStatus, status, lastCall, callResult, lastResult, systemExceptionReason, updatedAt, overdue, agentId, nevDispatched, nevDispatchedAt</td>
             <td>渲染明细列表表格与分页</td>
             <td>接口返回空或异常时，页面显示"数据加载失败，请刷新重试"空状态</td>
           </tr>
@@ -362,7 +362,7 @@
             <td>GET</td>
             <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/metrics</td>
             <td>startDate, endDate, attentionFocus（可选）</td>
-            <td>totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallTotal, firstCallConnected, firstCallRate, nonFirstCallTotal, nonFirstCallConnected, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent</td>
+            <td>totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallTotal, firstCallConnected, firstCallRate, nonFirstCallTotal, nonFirstCallConnected, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent, dailyAvgLoad（同步批次汇总使用）</td>
             <td>渲染数据概览两组指标卡片</td>
             <td>指标接口异常时，概览区域显示"数据加载失败"空状态</td>
           </tr>
@@ -429,7 +429,7 @@
           <li><strong>任务流转与坐席分配</strong>（8 个指标）：预外呼任务总量、已推送任务量、同步失败量、已分配坐席（总量）、已分配坐席（通话状态=坐席接听）、线索下发量、线索下发量（通话状态=坐席接听）、线索下发量（通话状态≠坐席接听）。</li>
           <li><strong>外呼与回传监控</strong>（15 个概览指标）：任务处理中、任务已处理、有效任务量、话单已回传、话单待回传、话单超时未回传、录音丢失量、外呼接通量、有效通话量、首呼接通率、2~N呼接通率、线路拒呼、线路未呼、呼叫接通时长、每通呼叫接通时长。同步批次汇总另展示“日人均承载量”。</li>
         </ul>
-        <p>核心计算口径：推送率 = 已推送任务量 ÷ 预外呼任务总量；处理率 = 任务已处理 ÷ 已推送任务量；接通率 = 外呼接通量 ÷ 话单总量；有效通话率 = 有效通话量 ÷ 外呼接通量；有效任务量 = 当前筛选范围内预外呼任务数；有效通话量 = 建联成功且通话时长 ≥ 30秒；日人均承载量 = 已推送任务量 ÷ 外呼接通量。</p>
+        <p>核心计算口径：推送率 = 已推送任务量 ÷ 预外呼任务总量；处理率 = 任务已处理 ÷ 已推送任务量；接通率 = 外呼接通量 ÷ 有效任务量；有效通话率 = 有效通话量 ÷ 外呼接通量；话单已回传 / 话单待回传 / 话单超时未回传均按话单统计，不按任务去重；外呼接通量按接通话单统计，不按任务去重；有效通话量 = 建联成功且通话时长 ≥ 30秒的话单数；有效任务量 = 已推送任务量 -（线路拒呼且外呼已完成任务 + 线路未呼且外呼已完成任务 + 存在待回传话单的任务 + 任务中止 + 用户黑名单）；已分配坐席按坐席ID去重统计；日人均承载量 = 有效任务量 ÷ 去重坐席人数。</p>
       </div>
       <details>
         <summary>功能明细（12 列完整规格）</summary>
@@ -442,7 +442,7 @@
                 <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 数据概览 Tab</td>
                 <td>系统运维角色（DCC平台组、系统运维人员）；其他角色无权限访问该页面</td>
                 <td>1. 进入页面自动加载当前周期指标数据<br>2. 点击指标卡片查看指标说明浮层<br>3. 同步失败、超时未回传、录音丢失、线路拒呼、线路未呼等风险指标值大于 0 时高亮提示</td>
-                <td>23 个概览指标值及对应比率：totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallRate, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent</td>
+                <td>23 个概览指标值及对应比率：totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallRate, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent。辅助字段：firstCallTotal, firstCallConnected, nonFirstCallTotal, nonFirstCallConnected；批次汇总另展示 dailyAvgLoad</td>
                 <td>后端指标概览接口（GET /api/ops/predialer/metrics）</td>
                 <td>所有指标值由后端计算返回。比率类指标（推送率、处理率、接通率、有效通话率、首呼接通率、2~N呼接通率）由后端计算百分比。异常指标值 &gt; 0 时前端加 metric-alert 样式高亮</td>
                 <td>读操作，无数据变更</td>
@@ -655,7 +655,7 @@
         <p><strong>交互说明</strong>：仅在"明细列表"、"同步批次汇总"两个 Tab 显示。包含 5 个筛选字段 + 3 个操作按钮 + 定位提示条。</p>
         <p><strong>字段规则</strong>：</p>
         <ul>
-          <li>同步日期：两个 date input（startDate / endDate），默认近 3 天</li>
+          <li>同步日期：两个 datetime-local input（startDate / endDate），默认近 3 天</li>
           <li>任务系统状态：select，选项 = 全部 / 待同步 / 同步失败 / 已同步 / 处理完成</li>
           <li>任务异常原因：select，选项 = 全部 / 中止外呼任务 / 手机号码黑名单 / 店端跟进冲突</li>
           <li>预外呼任务状态：select，选项 = 全部 / 处理中 / 已完成</li>
