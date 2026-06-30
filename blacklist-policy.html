@@ -2914,6 +2914,192 @@
       justify-content: flex-end;
       min-height: 30px;
     }
+    .area-multi-picker {
+      position: relative;
+      width: 100%;
+    }
+    .area-multi-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      background: #fff;
+      color: #1f2937;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .area-multi-trigger.placeholder {
+      color: #9ca3af;
+    }
+    .area-multi-trigger::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid #64748b;
+      border-bottom: 2px solid #64748b;
+      transform: rotate(45deg) translateY(-2px);
+      flex: 0 0 auto;
+    }
+    .area-multi-picker.open .area-multi-trigger::after {
+      transform: rotate(225deg) translateY(-2px);
+    }
+    .area-multi-panel {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      display: none;
+      padding: 6px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+    }
+    .area-multi-picker.open .area-multi-panel {
+      display: grid;
+      gap: 2px;
+    }
+    .area-multi-panel.simple {
+      max-height: 190px;
+      overflow: auto;
+    }
+    .city-cascade-picker {
+      padding: 0;
+      overflow: hidden;
+    }
+    .city-picker-search {
+      padding: 10px;
+      border-bottom: 1px solid #edf2f7;
+      background: #fff;
+    }
+    .city-picker-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border-bottom: 1px solid #edf2f7;
+      background: #f8fafc;
+    }
+    .city-picker-count {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .city-picker-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .city-picker-action {
+      border: 0;
+      background: transparent;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0;
+    }
+    .city-picker-action:hover {
+      color: #1d4ed8;
+    }
+    .city-picker-action:disabled {
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+    .city-picker-search input {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #d5deea;
+      border-radius: 6px;
+      padding: 0 10px;
+      color: #111827;
+      font-size: 13px;
+      outline: none;
+    }
+    .city-picker-search input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.10);
+    }
+    .city-picker-layout {
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr);
+      min-height: 230px;
+      max-height: 300px;
+    }
+    .city-province-list {
+      overflow: auto;
+      border-right: 1px solid #edf2f7;
+      background: #f8fafc;
+    }
+    .city-province-item {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 10px;
+      border: 0;
+      border-bottom: 1px solid #eef2f7;
+      background: transparent;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .city-province-item.active {
+      background: #fff;
+      color: #2563eb;
+      box-shadow: inset 3px 0 0 #2563eb;
+    }
+    .city-list-wrap {
+      min-width: 0;
+      overflow: auto;
+      padding: 8px;
+      background: #fff;
+    }
+    .city-picker-empty {
+      display: none;
+      padding: 18px 10px;
+      color: #94a3b8;
+      font-size: 13px;
+      text-align: center;
+    }
+    .area-multi-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #334155;
+      cursor: pointer;
+      user-select: none;
+    }
+    .area-multi-option:hover {
+      background: #f1f5f9;
+    }
+    .area-multi-option.disabled {
+      color: #a0aec0;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+    .area-multi-option input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+    }
+    .city-list-wrap .area-multi-option {
+      min-height: 34px;
+    }
     .city-allocation-row .assignment-allocation-panel {
       padding: 0;
       border: 0;
@@ -3615,6 +3801,31 @@
     }
     .policy-rule-modal .btn-save:hover {
       background: #1d4ed8;
+    }
+    .allocation-policy-detail-page .lead-detail-content {
+      display: grid;
+      gap: 16px;
+    }
+    .allocation-policy-detail-page .allocation-policy-form-card {
+      padding: 18px;
+      border-color: #e5edf7;
+      background: #fff;
+      border: 1px solid #e4eaf3;
+      border-radius: 8px;
+    }
+    .allocation-policy-detail-page .section-heading {
+      margin: 4px 0 14px;
+    }
+    .allocation-policy-detail-page .form-group {
+      margin-bottom: 16px;
+    }
+    .allocation-policy-detail-page .allocation-policy-page-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 0 0;
+      border-top: 1px solid #edf2f7;
+      background: #fff;
     }
     #leadDispatchRuleModal .cold-lead-policy-modal {
       width: min(980px, calc(100vw - 40px));
@@ -7097,11 +7308,11 @@ function renderPreCallReportPage() {
   renderPreDialerReportPage(page);
 }
 const preDialerTasks = [
-  { id: 'PD-20260622-001', manualTaskCode: 'RG-20260622-018', leadId: 'HQ-20260622-018', customer: '陈先生', mobile: '138****1298', series: 'N6', syncDate: '2026-06-22', syncTime: '09:08', syncStatus: '已同步', systemStatus: '已同步', status: '处理中', lastCall: '2026-06-22 11:05', callResult: '线路未呼', lastResult: '线路未呼，待回传', systemExceptionReason: '无异常', updatedAt: '2026-06-23 11:05', overdue: true },
-  { id: 'PD-20260622-002', manualTaskCode: 'RG-20260622-024', leadId: 'HQ-20260622-024', customer: '林女士', mobile: '139****4821', series: '轩逸', syncDate: '2026-06-22', syncTime: '09:16', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 14:12', callResult: '用户接通', lastResult: '已建联，预约到店', systemExceptionReason: '无异常', updatedAt: '2026-06-22 14:15', overdue: false, nevDispatched: true, nevDispatchedAt: '2026-06-22 14:18' },
-  { id: 'PD-20260622-003', manualTaskCode: 'RG-20260622-031', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '中止外呼任务', updatedAt: '2026-06-22 15:40', overdue: false },
+  { id: 'PD-20260622-001', manualTaskCode: 'RG-20260622-018', leadId: 'HQ-20260622-018', customer: '陈先生', mobile: '138****1298', series: 'N6', syncDate: '2026-06-22', syncTime: '09:08', syncStatus: '已同步', systemStatus: '已同步', status: '处理中', lastCall: '2026-06-22 11:05', callResult: '线路未呼', lastResult: '线路未呼，待回传', systemExceptionReason: '无异常', updatedAt: '2026-06-23 11:05', overdue: true, agentId: 'AG-001' },
+  { id: 'PD-20260622-002', manualTaskCode: 'RG-20260622-024', leadId: 'HQ-20260622-024', customer: '林女士', mobile: '139****4821', series: '轩逸', syncDate: '2026-06-22', syncTime: '09:16', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 14:12', callResult: '用户接通', lastResult: '已建联，预约到店', systemExceptionReason: '无异常', updatedAt: '2026-06-22 14:15', overdue: false, nevDispatched: true, nevDispatchedAt: '2026-06-22 14:18', agentId: 'AG-002' },
+  { id: 'PD-20260622-003', manualTaskCode: 'RG-20260622-031', leadId: 'HQ-20260622-031', customer: '周先生', mobile: '136****2675', series: '天籁', syncDate: '2026-06-22', syncTime: '10:03', syncStatus: '已同步', systemStatus: '处理完成', status: '已完成', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '中止外呼任务', updatedAt: '2026-06-22 15:40', overdue: false, agentId: 'AG-003' },
   { id: 'PD-20260621-004', manualTaskCode: 'RG-20260621-095', leadId: 'HQ-20260621-095', customer: '王女士', mobile: '137****8096', series: '逍客', syncDate: '2026-06-21', syncTime: '11:25', syncStatus: '同步失败', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-21 14:30', callResult: '线路拒呼', lastResult: '线路拒呼', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-21 17:10', overdue: false },
-  { id: 'PD-20260621-005', manualTaskCode: 'RG-20260621-106', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '处理完成', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 09:34', callResult: '无人接听', lastResult: '三次未接听，结束处理', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-22 09:35', overdue: false },
+  { id: 'PD-20260621-005', manualTaskCode: 'RG-20260621-106', leadId: 'HQ-20260621-106', customer: '赵先生', mobile: '135****3074', series: 'N6', syncDate: '2026-06-21', syncTime: '13:42', syncStatus: '处理完成', systemStatus: '处理完成', status: '已完成', lastCall: '2026-06-22 09:34', callResult: '无人接听', lastResult: '三次未接听，结束处理', systemExceptionReason: '手机号码黑名单', updatedAt: '2026-06-22 09:35', overdue: false, agentId: 'AG-001' },
   { id: 'PD-20260620-006', manualTaskCode: 'RG-20260620-213', leadId: 'HQ-20260620-213', customer: '刘女士', mobile: '186****1852', series: '奇骏', syncDate: '2026-06-20', syncTime: '08:18', syncStatus: '待同步', systemStatus: '待同步', status: '', lastCall: '', callResult: '', lastResult: '', systemExceptionReason: '', updatedAt: '2026-06-22 08:48', overdue: false },
 ];
 
@@ -7148,8 +7359,8 @@ function getLatestTaskCallRecord(taskId) {
 }
 
 function getPreDialerMetrics(tasks, calls) {
-  const pushedTasks = tasks.filter(task => task.systemStatus !== '待同步');
   const syncFailedTasks = tasks.filter(task => task.syncStatus === '同步失败');
+  const pushedTasks = tasks.filter(task => task.systemStatus !== '待同步' && task.syncStatus !== '同步失败');
   const processingTasks = tasks.filter(task => task.status === '处理中');
   const handledTasks = tasks.filter(task => task.status === '已完成');
   const returnedCalls = calls.filter(call => call.returnedAt);
@@ -7160,15 +7371,24 @@ function getPreDialerMetrics(tasks, calls) {
   const effectiveCalls = connectedCalls.filter(call => Number.parseInt(call.duration, 10) >= 30);
   const lineRejectedCalls = calls.filter(call => call.result === '线路拒呼');
   const lineUncalledCalls = calls.filter(call => call.result === '线路未呼');
-  const effectiveOutboundCalls = tasks.length;
-  const assignedAgentsTotal = tasks.length - syncFailedTasks.length;
-  const assignedAgentsAnswered = calls.filter(call => call.connected).length;
+  const invalidReasons = ['中止外呼任务', '手机号码黑名单'];
+  const effectiveOutboundTasks = pushedTasks.filter(task => {
+    const taskCalls = calls.filter(call => call.taskId === task.id);
+    const latestCall = getLatestTaskCallRecord(task.id);
+    const isFinishedLineFailure = task.status === '已完成' && ['线路拒呼', '线路未呼'].includes(latestCall?.result);
+    const hasPendingCall = taskCalls.some(call => !call.returnedAt);
+    return !isFinishedLineFailure && !hasPendingCall && !invalidReasons.includes(task.systemExceptionReason);
+  });
+  const assignedAgentIds = new Set(pushedTasks.map(task => task.agentId).filter(Boolean));
+  const answeredAgentIds = new Set(pushedTasks.filter(task => calls.some(call => call.taskId === task.id && call.connected)).map(task => task.agentId).filter(Boolean));
+  const assignedAgentsTotal = assignedAgentIds.size || pushedTasks.length;
+  const assignedAgentsAnswered = answeredAgentIds.size || pushedTasks.filter(task => calls.some(call => call.taskId === task.id && call.connected)).length;
   const firstCalls = calls.filter(call => call.attempt === 1);
   const firstCallConnected = firstCalls.filter(call => call.connected);
   const nonFirstCalls = calls.filter(call => call.attempt > 1);
   const nonFirstCallConnected = nonFirstCalls.filter(call => call.connected);
   const totalDurationSeconds = connectedCalls.reduce((sum, call) => sum + (Number.parseInt(call.duration, 10) || 0), 0);
-  const dailyAvgLoad = connectedCalls.length ? (pushedTasks.length / connectedCalls.length).toFixed(1) : '0.0';
+  const dailyAvgLoad = assignedAgentsTotal ? (effectiveOutboundTasks.length / assignedAgentsTotal).toFixed(1) : '0.0';
   const nevDispatchedTasks = tasks.filter(task => task.nevDispatched);
   const nevDispatchedSeatAnsweredTasks = nevDispatchedTasks.filter(task => getTaskCallRecords(task.id).some(call => call.connected));
   const nevDispatchedNonSeatAnsweredTasks = nevDispatchedTasks.filter(task => !getTaskCallRecords(task.id).some(call => call.connected));
@@ -7184,7 +7404,7 @@ function getPreDialerMetrics(tasks, calls) {
     recordingMissingCalls: recordingMissingCalls.length,
     connectedCalls: connectedCalls.length,
     effectiveCalls: effectiveCalls.length,
-    effectiveOutboundCalls: effectiveOutboundCalls,
+    effectiveOutboundCalls: effectiveOutboundTasks.length,
     lineRejectedCalls: lineRejectedCalls.length,
     lineUncalledCalls: lineUncalledCalls.length,
     assignedAgentsTotal: assignedAgentsTotal,
@@ -7477,8 +7697,8 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('预外呼任务总量', metrics.totalTasks, '需推送至预外呼', 'flow')}
               ${renderPreDialerMetricCard('已推送任务量', metrics.pushedTasks, `推送率 <strong>${rate(metrics.pushedTasks, metrics.totalTasks)}</strong>`, 'flow')}
               ${renderPreDialerMetricCard('同步失败量', metrics.syncFailedTasks, '任务同步异常', 'flow')}
-              ${renderPreDialerMetricCard('已分配坐席（总量）', metrics.assignedAgentsTotal, '坐席接听去重', 'flow')}
-              ${renderPreDialerMetricCard('已分配坐席（通话状态 = 坐席接听）', metrics.assignedAgentsAnswered, '坐席接听去重', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（总量）', metrics.assignedAgentsTotal, '去重坐席人数', 'flow')}
+              ${renderPreDialerMetricCard('已分配坐席（通话状态 = 坐席接听）', metrics.assignedAgentsAnswered, '接听坐席去重', 'flow')}
               ${renderPreDialerMetricCard('线索下发量', metrics.nevDispatchedTasks, '已下发至 NEV线索中台', 'flow')}
               ${renderPreDialerMetricCard('线索下发量（通话状态 = 坐席接听）', metrics.nevDispatchedSeatAnsweredTasks, '坐席接听后下发', 'flow')}
               ${renderPreDialerMetricCard('线索下发量（通话状态 ≠ 坐席接听）', metrics.nevDispatchedNonSeatAnsweredTasks, '非坐席接听后下发', 'flow')}
@@ -7491,10 +7711,10 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.pushedTasks)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('有效任务量', metrics.effectiveOutboundCalls, '剔除无效与待回传任务', 'quality')}
               ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, '不按任务去重', 'quality')}
-              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '按任务去重', 'quality')}
+              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '按话单统计', 'quality')}
               ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传', 'risk')}
               ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音', 'risk')}
-              ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, calls.length)}</strong>`, 'quality')}
+              ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, metrics.effectiveOutboundCalls)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('有效通话量', metrics.effectiveCalls, `有效通话率 <strong>${rate(metrics.effectiveCalls, metrics.connectedCalls)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('首呼接通率', metrics.firstCallRate, `首次接通 ${metrics.firstCallConnected} / ${metrics.firstCallTotal}`, 'quality')}
               ${renderPreDialerMetricCard('2~N呼接通率', metrics.nonFirstCallRate, `非首次接通 ${metrics.nonFirstCallConnected} / ${metrics.nonFirstCallTotal}`, 'quality')}
@@ -7737,16 +7957,16 @@ function showPreDialerMetricInfo(metric) {
     '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 推送任务量 × 100%',
     '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。处理率 = 任务已处理 ÷ 推送任务量 × 100%',
     '话单已回传': '预外呼系统已将外呼结果成功回传至 DCC培育系统的话单数量，按话单统计，不按任务去重。',
-    '话单待回传': '已成功推送并被预外呼系统，但尚未收到预外呼系统回传首次话单的去重任务数',
-    '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传首次话单的去重任务数，需要核查接口或补偿任务',
+    '话单待回传': '已发起外呼但尚未收到预外呼系统回传结果的话单数量，按话单统计，不按任务去重。',
+    '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传结果的话单数量，按话单统计，需要核查接口或补偿任务。',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
-    '外呼接通量': '话单结果标识为成功建联的外呼次数，同一任务多次接通去重计入。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
-    '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼且外呼已完成 + 线路未呼且外呼已完成 + 话单待回传 + 任务中止 + 用户黑名单）',
+    '外呼接通量': '话单结果标识为成功建联的外呼次数，按话单统计，不按任务去重。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
+    '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼且外呼已完成任务 + 线路未呼且外呼已完成任务 + 存在待回传话单的任务 + 任务中止 + 用户黑名单）',
     '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
     '线路未呼': '外呼结果为线路未呼的话单数量，表示预外呼系统已接收任务但线路侧未实际发起呼叫，按话单统计，不按任务去重。',
-    '已分配坐席（总量）': '待同步/同步失败状态未进入有效坐席承接，不计入该指标。',
-    '已分配坐席（通话状态 = 坐席接听）': '预外呼任务人工接管后，已分配至坐席的去重任务总数',
+    '已分配坐席（总量）': '统计周期内已承接预外呼任务的去重坐席人数，待同步/同步失败任务不计入。',
+    '已分配坐席（通话状态 = 坐席接听）': '统计周期内存在坐席接听话单的去重坐席人数。',
     '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，出现坐席接听记录的去重任务数，用于识别接听场景下的下发量。',
     '线索下发量（通话状态 ≠ 坐席接听）': '已下发至 NEV线索中台，但未出现坐席接听记录的去重任务数，用于识别非接听场景下的下发量。',
     '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
@@ -9154,7 +9374,7 @@ function getAllocationPolicySummary(policy = {}) {
   if (scope !== 'none') {
     const config = getAllocationAreaConfig(scope);
     return [
-      ...(policy.cityAllocations || []).map(item => `${item.city}：${renderCityAllocationSummary(item)}`),
+      ...(policy.cityAllocations || []).map(item => `${getCityAllocationAreaLabel(item)}：${renderCityAllocationSummary(item)}`),
       `${config.fallbackLabel}：${renderCityAllocationSummary(policy.fallbackCityAllocation || {})}`
     ].join('；');
   }
@@ -9618,17 +9838,45 @@ function openAllocationPolicyModal(mode, id = null) {
   const policy = id ? getAllocationPolicyById(id) : null;
   editingAllocationPolicyId = mode === 'edit' ? id : null;
   const titleMap = { add: '新增分配比例策略', edit: '编辑分配比例策略', view: '查看分配比例策略' };
-  document.getElementById('leadDispatchRuleModalTitle').textContent = titleMap[mode] || '分配比例策略';
-  document.getElementById('leadDispatchRuleModalBody').innerHTML = mode === 'view'
-    ? renderAllocationPolicyDetail(policy)
-    : renderAllocationPolicyForm(policy || { status: '启用', byCity: '否', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }] });
-  document.getElementById('leadDispatchRuleModalFooter').innerHTML = mode === 'view'
-    ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
-    : `
-      <button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button>
-      <button class="btn-save" type="button" onclick="saveAllocationPolicy()">保存</button>
-    `;
-  document.getElementById('leadDispatchRuleModal').classList.add('show');
+  const page = document.getElementById('leadAssignmentConfigPage');
+  if (!page) return;
+  const subtitle = mode === 'add'
+    ? '培育策略 / 策略配置 / 分配比例策略 / 新增策略'
+    : `培育策略 / 策略配置 / 分配比例策略 / ${policy?.name || '策略详情'}`;
+  page.innerHTML = `
+    <div class="allocation-policy-detail-page">
+      <div class="detail-page-header">
+        <div>
+          <div class="detail-page-title">${titleMap[mode] || '分配比例策略'}</div>
+          <div class="detail-page-subtitle">${escapeHtml(subtitle)}</div>
+        </div>
+        <div class="lead-toolbar-right">
+          ${mode === 'view'
+            ? `<button class="btn-secondary" type="button" onclick="closeAllocationPolicyPage()">返回列表</button><button class="btn-add" type="button" onclick="openAllocationPolicyModal('edit', '${escapeAttr(policy?.id || '')}')">编辑策略</button>`
+            : `<button class="btn-secondary" type="button" onclick="closeAllocationPolicyPage()">取消</button><button class="btn-add" type="button" onclick="saveAllocationPolicy()">保存</button>`}
+        </div>
+      </div>
+      <div class="lead-detail-content">
+        <div class="allocation-policy-form-card">
+          ${mode === 'view'
+            ? renderAllocationPolicyDetail(policy)
+            : renderAllocationPolicyForm(policy || { status: '启用', byCity: '否', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }] })}
+          ${mode === 'view' ? '' : `
+            <div class="allocation-policy-page-actions">
+              <button class="btn-cancel" type="button" onclick="closeAllocationPolicyPage()">取消</button>
+              <button class="btn-save" type="button" onclick="saveAllocationPolicy()">保存</button>
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+  refreshCityAllocationSelectionMutex();
+}
+
+function closeAllocationPolicyPage() {
+  editingAllocationPolicyId = null;
+  renderAllocationPolicyTemplatePage();
 }
 
 function switchAllocationPolicyCityMode(triggerOrValue, maybeValue) {
@@ -9653,6 +9901,7 @@ function switchAllocationPolicyCityMode(triggerOrValue, maybeValue) {
   if (label && value !== 'none') label.innerHTML = `${getAllocationPolicyScopeLabel(value)}配置 <span class="required">*</span>`;
   const content = document.getElementById('allocationPolicyAreaAllocationContent');
   if (content && value !== 'none') content.innerHTML = renderSmartCodeCityAllocationPanel({}, value);
+  refreshCityAllocationSelectionMutex();
 }
 
 function saveAllocationPolicy() {
@@ -9677,7 +9926,7 @@ function saveAllocationPolicy() {
       allocationMode: 'policy-city',
       allocations: [],
       action: [
-        ...cityResult.value.cityAllocations.map(item => `${item.city}：${renderCityAllocationSummary(item)}`),
+        ...cityResult.value.cityAllocations.map(item => `${getCityAllocationAreaLabel(item)}：${renderCityAllocationSummary(item)}`),
         `${config.fallbackLabel}：${renderCityAllocationSummary(cityResult.value.fallbackCityAllocation)}`
       ].join('；')
     };
@@ -9704,8 +9953,7 @@ function saveAllocationPolicy() {
     leadAllocationPolicies.push({ id: `AP-${String(nextNo).padStart(3, '0')}`, ...payload });
     showToast('分配比例策略已创建', true);
   }
-  closeModal('leadDispatchRuleModal');
-  renderAllocationPolicyTemplatePage();
+  closeAllocationPolicyPage();
 }
 
 function deleteAllocationPolicy(id) {
@@ -9722,6 +9970,11 @@ function deleteAllocationPolicy(id) {
   showToast('分配比例策略已删除', true);
   renderAllocationPolicyTemplatePage();
 }
+
+document.addEventListener('click', function(event) {
+  if (event.target.closest('.area-multi-picker')) return;
+  document.querySelectorAll('.area-multi-picker.open').forEach(item => item.classList.remove('open'));
+});
 
 // ===== Contact Mutex Policy Config =====
 let contactMutexPolicies = [
@@ -9946,6 +10199,7 @@ function openContactMutexPolicyModal(mode, id = null) {
     ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
     : `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button><button class="btn-save" type="button" onclick="saveContactMutexPolicy()">保存</button>`;
   document.getElementById('leadDispatchRuleModal').classList.add('show');
+  refreshCityAllocationSelectionMutex();
 }
 
 function saveContactMutexPolicy() {
@@ -10125,7 +10379,13 @@ function renderLeadAssignmentRuleForm(rule, dimension) {
 
 const seriesIntentOptions = ['N6', '轩逸', '天籁', '逍客', '奇骏', 'ARIYA', '探陆', '其他车系'];
 const assignmentSmartCodeOptions = ['SC-N6-0891', 'SC-GZ-2026', 'SC-SY-0234', 'SC-XK-7712', 'SC-QJ-5520', 'SC-TL-4219', 'SC-OLD-001'];
-const assignmentCityOptions = ['广州', '深圳', '杭州', '上海', '成都'];
+const assignmentCityGroups = [
+  { province: '广东省', cities: ['广州', '深圳'] },
+  { province: '浙江省', cities: ['杭州'] },
+  { province: '上海市', cities: ['上海'] },
+  { province: '四川省', cities: ['成都'] }
+];
+const assignmentCityOptions = assignmentCityGroups.flatMap(group => group.cities);
 const assignmentProvinceOptions = ['广东省', '浙江省', '上海市', '四川省'];
 const projectNameOptions = ['新能源专项', '置换活动', 'DCC培育项目', '高意向培育', '保客激活', '金融置换专项'];
 const assignmentChannelCodeOptions = ['R1', 'R2', 'R3', 'R4', 'R5', '未知渠道'];
@@ -10889,6 +11149,17 @@ function renderCityAllocationSummary(item = {}) {
     : `全部分配给${allocations[0]?.channel || '—'}`;
 }
 
+function getCityAllocationAreaValues(item = {}) {
+  if (Array.isArray(item.cities) && item.cities.length) return item.cities.filter(Boolean);
+  if (Array.isArray(item.cityValues) && item.cityValues.length) return item.cityValues.filter(Boolean);
+  return item.city ? [item.city] : [];
+}
+
+function getCityAllocationAreaLabel(item = {}) {
+  const values = getCityAllocationAreaValues(item);
+  return values.length ? values.join('、') : (item.city || '—');
+}
+
 function renderAllocationPushTimeSummary(pushTime = {}) {
   const normalized = normalizeAllocationPushTime(pushTime);
   const slots = normalized.slots
@@ -10913,9 +11184,10 @@ function renderCityAllocationRatioRows(allocations = []) {
 
 function renderSmartCodeCityAllocationRow(item = {}, index = 0, isFallback = false, scope = 'city') {
   const config = getAllocationAreaConfig(scope);
+  const selectedAreas = getCityAllocationAreaValues(item);
   const citySelect = isFallback
     ? `<input class="form-input city-allocation-city" value="${config.fallbackLabel}" disabled />`
-    : `<select class="form-input city-allocation-city">${config.options.map(value => `<option value="${value}" ${item.city === value ? 'selected' : ''}>${value}</option>`).join('')}</select>`;
+    : renderAreaMultiPicker(config.options, selectedAreas, config.valueLabel);
   return `
     <div class="city-allocation-row${isFallback ? ' fallback' : ''}" data-fallback="${isFallback ? 'true' : 'false'}">
       <div class="city-allocation-head">
@@ -10940,6 +11212,66 @@ function renderSmartCodeCityAllocationRow(item = {}, index = 0, isFallback = fal
   `;
 }
 
+function renderAreaMultiPicker(options = [], selectedValues = [], label = '关联区域') {
+  const selectedSet = new Set(selectedValues);
+  const summary = selectedValues.length ? selectedValues.join('、') : `请选择${label}`;
+  const isCityPicker = label === '关联城市';
+  const activeProvince = getInitialCityPickerProvince(selectedValues);
+  return `
+    <div class="area-multi-picker city-allocation-city" data-area-picker="true" data-picker-type="${isCityPicker ? 'city' : 'province'}">
+      <button class="area-multi-trigger${selectedValues.length ? '' : ' placeholder'}" type="button" onclick="toggleAreaMultiPicker(this)">${summary}</button>
+      <div class="area-multi-panel${isCityPicker ? ' city-cascade-picker' : ' simple'}">
+        ${isCityPicker ? renderCityCascadePicker(selectedSet, activeProvince) : options.map(value => `
+            <label class="area-multi-option" data-area-option="${value}">
+              <input type="checkbox" class="area-multi-checkbox" value="${value}" ${selectedSet.has(value) ? 'checked' : ''} onchange="refreshCityAllocationSelectionMutex()" />
+              <span>${value}</span>
+            </label>
+          `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function getInitialCityPickerProvince(selectedValues = []) {
+  const matched = assignmentCityGroups.find(group => selectedValues.some(city => group.cities.includes(city)));
+  return matched?.province || assignmentCityGroups[0]?.province || '';
+}
+
+function renderCityCascadePicker(selectedSet, activeProvince = '') {
+  return `
+    <div class="city-picker-search">
+      <input type="search" class="city-picker-search-input" placeholder="搜索城市" oninput="filterCityCascadePicker(this)" />
+    </div>
+    <div class="city-picker-toolbar">
+      <span class="city-picker-count">已选 ${selectedSet.size} 项</span>
+      <div class="city-picker-actions">
+        <button class="city-picker-action" type="button" onclick="selectCurrentProvinceCities(this)">选择当前省</button>
+        <button class="city-picker-action" type="button" onclick="clearCurrentCityPicker(this)">清空本组</button>
+      </div>
+    </div>
+    <div class="city-picker-layout">
+      <div class="city-province-list">
+        ${assignmentCityGroups.map(group => `
+          <button class="city-province-item ${group.province === activeProvince ? 'active' : ''}" type="button" data-province="${group.province}" onclick="switchCityPickerProvince(this)">${group.province}</button>
+        `).join('')}
+      </div>
+      <div class="city-list-wrap">
+        ${assignmentCityGroups.map(group => `
+          <div class="city-group" data-city-group="${group.province}" style="${group.province === activeProvince ? '' : 'display:none'}">
+            ${group.cities.map(city => `
+              <label class="area-multi-option" data-area-option="${city}" data-province="${group.province}">
+                <input type="checkbox" class="area-multi-checkbox" value="${city}" ${selectedSet.has(city) ? 'checked' : ''} onchange="refreshCityAllocationSelectionMutex()" />
+                <span>${city}</span>
+              </label>
+            `).join('')}
+          </div>
+        `).join('')}
+        <div class="city-picker-empty">暂无匹配城市</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderSmartCodeCityAllocationPanel(rule = {}, scope = 'city') {
   const { cityAllocations, fallbackCityAllocation } = getSmartCodeCityAllocations(rule);
   const config = getAllocationAreaConfig(scope);
@@ -10953,7 +11285,7 @@ function renderSmartCodeCityAllocationPanel(rule = {}, scope = 'city') {
       ${renderSmartCodeCityAllocationRow(fallback, rows.length, true, scope)}
     </div>
     <button class="series-add-channel-btn" type="button" onclick="addSmartCodeCityAllocationRow()">${config.addLabel}</button>
-    <div class="series-form-hint">${config.hint}</div>
+    <div class="series-form-hint">${config.hint} 同一个配置组可多选，且不同配置组之间不可重复选择相同${config.valueLabel.replace('关联', '')}。</div>
   `;
 }
 
@@ -10972,17 +11304,139 @@ function addSeriesAllocationRow() {
   document.getElementById('seriesAllocationRows')?.insertAdjacentHTML('beforeend', renderSeriesAllocationRow({ channel: 'AI外呼', percent: '' }));
 }
 
+function getAreaPickerSelectedValues(picker) {
+  return Array.from(picker?.querySelectorAll('.area-multi-checkbox:checked') || [])
+    .map(input => input.value)
+    .filter(Boolean);
+}
+
+function getSelectedCityAllocationValues(excludedPicker = null) {
+  return Array.from(document.querySelectorAll('#smartCodeCityAllocationRows .city-allocation-row[data-fallback="false"] .area-multi-picker'))
+    .filter(picker => picker !== excludedPicker)
+    .flatMap(picker => getAreaPickerSelectedValues(picker));
+}
+
+function refreshAreaMultiPickerSummary(picker) {
+  const trigger = picker?.querySelector('.area-multi-trigger');
+  if (!trigger) return;
+  const selected = getAreaPickerSelectedValues(picker);
+  const row = picker.closest('.city-allocation-row');
+  const label = row?.querySelector('.form-label')?.textContent?.trim() || '关联区域';
+  trigger.textContent = selected.length ? selected.join('、') : `请选择${label}`;
+  trigger.classList.toggle('placeholder', !selected.length);
+  const count = picker.querySelector('.city-picker-count');
+  if (count) count.textContent = `已选 ${selected.length} 项`;
+}
+
+function refreshCityAllocationSelectionMutex() {
+  const pickers = Array.from(document.querySelectorAll('#smartCodeCityAllocationRows .city-allocation-row[data-fallback="false"] .area-multi-picker'));
+  pickers.forEach(picker => {
+    const selectedInOtherRows = new Set(getSelectedCityAllocationValues(picker));
+    picker.querySelectorAll('.area-multi-option').forEach(option => {
+      const input = option.querySelector('.area-multi-checkbox');
+      const disabled = !!input && !input.checked && selectedInOtherRows.has(input.value);
+      if (input) input.disabled = disabled;
+      option.classList.toggle('disabled', disabled);
+    });
+    refreshAreaMultiPickerSummary(picker);
+  });
+}
+
+function switchCityPickerProvince(button) {
+  const picker = button.closest('.area-multi-picker');
+  if (!picker) return;
+  picker.querySelectorAll('.city-province-item').forEach(item => item.classList.toggle('active', item === button));
+  const province = button.dataset.province || '';
+  picker.querySelectorAll('.city-group').forEach(group => {
+    group.style.display = group.dataset.cityGroup === province ? '' : 'none';
+  });
+  const search = picker.querySelector('.city-picker-search-input');
+  if (search) search.value = '';
+  filterCityCascadePicker(search || picker.querySelector('.city-picker-search-input'));
+}
+
+function filterCityCascadePicker(input) {
+  const picker = input?.closest('.area-multi-picker');
+  if (!picker) return;
+  const keyword = String(input.value || '').trim().toLowerCase();
+  const groups = Array.from(picker.querySelectorAll('.city-group'));
+  let visibleCount = 0;
+  if (keyword) {
+    groups.forEach(group => {
+      let groupVisible = 0;
+      group.querySelectorAll('.area-multi-option').forEach(option => {
+        const city = (option.dataset.areaOption || option.textContent || '').toLowerCase();
+        const visible = city.includes(keyword);
+        option.style.display = visible ? '' : 'none';
+        if (visible) groupVisible += 1;
+      });
+      group.style.display = groupVisible ? '' : 'none';
+      visibleCount += groupVisible;
+    });
+    picker.querySelectorAll('.city-province-item').forEach(item => item.classList.remove('active'));
+  } else {
+    const active = picker.querySelector('.city-province-item.active') || picker.querySelector('.city-province-item');
+    const province = active?.dataset.province || '';
+    picker.querySelectorAll('.city-province-item').forEach(item => item.classList.toggle('active', item === active));
+    groups.forEach(group => {
+      const show = group.dataset.cityGroup === province;
+      group.style.display = show ? '' : 'none';
+      group.querySelectorAll('.area-multi-option').forEach(option => option.style.display = '');
+      if (show) visibleCount += group.querySelectorAll('.area-multi-option').length;
+    });
+  }
+  const empty = picker.querySelector('.city-picker-empty');
+  if (empty) empty.style.display = visibleCount ? 'none' : 'block';
+}
+
+function selectCurrentProvinceCities(button) {
+  const picker = button.closest('.area-multi-picker');
+  if (!picker) return;
+  const activeProvince = picker.querySelector('.city-province-item.active')?.dataset.province || '';
+  const groups = Array.from(picker.querySelectorAll('.city-group'))
+    .filter(group => !activeProvince || group.dataset.cityGroup === activeProvince);
+  groups.flatMap(group => Array.from(group.querySelectorAll('.area-multi-checkbox'))).forEach(input => {
+    if (!input.disabled) input.checked = true;
+  });
+  refreshCityAllocationSelectionMutex();
+}
+
+function clearCurrentCityPicker(button) {
+  const picker = button.closest('.area-multi-picker');
+  if (!picker) return;
+  picker.querySelectorAll('.area-multi-checkbox').forEach(input => {
+    input.checked = false;
+  });
+  refreshCityAllocationSelectionMutex();
+}
+
+function toggleAreaMultiPicker(trigger) {
+  const picker = trigger.closest('.area-multi-picker');
+  const shouldOpen = !picker.classList.contains('open');
+  document.querySelectorAll('.area-multi-picker.open').forEach(item => {
+    if (item !== picker) item.classList.remove('open');
+  });
+  picker.classList.toggle('open', shouldOpen);
+  if (shouldOpen && picker.dataset.pickerType === 'city') {
+    filterCityCascadePicker(picker.querySelector('.city-picker-search-input'));
+  }
+}
+
 function addSmartCodeCityAllocationRow() {
   const container = document.getElementById('smartCodeCityAllocationRows');
   const fallback = container?.querySelector('.city-allocation-row[data-fallback="true"]');
   if (!container || !fallback) return;
   const scope = container.dataset.allocationScope || 'city';
   const config = getAllocationAreaConfig(scope);
-  fallback.insertAdjacentHTML('beforebegin', renderSmartCodeCityAllocationRow({ city: config.defaultValue, allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }, 0, false, scope));
+  const selected = getSelectedCityAllocationValues();
+  const defaultValue = config.options.find(value => !selected.includes(value)) || config.defaultValue;
+  fallback.insertAdjacentHTML('beforebegin', renderSmartCodeCityAllocationRow({ cities: [defaultValue], allocationMode: 'ratio', allocations: [{ channel: 'AI外呼', percent: 40 }, { channel: '人工外呼', percent: 60 }] }, 0, false, scope));
+  refreshCityAllocationSelectionMutex();
 }
 
 function removeSmartCodeCityAllocationRow(button) {
   button.closest('.city-allocation-row')?.remove();
+  refreshCityAllocationSelectionMutex();
 }
 
 function addCityAllocationRatioRow(button) {
@@ -11300,11 +11754,15 @@ function collectSmartCodePushTime() {
 function collectCityAllocationFromRow(row, scope = 'city') {
   const config = getAllocationAreaConfig(scope);
   const isFallback = row.dataset.fallback === 'true';
-  const city = isFallback ? config.fallbackLabel : row.querySelector('.city-allocation-city')?.value || '';
-  if (!city) return { ok: false, message: `请选择${config.valueLabel}` };
+  const areaInput = row.querySelector('.city-allocation-city');
+  const cities = isFallback
+    ? [config.fallbackLabel]
+    : getAreaPickerSelectedValues(areaInput);
+  if (!cities.length) return { ok: false, message: `请选择${config.valueLabel}` };
+  const city = cities.join('、');
   const result = collectAllocationRowsFromPanel(row.querySelector('.city-allocation-ratio-rows'), city);
   if (!result.ok) return result;
-  return { ok: true, value: { city, allocationMode: 'ratio', allocations: result.value } };
+  return { ok: true, value: { city, cities, allocationMode: 'ratio', allocations: result.value } };
 }
 
 function collectAllocationRowsFromPanel(panel, contextLabel = '') {
@@ -11368,8 +11826,10 @@ function collectSmartCodeCityAllocations(scope = 'city') {
   for (const row of cityRows) {
     const result = collectCityAllocationFromRow(row, scope);
     if (!result.ok) return result;
-    if (citySet.has(result.value.city)) return { ok: false, message: `${config.valueLabel}${result.value.city}重复` };
-    citySet.add(result.value.city);
+    for (const city of result.value.cities) {
+      if (citySet.has(city)) return { ok: false, message: `${config.valueLabel}${city}重复，请勿在多个配置组中同时选择` };
+      citySet.add(city);
+    }
     cityAllocations.push(result.value);
   }
   const fallbackResult = collectCityAllocationFromRow(fallbackRow, scope);
@@ -16289,14 +16749,19 @@ function closeModal(id) {
   const modal = document.getElementById(id);
   if (!modal) return;
   modal.classList.remove('show');
+  if (id === 'leadDispatchRuleModal') {
+    setSharedRuleModalVisual('config');
+  }
 }
 
 function setSharedRuleModalVisual(variant = 'config') {
   const modal = document.querySelector('#leadDispatchRuleModal .modal');
   if (!modal) return;
-  modal.className = variant === 'policy'
-    ? 'modal config-modal lead-dispatch-rule-modal policy-rule-modal cold-lead-policy-modal'
-    : 'modal config-modal lead-dispatch-rule-modal';
+  if (variant === 'policy') {
+    modal.className = 'modal config-modal lead-dispatch-rule-modal policy-rule-modal cold-lead-policy-modal';
+  } else {
+    modal.className = 'modal config-modal lead-dispatch-rule-modal';
+  }
 }
 
 function closeViewModal() {
