@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预外呼监控 · 功能说明文档</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #d9e0ea;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --success: #0f766e;
+      --warning: #b45309;
+      --danger: #b42318;
+      --radius: 8px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .doc-header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 32px 22px;
+      margin-bottom: 18px;
+    }
+    .doc-header .doc-type-badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .doc-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .doc-header .doc-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .doc-header .doc-meta-list {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .doc-header .doc-meta-list span { display: flex; align-items: center; gap: 4px; }
+    .doc-header .doc-meta-list .meta-label { font-weight: 700; color: var(--text); }
+    .summary-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .summary-strip .summary-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 20px;
+      flex: 1;
+      min-width: 140px;
+    }
+    .summary-strip .summary-label { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+    .summary-strip .summary-value { font-size: 20px; font-weight: 800; color: var(--text); }
+    .toc {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 28px;
+      margin-bottom: 18px;
+    }
+    .toc-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .toc-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+    .toc-links a {
+      font-size: 14px;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .toc-links a:hover, .toc-links a:focus { border-bottom-color: var(--accent); }
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .section-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table th, table td {
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      min-width: 60px;
+    }
+    table th {
+      background: #f3f5f9;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    table td { color: var(--text); }
+    table td .cell-title { font-weight: 700; margin-bottom: 2px; }
+    table td .cell-sub { color: var(--muted); font-size: 12px; }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      line-height: 1.4;
+      margin-right: 4px;
+    }
+    .badge-warn { background: #fef3c7; color: var(--warning); }
+    .badge-danger { background: #fde8e8; color: var(--danger); }
+    .badge-success { background: #d1fae5; color: var(--success); }
+    .badge-info { background: var(--accent-soft); color: var(--accent); }
+    .badge-muted { background: #f3f5f9; color: var(--muted); }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .feature-card {
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .feature-card + .feature-card {
+      margin-top: 16px;
+    }
+    .feature-card .fc-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-card .fc-body { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .feature-card .fc-body p { margin-bottom: 6px; }
+    .feature-card .fc-body strong { color: var(--text); }
+    .feature-card .fc-body ul { padding-left: 16px; margin-bottom: 6px; }
+    .feature-card .fc-body li { margin-bottom: 2px; }
+    details {
+      margin-top: 10px;
+      padding-top: 2px;
+    }
+    details summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      padding: 4px 0;
+      user-select: none;
+    }
+    details summary:hover { text-decoration: underline; }
+    .meta-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .meta-list span { display: inline-flex; align-items: center; gap: 4px; }
+    .meta-list .meta-label { font-weight: 700; color: var(--text); }
+    @media (max-width: 720px) {
+      .page { padding: 0 12px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .summary-strip .summary-card { min-width: 100%; }
+      .doc-header { padding: 18px 16px; }
+      .section { padding: 16px 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="doc-type-badge">功能说明文档 · HTML 阅读版</div>
+    <h1>预外呼监控 · 功能说明文档</h1>
+    <div class="doc-subtitle">DCC培育平台 · 系统运维模块 — 追踪预外呼系统任务同步、话单回传、建联结果与运维响应</div>
+    <div class="doc-meta-list">
+      <span><span class="meta-label">系统：</span>DCC培育平台</span>
+      <span><span class="meta-label">板块：</span>系统运维 &gt; 系统监控</span>
+      <span><span class="meta-label">版本：</span>v1.1</span>
+      <span><span class="meta-label">日期：</span>2026-06-30</span>
+    </div>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip">
+    <div class="summary-card"><div class="summary-label">功能数量</div><div class="summary-value">5</div></div>
+    <div class="summary-card"><div class="summary-label">涉及接口数</div><div class="summary-value">7 <span class="badge badge-warn">待确认 2</span></div></div>
+    <div class="summary-card"><div class="summary-label">写操作</div><div class="summary-value">有</div></div>
+    <div class="summary-card"><div class="summary-label">权限</div><div class="summary-value">有</div></div>
+    <div class="summary-card"><div class="summary-label">导出</div><div class="summary-value">有</div></div>
+    <div class="summary-card"><div class="summary-label">待确认项</div><div class="summary-value">2</div></div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc" aria-label="目录">
+    <div class="toc-title">目录</div>
+    <div class="toc-links">
+      <a href="#scope">项目范围</a>
+      <a href="#logic">逻辑说明</a>
+      <a href="#api">接口清单</a>
+      <a href="#feature">功能说明</a>
+      <a href="#permission">权限矩阵</a>
+      <a href="#exception">异常规则</a>
+      <a href="#pending">待确认项</a>
+      <a href="#other">其他说明</a>
+    </div>
+  </nav>
+
+  <!-- 一. 项目范围 -->
+  <section class="section" id="scope">
+    <div class="section-title">一. 项目范围</div>
+    <div class="section-desc">界定本次功能说明覆盖的系统、板块与功能边界</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>系统名称</th><th>涉及板块</th><th>功能范围</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>DCC培育平台</td>
+            <td>系统运维 &gt; 系统监控 &gt; 预外呼监控</td>
+            <td>追踪 DCC培育系统同步至预外呼系统的任务处理、每次外呼话单回传及建联结果。仅用于数据监控，不包含规则设置。<br>包含 5 个子功能：数据概览、明细列表、同步批次汇总、预警管理、自动化运维与响应。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 二. 逻辑说明 -->
+  <section class="section" id="logic">
+    <div class="section-title">二. 逻辑说明</div>
+    <div class="section-desc">预外呼监控相关的页面跳转与跨模块依赖</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>流程名称</th><th>跳转地址</th></tr></thead>
+        <tbody>
+          <tr><td>进入预外呼监控</td><td>系统运维 &gt; 系统监控 &gt; 预外呼监控</td></tr>
+          <tr><td>数据概览 → 查看指标详情</td><td>点击指标卡片弹出指标说明浮层，不跳转页面</td></tr>
+          <tr><td>明细列表 → 查看任务详情</td><td>点击"查看"按钮打开预外呼任务详情弹窗（preDialerTaskModal），展示任务信息与外呼话单回传列表</td></tr>
+          <tr><td>明细列表 → 导出数据</td><td>点击"导出数据"按钮导出 Excel 文件，包含“预外呼任务明细”和“外呼话单明细”两个 Sheet，文件名含日期范围</td></tr>
+          <tr><td>同步批次汇总 → 导出数据</td><td>点击"导出数据"按钮触发按同步日期汇总的 CSV 文件下载</td></tr>
+          <tr><td>数据概览 → 查看指标说明</td><td>点击任意指标卡片弹出指标说明浮层；同步失败量、话单超时未回传、录音丢失量、线路拒呼、线路未呼数值大于 0 时使用警告样式提示</td></tr>
+          <tr><td>预警管理 → 确认预警</td><td>点击"确认"按钮将预警状态从"待确认"变更为"处理中"，责任人变更为DCC运营</td></tr>
+          <tr><td>预警管理 → 关闭预警</td><td>点击"关闭"按钮将预警状态变更为"已关闭"，处置记录留存</td></tr>
+          <tr><td>预警管理 → 规则配置</td><td>点击"规则配置"按钮打开预警规则配置弹窗（preDialerAlertRuleModal），可配置三类预警规则与通知对象</td></tr>
+          <tr><td>自动化运维 → 立即执行</td><td>手动触发自动化任务，更新最近执行时间为"刚刚"</td></tr>
+          <tr><td>自动化运维 → 暂停/启用</td><td>切换自动化任务运行状态（运行中 ↔ 已暂停）</td></tr>
+          <tr><td>自动化运维 → 立即对账</td><td>触发数据对账任务，完成后自动生成差异与修复记录</td></tr>
+          <tr><td>跨模块依赖：线索下发</td><td>预外呼任务完成后，系统将建联结果线索下发至 NEV线索中台；监控页面通过"已下发线索"字段追踪下发状态</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 三. 接口清单 -->
+  <section class="section" id="api">
+    <div class="section-title">三. 接口清单</div>
+    <div class="section-desc">预外呼监控涉及的全部接口，含开发速览</div>
+
+    <!-- 开发速览 -->
+    <div class="table-wrap" style="margin-bottom:18px">
+      <table>
+        <thead><tr><th>功能数量</th><th>涉及接口数</th><th>是否涉及写操作</th><th>是否涉及权限</th><th>是否涉及导出</th><th>待确认项</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>5</td>
+            <td>7</td>
+            <td><span class="badge badge-warn">是</span> 确认预警、关闭预警、规则配置、自动化启停/执行、对账触发</td>
+            <td><span class="badge badge-info">是</span> 仅系统运维角色可查看与操作</td>
+            <td><span class="badge badge-info">是</span> 明细列表与批次汇总支持导出</td>
+            <td><span class="badge badge-danger">2</span> 对账接口、自动化日志查询待确认</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 接口清单 -->
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>接口名称</th><th>请求方式</th><th>接口路径</th><th>请求参数</th><th>响应字段</th><th>成功处理</th><th>失败处理</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>预外呼任务列表查询</td>
+            <td>GET</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/tasks</td>
+            <td>startDate, endDate, status, systemStatus, exceptionReason, callResult, keyword, attentionFocus, page, pageSize</td>
+            <td>total, page, pageSize, list[]：id, leadId, customer, mobile, series, syncDate, syncTime, syncStatus, systemStatus, status, lastCall, callResult, lastResult, systemExceptionReason, updatedAt, overdue, nevDispatched, nevDispatchedAt</td>
+            <td>渲染明细列表表格与分页</td>
+            <td>接口返回空或异常时，页面显示"数据加载失败，请刷新重试"空状态</td>
+          </tr>
+          <tr>
+            <td>预外呼任务详情查询</td>
+            <td>GET</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/tasks/{taskId}</td>
+            <td>taskId</td>
+            <td>任务基本信息 + callRecords[]：callId, attempt, callTime, duration, result, handleStatus, returnedAt, connected, recordingAvailable</td>
+            <td>渲染任务详情弹窗</td>
+            <td>taskId 不存在时弹出 Toast 提示"未找到该预外呼任务"</td>
+          </tr>
+          <tr>
+            <td>预外呼指标概览查询</td>
+            <td>GET</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/metrics</td>
+            <td>startDate, endDate, attentionFocus（可选）</td>
+            <td>totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallTotal, firstCallConnected, firstCallRate, nonFirstCallTotal, nonFirstCallConnected, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent</td>
+            <td>渲染数据概览两组指标卡片</td>
+            <td>指标接口异常时，概览区域显示"数据加载失败"空状态</td>
+          </tr>
+          <tr>
+            <td>预外呼任务导出</td>
+            <td>POST</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/tasks/export</td>
+            <td>startDate, endDate, status, systemStatus, exceptionReason, callResult, keyword, attentionFocus</td>
+            <td>Excel 文件流，文件名含日期范围</td>
+            <td>浏览器下载 Excel 文件，弹出 Toast"已导出 X 条任务 + Y 条话单，外呼话单明细已写入独立 Sheet"</td>
+            <td>无数据时弹出 Toast"当前筛选条件下暂无可导出的预外呼任务"；接口异常时弹出 Toast"导出失败，请稍后重试"</td>
+          </tr>
+          <tr>
+            <td>预警确认/关闭</td>
+            <td>POST</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/alerts/{alertId}/confirm<br>/api/ops/predialer/alerts/{alertId}/close</td>
+            <td>alertId</td>
+            <td>success, message, updatedAlert</td>
+            <td>更新预警列表，弹出 Toast"预警已确认并分派处理"或"预警已关闭，处置记录已留存"</td>
+            <td>alertId 不存在或状态不可变更时弹出 Toast 提示具体错误信息</td>
+          </tr>
+          <tr>
+            <td>预警规则配置保存</td>
+            <td>POST</td>
+            <td><span class="badge badge-muted">待确认</span> /api/ops/predialer/alert-rules</td>
+            <td>callTimeout, callLevel, callReceivers[], callEscalation, syncWindow, syncRate, syncLevel, syncReceivers[], syncEscalation, recordingLevel, recordingReceivers[], recordingEscalation, mergeWindow</td>
+            <td>success, message</td>
+            <td>关闭配置弹窗，弹出 Toast"预警规则配置已保存并生效"</td>
+            <td>必填项缺失时弹出 Toast"请完整填写预警阈值后再保存"</td>
+          </tr>
+          <tr>
+            <td>数据对账触发 <span class="badge badge-danger">待确认：接口地址</span></td>
+            <td>POST</td>
+            <td><span class="badge badge-danger">待确认</span></td>
+            <td>startDate, endDate</td>
+            <td>success, message, reconciliationId</td>
+            <td>弹出 Toast"对账任务已启动，完成后将自动生成差异与修复记录"</td>
+            <td>接口异常时弹出 Toast"对账任务启动失败，请稍后重试"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 四. 功能说明 -->
+  <section class="section" id="feature">
+    <div class="section-title">四. 功能说明</div>
+    <div class="section-desc">按板块逐条说明每个功能点的交互、数据来源、逻辑、异常处理与验收标准</div>
+
+    <!-- 板块：预外呼监控 -->
+    <h3 style="font-size:16px;font-weight:700;margin:18px 0 8px;color:#111827">1. 预外呼监控</h3>
+
+    <!-- 1）数据概览 -->
+    <div class="feature-card">
+      <div class="fc-title"><span class="badge badge-info">F1</span> 数据概览</div>
+      <div class="fc-body">
+        <p><strong>2）交互说明</strong></p>
+        <p>页面入口：系统运维 &gt; 系统监控 &gt; 预外呼监控，默认进入"数据概览"Tab。用户无需筛选即可查看当前周期全量指标。点击任意指标卡片弹出指标说明浮层（metricInfoPopover），展示指标定义与计算口径。同步失败量、话单超时未回传、录音丢失量、线路拒呼、线路未呼卡片值大于 0 时高亮显示警告样式（metric-alert），用于提示运维关注。</p>
+        <p><strong>3）数据来源</strong></p>
+        <p>后端接口：预外呼指标概览查询接口（GET /api/ops/predialer/metrics），参数为 startDate、endDate、可选 attentionFocus。指标计算在后端完成，前端仅渲染。</p>
+        <p><strong>4）逻辑说明</strong></p>
+        <p>指标分为两组：</p>
+        <ul>
+          <li><strong>任务流转与坐席分配</strong>（8 个指标）：预外呼任务总量、已推送任务量、同步失败量、已分配坐席（总量）、已分配坐席（通话状态=坐席接听）、线索下发量、线索下发量（通话状态=坐席接听）、线索下发量（通话状态≠坐席接听）。</li>
+          <li><strong>外呼与回传监控</strong>（15 个概览指标）：任务处理中、任务已处理、有效任务量、话单已回传、话单待回传、话单超时未回传、录音丢失量、外呼接通量、有效通话量、首呼接通率、2~N呼接通率、线路拒呼、线路未呼、呼叫接通时长、每通呼叫接通时长。同步批次汇总另展示“日人均承载量”。</li>
+        </ul>
+        <p>核心计算口径：推送率 = 已推送任务量 ÷ 预外呼任务总量；处理率 = 任务已处理 ÷ 已推送任务量；接通率 = 外呼接通量 ÷ 话单总量；有效通话率 = 有效通话量 ÷ 外呼接通量；有效任务量 = 当前筛选范围内预外呼任务数；有效通话量 = 建联成功且通话时长 ≥ 30秒；日人均承载量 = 已推送任务量 ÷ 外呼接通量。</p>
+      </div>
+      <details>
+        <summary>功能明细（12 列完整规格）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能名称</th><th>页面入口</th><th>适用角色</th><th>操作说明</th><th>字段/参数</th><th>数据来源</th><th>取值逻辑</th><th>接口/数据变更</th><th>数据格式</th><th>默认值</th><th>异常处理</th><th>验收标准</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>数据概览</td>
+                <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 数据概览 Tab</td>
+                <td>系统运维角色（DCC平台组、系统运维人员）；其他角色无权限访问该页面</td>
+                <td>1. 进入页面自动加载当前周期指标数据<br>2. 点击指标卡片查看指标说明浮层<br>3. 同步失败、超时未回传、录音丢失、线路拒呼、线路未呼等风险指标值大于 0 时高亮提示</td>
+                <td>23 个概览指标值及对应比率：totalTasks, pushedTasks, syncFailedTasks, processingTasks, handledTasks, returnedCalls, pendingCalls, timeoutPendingCalls, recordingMissingCalls, connectedCalls, effectiveCalls, effectiveOutboundCalls, lineRejectedCalls, lineUncalledCalls, assignedAgentsTotal, assignedAgentsAnswered, nevDispatchedTasks, nevDispatchedSeatAnsweredTasks, nevDispatchedNonSeatAnsweredTasks, firstCallRate, nonFirstCallRate, totalDurationSeconds, avgDurationPerAgent</td>
+                <td>后端指标概览接口（GET /api/ops/predialer/metrics）</td>
+                <td>所有指标值由后端计算返回。比率类指标（推送率、处理率、接通率、有效通话率、首呼接通率、2~N呼接通率）由后端计算百分比。异常指标值 &gt; 0 时前端加 metric-alert 样式高亮</td>
+                <td>读操作，无数据变更</td>
+                <td>数值为整数或百分比字符串（如"85.7%"）；时长为"XX秒"格式；承载量为小数（1位）</td>
+                <td>默认日期范围：近 3 天；无 attentionFocus 时显示全量指标</td>
+                <td>接口返回异常时概览区域显示"数据加载失败，请刷新重试"；指标值为 0 时正常显示</td>
+                <td>当用户进入数据概览 Tab 时，应展示两组共 23 个指标卡片；当任一风险指标值 &gt; 0 时，该卡片应高亮显示；当点击指标卡片时，应弹出对应指标说明浮层</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- 2）明细列表 -->
+    <div class="feature-card">
+      <div class="fc-title"><span class="badge badge-info">F2</span> 明细列表</div>
+      <div class="fc-body">
+        <p><strong>2）交互说明</strong></p>
+        <p>页面入口：系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 明细列表 Tab。进入 Tab 后顶部显示筛选面板（同步日期、任务系统状态、任务异常原因、预外呼任务状态、最新外呼结果），筛选面板仅在此 Tab 及同步批次汇总 Tab 显示。点击"查询"按钮按筛选条件刷新列表；点击"重置"清空所有筛选条件并刷新；点击"刷新"重新加载当前筛选结果。列表支持分页（5/10/20/50条/页）和页码跳转。点击"查看"按钮打开任务详情弹窗，展示任务基本信息和外呼话单回传列表。点击"导出数据"按钮下载 Excel 文件。</p>
+        <p><strong>3）数据来源</strong></p>
+        <p>后端接口：预外呼任务列表查询接口（GET /api/ops/predialer/tasks），参数含 startDate、endDate、status、systemStatus、exceptionReason、callResult、keyword、attentionFocus、page、pageSize。</p>
+        <p><strong>4）逻辑说明</strong></p>
+        <p>列表表头 14 列：同步日期、人工任务编码、预外呼任务ID、总部线索ID、客户（含手机号）、意向车系、任务系统状态、任务异常原因、外呼次数（多次时显示"多次"警告标签）、预外呼任务状态（处理中超时显示"处理中（超时）"标签）、最新外呼结果、更新时间、已下发线索（是/否）、操作（查看按钮）。筛选逻辑：日期范围两端取包含；任务系统状态精确匹配；异常原因精确匹配；预外呼任务状态精确匹配；最新外呼结果按最新一条话单结果匹配；关键词在任务ID、线索ID、客户名、手机号中模糊匹配；attentionFocus 定位筛选逻辑：sync-failed 匹配同步失败任务，timeout-pending 匹配超时未回传任务，recording-missing 匹配录音丢失任务。</p>
+      </div>
+      <details>
+        <summary>功能明细（12 列完整规格）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能名称</th><th>页面入口</th><th>适用角色</th><th>操作说明</th><th>字段/参数</th><th>数据来源</th><th>取值逻辑</th><th>接口/数据变更</th><th>数据格式</th><th>默认值</th><th>异常处理</th><th>验收标准</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>明细列表</td>
+                <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 明细列表 Tab</td>
+                <td>系统运维角色；无权限角色无法看到该 Tab</td>
+                <td>1. 切换到明细列表 Tab 自动加载第一页数据<br>2. 设置筛选条件后点击"查询"<br>3. 点击"重置"清空筛选<br>4. 点击"刷新"重新加载<br>5. 点击"查看"打开任务详情弹窗<br>6. 点击"导出数据"下载 Excel</td>
+                <td>筛选：startDate（datetime-local）、endDate（datetime-local）、systemStatus（select：全部/待同步/同步失败/已同步/处理完成）、exceptionReason（select：全部/中止外呼任务/手机号码黑名单/店端跟进冲突）、status（select：全部/处理中/已完成）、callResult（select：全部/空号/停机/忙音/不在服务区/无人接听/关机/用户接通/线路拒呼/线路未呼）、keyword（hidden）、attentionFocus（hidden）<br>列表14列：同步日期、人工任务编码、预外呼任务ID、总部线索ID、客户+手机号、意向车系、任务系统状态、任务异常原因、外呼次数、预外呼任务状态、最新外呼结果、更新时间、已下发线索、操作</td>
+                <td>后端任务列表接口</td>
+                <td>筛选逻辑如上文所述；外呼次数 = 该任务话单记录数量，&gt;1 时显示"多次"标签；最新外呼结果 = 该任务最新一条话单的 result 字段；已下发线索 = task.nevDispatched（boolean）；预外呼任务状态 = task.status，overdue 时显示"处理中（超时）"</td>
+                <td>读操作，无数据变更；导出操作触发 Excel 下载，包含任务明细 Sheet 与外呼话单明细 Sheet</td>
+                <td>日期显示 YYYY/M/D 格式；状态枚举值；是/否</td>
+                <td>日期范围默认近3天；其余筛选默认"全部"</td>
+                <td>筛选无结果时表格显示"当前筛选条件下暂无预外呼任务"；接口异常时显示"数据加载失败"；导出无数据时 Toast 提示"暂无可导出的预外呼任务"</td>
+                <td>当用户切换到明细列表 Tab 时，应显示筛选面板和任务表格；当设置筛选条件点击查询时，应按条件过滤并刷新列表；当点击查看按钮时，应打开任务详情弹窗展示任务信息和话单列表；当点击导出数据时，应下载 Excel 文件并包含任务与话单两个 Sheet</td>
+              </tr>
+              <tr>
+                <td>任务详情弹窗</td>
+                <td>明细列表 &gt; 查看按钮</td>
+                <td>系统运维角色</td>
+                <td>点击"查看"按钮打开弹窗；弹窗标题为"预外呼任务详情 · {taskId}"；展示任务信息区 + 外呼话单回传区</td>
+                <td>任务信息区 10 个字段：人工任务编码、总部线索ID、客户、意向车系、同步时间、预外呼任务状态、最新外呼结果、任务系统状态、任务异常原因、已下发线索<br>话单回传区表头7列：话单ID、第几次外呼、外呼时间、通话时长、外呼结果、预外呼处理状态、回传时间</td>
+                <td>后端任务详情接口（GET /api/ops/predialer/tasks/{taskId}）</td>
+                <td>话单列表按 attempt 排序；预外呼处理状态取 handleStatus 字段；已下发线索为是时附带更新时间</td>
+                <td>读操作，无数据变更</td>
+                <td>日期含时分；时长格式如"38秒"；状态枚举值</td>
+                <td>无</td>
+                <td>taskId 不存在时 Toast 提示"未找到该预外呼任务"</td>
+                <td>当用户点击查看按钮时，应打开弹窗并展示完整任务信息与话单列表；当任务无话单时，话单区应显示"暂无外呼话单回传"空状态</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- 3）同步批次汇总 -->
+    <div class="feature-card">
+      <div class="fc-title"><span class="badge badge-info">F3</span> 同步批次汇总</div>
+      <div class="fc-body">
+        <p><strong>2）交互说明</strong></p>
+        <p>页面入口：系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 同步批次汇总 Tab。按同步日期分组统计全部概览指标，与概览指标口径一致。表格列宽自适应，合计行固定在底部。支持分页（5/10/20/50条/页）和导出。</p>
+        <p><strong>3）数据来源</strong></p>
+        <p>复用任务列表接口，前端按 syncDate 分组后再计算每组指标。合计行由前端汇总全量数据计算。</p>
+        <p><strong>4）逻辑说明</strong></p>
+        <p>列 = 同步日期 + 24 个指标列（任务流转8列 + 外呼回传16列）。每行按 syncDate 筛选该日期下的任务和话单，独立计算指标值。合计行使用全量数据计算。表格最小宽度 = (列数 + 1) × 128px，超出容器宽度时横向滚动。</p>
+      </div>
+      <details>
+        <summary>功能明细（12 列完整规格）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能名称</th><th>页面入口</th><th>适用角色</th><th>操作说明</th><th>字段/参数</th><th>数据来源</th><th>取值逻辑</th><th>接口/数据变更</th><th>数据格式</th><th>默认值</th><th>异常处理</th><th>验收标准</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>同步批次汇总</td>
+                <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 同步批次汇总 Tab</td>
+                <td>系统运维角色</td>
+                <td>1. 切换到批次汇总 Tab 自动加载<br>2. 使用筛选面板筛选日期范围等条件<br>3. 查看按日期分组的指标表格<br>4. 点击"导出数据"下载 CSV</td>
+                <td>同步日期 + 24 个指标列（任务流转8列 + 外呼回传16列）<br>合计行：全量数据汇总</td>
+                <td>复用任务列表接口，前端按 syncDate 分组计算</td>
+                <td>每行 = 该日期下所有任务的指标计算值；合计行 = 全量指标值；排序按 syncDate 降序</td>
+                <td>读操作；导出操作触发 CSV 下载（批次汇总）</td>
+                <td>数值为整数；比率百分比字符串</td>
+                <td>默认近3天；排序降序</td>
+                <td>无数据时表格显示"暂无同步批次数据"；导出无数据时 Toast 提示</td>
+                <td>当用户切换到同步批次汇总 Tab 时，应按同步日期分组显示指标表格；当存在合计行时，应固定在表格底部；当点击导出数据时，应下载含分组和合计的 CSV 文件</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- 4）预警管理 -->
+    <div class="feature-card">
+      <div class="fc-title"><span class="badge badge-info">F4</span> 预警管理</div>
+      <div class="fc-body">
+        <p><strong>2）交互说明</strong></p>
+        <p>页面入口：系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 预警管理 Tab。顶部展示摘要条（当前待处置预警数、P1 紧急预警数、通知升级中数量）。下方包含两个卡片区域：</p>
+        <ul>
+          <li><strong>预警事件中心</strong>：表格展示预警编号、等级（P1/P2 标签）、预警类型、关联任务、自动处置、责任人、状态、操作（确认/关闭按钮）。</li>
+          <li><strong>预警规则与通知升级</strong>：表格展示规则名称、触发条件、等级、通知对象、未确认升级、重复告警策略、状态。右上角"规则配置"按钮打开预警规则配置弹窗。</li>
+        </ul>
+        <p><strong>预警规则配置弹窗</strong>包含三个规则分组：</p>
+        <ul>
+          <li><strong>话单回传超时</strong>：超时阈值（小时，默认24）、预警等级（P1/P2）、通知对象（账号人员多选）、未确认升级（分钟，默认5，升级至运维主管）。</li>
+          <li><strong>同步失败率异常</strong>：统计窗口（分钟，默认15）、失败率阈值（%，默认5）、预警等级（P2默认）、通知对象、未确认升级（分钟，默认30，升级至业务负责人）。</li>
+          <li><strong>录音缺失</strong>：触发条件（已回传话单无录音）、预警等级（P2默认）、通知对象、未确认升级（分钟，默认60，创建人工工单）。</li>
+          <li><strong>重复告警抑制</strong>：同一任务合并窗口（分钟，默认30）。</li>
+        </ul>
+        <p><strong>3）数据来源</strong></p>
+        <p>预警事件：后端接口（GET /api/ops/predialer/alerts）。预警规则：后端接口（GET /api/ops/predialer/alert-rules）。通知对象选择器：复用账号人员列表（reviewUserOptions），包含账号、姓名、角色、部门。</p>
+        <p><strong>4）逻辑说明</strong></p>
+        <p>预警状态流转：待确认 → 处理中（点击确认）→ 已关闭（点击关闭）。确认操作将 owner 变更为"DCC运营"。通知对象选择器支持多选、全选、清除所选，选择结果存储为账号ID数组。</p>
+      </div>
+      <details>
+        <summary>功能明细（12 列完整规格）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能名称</th><th>页面入口</th><th>适用角色</th><th>操作说明</th><th>字段/参数</th><th>数据来源</th><th>取值逻辑</th><th>接口/数据变更</th><th>数据格式</th><th>默认值</th><th>异常处理</th><th>验收标准</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>预警事件中心</td>
+                <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 预警管理 Tab</td>
+                <td>系统运维角色；仅"待确认"预警可确认，"未关闭"预警可关闭</td>
+                <td>1. 查看摘要条与预警事件表格<br>2. 点击"确认"将预警从"待确认"变更为"处理中"<br>3. 点击"关闭"将预警变更为"已关闭"<br>4. 点击"规则配置"打开预警规则配置弹窗</td>
+                <td>摘要：当前待处置预警数、P1紧急预警数、通知升级中数量<br>表格8列：预警编号、等级、预警类型、关联任务、自动处置、责任人、状态、操作<br>弹窗：callTimeout(number)、callLevel(select)、callReceivers(account-picker)、callEscalation(number)、syncWindow(number)、syncRate(number)、syncLevel(select)、syncReceivers(account-picker)、syncEscalation(number)、recordingLevel(select)、recordingReceivers(account-picker)、recordingEscalation(number)、mergeWindow(number)</td>
+                <td>预警事件：后端预警列表接口；预警规则：后端规则查询接口；通知对象：账号人员列表接口</td>
+                <td>摘要数据从预警列表实时计算；预警等级P1标签样式与P2不同；"待确认"状态显示确认按钮，"未关闭"状态显示关闭按钮；通知对象选择器选中后显示姓名·角色格式，超过2人显示"等N人"</td>
+                <td>确认预警：POST /api/ops/predialer/alerts/{id}/confirm，owner 变更为"DCC运营"<br>关闭预警：POST /api/ops/predialer/alerts/{id}/close<br>保存规则：POST /api/ops/predialer/alert-rules</td>
+                <td>预警编号格式 ALT-YYYYMMDD-XXX；等级枚举 P1/P2；状态枚举：待确认/处理中/已关闭</td>
+                <td>callTimeout=24、callLevel=P1、callEscalation=5、syncWindow=15、syncRate=5、syncLevel=P2、syncEscalation=30、recordingLevel=P2、recordingEscalation=60、mergeWindow=30</td>
+                <td>alertId 不存在或状态不可变更时 Toast 提示错误；必填项缺失时 Toast 提示"请完整填写预警阈值后再保存"</td>
+                <td>当用户进入预警管理 Tab 时，应展示摘要条与预警事件表格；当点击确认按钮时，预警状态应变更为"处理中"且责任人变更为"DCC运营"；当点击关闭按钮时，预警状态应变更为"已关闭"；当点击规则配置时，应打开配置弹窗并可保存三类预警规则</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- 5）自动化运维与响应 -->
+    <div class="feature-card">
+      <div class="fc-title"><span class="badge badge-info">F5</span> 自动化运维与响应</div>
+      <div class="fc-body">
+        <p><strong>2）交互说明</strong></p>
+        <p>页面入口：系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 自动化运维与响应 Tab。顶部摘要条：运行中自动化数、今日自动处置数（42）、自动修复成功率（96.2%）。下方包含两个卡片：</p>
+        <ul>
+          <li><strong>自动化编排与响应</strong>：表格展示任务ID、自动化任务名称、触发条件、自动响应、状态（运行中/已暂停）、最近执行时间、操作（立即执行/暂停/启用）。</li>
+          <li><strong>数据对账与自动修复</strong>：表格展示对账批次、对账范围、预外呼任务总量、已推送任务量、同步失败量、话单已回传、录音丢失量、差异数、自动修复、状态。右上角"立即对账"按钮触发对账任务。</li>
+        </ul>
+        <p><strong>3）数据来源</strong></p>
+        <p>自动化任务列表：后端接口（GET /api/ops/predialer/automation-jobs）。对账记录：后端接口（GET /api/ops/predialer/reconciliations）。对账触发：POST 接口。</p>
+        <p><strong>4）逻辑说明</strong></p>
+        <p>自动化任务状态切换：运行中 ↔ 已暂停。"立即执行"更新 lastRun 为"刚刚"并 Toast 提示。对账触发后 Toast 提示"对账任务已启动"，完成后自动生成差异与修复记录。</p>
+      </div>
+      <details>
+        <summary>功能明细（12 列完整规格）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能名称</th><th>页面入口</th><th>适用角色</th><th>操作说明</th><th>字段/参数</th><th>数据来源</th><th>取值逻辑</th><th>接口/数据变更</th><th>数据格式</th><th>默认值</th><th>异常处理</th><th>验收标准</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>自动化编排与响应</td>
+                <td>系统运维 &gt; 系统监控 &gt; 预外呼监控 &gt; 自动化运维与响应 Tab</td>
+                <td>系统运维角色；可启停和手动执行自动化任务</td>
+                <td>1. 查看摘要条与自动化任务表格<br>2. 点击"立即执行"手动触发自动化任务<br>3. 点击"暂停/启用"切换自动化任务运行状态</td>
+                <td>摘要：运行中自动化数、今日自动处置数、自动修复成功率<br>表格7列：任务ID、自动化任务名称、触发条件、自动响应、状态、最近执行时间、操作</td>
+                <td>后端自动化任务列表接口</td>
+                <td>状态为"运行中"时显示"暂停"按钮和"complete"样式；状态为"已暂停"时显示"启用"按钮；"立即执行"更新 lastRun 显示值</td>
+                <td>立即执行：POST /api/ops/predialer/automation/{id}/run<br>启停切换：POST /api/ops/predialer/automation/{id}/toggle</td>
+                <td>状态枚举：运行中/已暂停；成功率百分比；最近执行时间含时分</td>
+                <td>无</td>
+                <td>任务不存在时 Toast 提示错误；对账触发接口异常时 Toast 提示"对账任务启动失败"</td>
+                <td>当用户进入自动化运维 Tab 时，应展示摘要条与自动化任务表格；当点击"立即执行"时，应更新最近执行时间为"刚刚"并 Toast 提示任务名已手动执行；当点击"暂停"时，状态应变更为"已暂停"；当点击"启用"时，状态应变更为"运行中"</td>
+              </tr>
+              <tr>
+                <td>数据对账与自动修复</td>
+                <td>自动化运维与响应 Tab &gt; 数据对账卡片</td>
+                <td>系统运维角色</td>
+                <td>1. 查看对账记录表格<br>2. 点击"立即对账"按钮触发对账任务</td>
+                <td>表格10列：对账批次、对账范围、预外呼任务总量、已推送任务量、同步失败量、话单已回传、录音丢失量、差异数、自动修复、状态</td>
+                <td>后端对账记录接口 <span class="badge badge-danger">待确认：接口地址</span></td>
+                <td>对账批次编号格式 REC-YYYYMMDD-XXX；对账范围为日期；差异数 = 系统记录与实际数据不一致的数量</td>
+                <td>触发对账：POST <span class="badge badge-danger">待确认：接口地址</span></td>
+                <td>批次编号格式；数值为整数；状态枚举值</td>
+                <td>无</td>
+                <td>对账触发接口异常时 Toast 提示"对账任务启动失败"</td>
+                <td>当用户点击"立即对账"时，应弹出 Toast 提示"对账任务已启动，完成后将自动生成差异与修复记录"；当对账记录存在时，应在表格中展示对账结果</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- 筛选面板 -->
+    <div class="feature-card" style="margin-top: 14px;">
+      <div class="fc-title"><span class="badge badge-muted">通用</span> 筛选面板（明细列表 / 同步批次汇总共享）</div>
+      <div class="fc-body">
+        <p><strong>交互说明</strong>：仅在"明细列表"、"同步批次汇总"两个 Tab 显示。包含 5 个筛选字段 + 3 个操作按钮 + 定位提示条。</p>
+        <p><strong>字段规则</strong>：</p>
+        <ul>
+          <li>同步日期：两个 date input（startDate / endDate），默认近 3 天</li>
+          <li>任务系统状态：select，选项 = 全部 / 待同步 / 同步失败 / 已同步 / 处理完成</li>
+          <li>任务异常原因：select，选项 = 全部 / 中止外呼任务 / 手机号码黑名单 / 店端跟进冲突</li>
+          <li>预外呼任务状态：select，选项 = 全部 / 处理中 / 已完成</li>
+          <li>最新外呼结果：select，选项 = 全部 / 空号 / 停机 / 忙音 / 不在服务区 / 无人接听 / 关机 / 用户接通 / 线路拒呼 / 线路未呼</li>
+          <li>定位提示条（attentionFocus）：当外部带入隐藏定位条件时显示，标签 = 同步失败任务 / 超时未回传任务 / 录音丢失任务，含"清除定位"按钮</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 五. 其他说明 -->
+  <section class="section" id="other">
+    <div class="section-title">五. 其他说明</div>
+    <div class="section-desc">状态枚举、权限矩阵、异常规则与待确认项</div>
+
+    <!-- 权限矩阵 -->
+    <div id="permission">
+      <div style="font-size:15px;font-weight:700;margin:14px 0 6px;color:#111827">权限矩阵</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>角色</th><th>查看概览</th><th>查看明细</th><th>导出数据</th><th>确认/关闭预警</th><th>配置预警规则</th><th>启停自动化</th><th>触发对账</th></tr></thead>
+          <tbody>
+            <tr><td>系统运维（DCC平台组）</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>DCC运营</td><td>✓</td><td>✓</td><td>✓</td><td>仅确认</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>其他角色</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">无权限角色访问预外呼监控页面时，应隐藏对应菜单项或显示"暂无访问权限"提示。</p>
+    </div>
+
+    <!-- 状态枚举 -->
+    <div id="exception">
+      <div style="font-size:15px;font-weight:700;margin:14px 0 6px;color:#111827">状态枚举映射表</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>枚举类型</th><th>枚举值</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>任务系统状态</td><td>待同步</td><td>DCC培育系统已生成但尚未推送至预外呼系统</td></tr>
+            <tr><td>任务系统状态</td><td>同步失败</td><td>推送至预外呼系统失败，需要重试或人工处理</td></tr>
+            <tr><td>任务系统状态</td><td>已同步</td><td>成功推送至预外呼系统并已被接收</td></tr>
+            <tr><td>任务系统状态</td><td>处理完成</td><td>预外呼系统已完成处理并回传最终结果</td></tr>
+            <tr><td>预外呼任务状态</td><td>处理中</td><td>预外呼系统仍在处理，尚未回传最终结果</td></tr>
+            <tr><td>预外呼任务状态</td><td>处理中（超时）</td><td>处理中且超过 SLA 时限（24小时）</td></tr>
+            <tr><td>预外呼任务状态</td><td>已完成</td><td>预外呼系统已完成处理并回传最终结果</td></tr>
+            <tr><td>任务异常原因</td><td>无异常</td><td>任务正常流转，无异常标记</td></tr>
+            <tr><td>任务异常原因</td><td>中止外呼任务</td><td>因策略规则中止外呼推送</td></tr>
+            <tr><td>任务异常原因</td><td>手机号码黑名单</td><td>客户号码命中黑名单策略，被拦截</td></tr>
+            <tr><td>任务异常原因</td><td>店端跟进冲突</td><td>专营店正在跟进该线索，暂停预外呼</td></tr>
+            <tr><td>外呼结果</td><td>空号 / 停机 / 忙音 / 不在服务区 / 无人接听 / 关机 / 用户接通 / 线路拒呼 / 线路未呼</td><td>话单回传的外呼结果枚举值</td></tr>
+            <tr><td>预警等级</td><td>P1</td><td>紧急预警，需立即处置</td></tr>
+            <tr><td>预警等级</td><td>P2</td><td>一般预警，需关注处置</td></tr>
+            <tr><td>预警状态</td><td>待确认</td><td>系统自动生成预警，等待人工确认</td></tr>
+            <tr><td>预警状态</td><td>处理中</td><td>已确认，正在处置</td></tr>
+            <tr><td>预警状态</td><td>已关闭</td><td>处置完成，已关闭</td></tr>
+            <tr><td>自动化任务状态</td><td>运行中</td><td>自动化任务正在按规则自动执行</td></tr>
+            <tr><td>自动化任务状态</td><td>已暂停</td><td>自动化任务暂停，不再自动触发</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-size:15px;font-weight:700;margin:14px 0 6px;color:#111827">全局异常规则</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>异常场景</th><th>处理方式</th><th>影响范围</th></tr></thead>
+          <tbody>
+            <tr><td>接口返回 5xx 或网络异常</td><td>页面显示"数据加载失败，请刷新重试"空状态；提供刷新按钮</td><td>影响前端展示</td></tr>
+            <tr><td>筛选条件无匹配数据</td><td>表格显示"当前筛选条件下暂无{数据类型}"空状态</td><td>影响列表展示</td></tr>
+            <tr><td>导出时筛选结果为空</td><td>Toast 提示"当前筛选条件下暂无可导出的数据"</td><td>影响导出功能</td></tr>
+            <tr><td>预警 ID 不存在或状态不可变更</td><td>Toast 提示具体错误信息</td><td>影响预警操作</td></tr>
+            <tr><td>预警规则保存必填项缺失</td><td>Toast 提示"请完整填写预警阈值后再保存"</td><td>影响预警配置</td></tr>
+            <tr><td>对账触发接口异常</td><td>Toast 提示"对账任务启动失败，请稍后重试"</td><td>影响对账功能</td></tr>
+            <tr><td>无权限访问</td><td>隐藏菜单项或显示"暂无访问权限"</td><td>影响所有功能</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 待确认项 -->
+    <div id="pending">
+      <div style="font-size:15px;font-weight:700;margin:14px 0 6px;color:#111827">待确认项</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>待确认项</th><th>影响范围</th><th>备注</th></tr></thead>
+          <tbody>
+            <tr><td>数据对账触发接口地址与参数</td><td><span class="badge badge-warn">影响后端开发</span></td><td>原型中仅展示 Toast 提示，实际接口路径、请求参数和响应结构需后端确认</td></tr>
+            <tr><td>自动化运维日志查询接口</td><td><span class="badge badge-warn">影响前端展示</span></td><td>原型展示自动化执行日志（3 条示例），但实际接口地址和数据结构未确认</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+</body>
+</html>
