@@ -7587,6 +7587,7 @@ function getPreDialerMetrics(tasks, calls) {
   const timeoutPendingCalls = pendingCalls.filter(call => tasks.find(task => task.id === call.taskId)?.overdue);
   const recordingMissingCalls = returnedCalls.filter(call => call.recordingAvailable === false);
   const connectedCalls = calls.filter(call => call.connected);
+  const connectedTaskCount = new Set(connectedCalls.map(call => call.taskId)).size;
   const effectiveCalls = connectedCalls.filter(call => Number.parseInt(call.duration, 10) >= 30);
   const lineRejectedCalls = calls.filter(call => call.result === '线路拒呼');
   const lineUncalledCalls = calls.filter(call => call.result === '线路未呼');
@@ -7622,7 +7623,7 @@ function getPreDialerMetrics(tasks, calls) {
     pendingCalls: pendingCalls.length,
     timeoutPendingCalls: timeoutPendingCalls.length,
     recordingMissingCalls: recordingMissingCalls.length,
-    connectedCalls: connectedCalls.length,
+    connectedCalls: connectedTaskCount,
     effectiveCalls: effectiveCalls.length,
     effectiveOutboundCalls: effectiveOutboundTasks.length,
     lineRejectedCalls: lineRejectedCalls.length,
@@ -8180,7 +8181,7 @@ function showPreDialerMetricInfo(metric) {
     '话单待回传': '已发起外呼但尚未收到预外呼系统回传结果的话单数量，按话单统计，不按任务去重。',
     '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传结果的话单数量，按话单统计，需要核查接口或补偿任务。',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
-    '外呼接通量': '话单结果标识为成功建联的外呼次数，按话单统计，不按任务去重。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
+    '外呼接通量': '话单结果标识为成功建联的外呼次数，去重任务数。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
     '有效任务量': '有效任务量 = 推送任务量 -（线路拒呼且外呼已完成任务 + 线路未呼且外呼已完成任务 + 存在待回传话单的任务 + 任务中止 + 用户黑名单）',
     '有效通话量': '成功建联且通话时长不少于 30 秒的外呼次数。有效通话率 = 有效通话量 ÷ 外呼接通量 × 100%',
     '线路拒呼': '外呼结果为线路拒呼的话单数量，表示预外呼系统因线路侧限制拒绝发起本次外呼，按话单统计，不按任务去重。',
@@ -8189,8 +8190,8 @@ function showPreDialerMetricInfo(metric) {
     '已分配坐席（通话状态 = 坐席接听）': '统计周期内存在坐席接听话单的去重坐席人数。',
     '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，出现坐席接听记录的去重任务数，用于识别接听场景下的下发量。',
     '线索下发量（通话状态 ≠ 坐席接听）': '已下发至 NEV线索中台，但未出现坐席接听记录的去重任务数，用于识别非接听场景下的下发量。',
-    '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 有效任务量 × 100%',
-    '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 有效任务量 × 100%',
+    '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 外呼接通量 × 100%',
+    '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 外呼接通量 × 100%',
     '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
     '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 外呼接通量',
     '人均日承载量': '人均日承载量 = 坐席接听线索数 ÷ 去重坐席人数',
