@@ -1241,9 +1241,22 @@
     }
     .lead-search-actions {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
+      align-self: end;
       gap: 8px;
       justify-content: flex-end;
+      min-height: 36px;
+      white-space: nowrap;
+    }
+    .lead-search-actions .btn-add,
+    .lead-search-actions .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      height: 36px;
+      padding: 0 14px;
+      line-height: 1;
       white-space: nowrap;
     }
     .date-range {
@@ -1553,6 +1566,7 @@
       padding: 14px;
       border-bottom: 1px solid #edf2f7;
       white-space: nowrap;
+      vertical-align: middle;
     }
     .lead-table tr:hover {
       background: #f8fbff;
@@ -2515,6 +2529,16 @@
       border-radius: 8px;
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
     }
+    .filter-row .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      min-width: 58px;
+      height: 36px;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
     .filter-label { font-size: 13px; color: #475569; font-weight: 700; }
     .filter-select {
       height: 34px;
@@ -2589,6 +2613,9 @@
       width: 100%;
       min-width: 0;
     }
+    .policy-content.filter-row .btn-secondary {
+      justify-self: start;
+    }
     .policy-table-wrap {
       width: 100%;
       overflow-x: auto;
@@ -2654,34 +2681,6 @@
       gap: 6px;
       white-space: nowrap;
     }
-    .policy-table .action-btn {
-      min-width: 38px;
-      height: 28px;
-      padding: 0 8px;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      font-weight: 700;
-      line-height: 26px;
-      background: transparent;
-    }
-    .policy-table .action-btn.view {
-      border-color: #ccfbf1;
-      background: #f0fdfa;
-      color: #0f766e;
-    }
-    .policy-table .action-btn.edit {
-      border-color: #bfdbfe;
-      background: #eff6ff;
-      color: #2563eb;
-    }
-    .policy-table .action-btn.delete {
-      border-color: #fecaca;
-      background: #fff1f2;
-      color: #dc2626;
-    }
-    .policy-table .action-btn.view:hover { background: #ccfbf1; }
-    .policy-table .action-btn.edit:hover { background: #dbeafe; }
-    .policy-table .action-btn.delete:hover { background: #ffe4e6; }
     .assignment-dimension-tabs {
       display: flex;
       align-items: center;
@@ -2974,7 +2973,8 @@
       padding: 0;
       overflow: hidden;
     }
-    .city-picker-search {
+    .city-picker-search,
+    .province-picker-search {
       padding: 10px;
       border-bottom: 1px solid #edf2f7;
       background: #fff;
@@ -3017,7 +3017,8 @@
       color: #94a3b8;
       cursor: not-allowed;
     }
-    .city-picker-search input {
+    .city-picker-search input,
+    .province-picker-search input {
       width: 100%;
       height: 34px;
       border: 1px solid #d5deea;
@@ -3027,7 +3028,8 @@
       font-size: 13px;
       outline: none;
     }
-    .city-picker-search input:focus {
+    .city-picker-search input:focus,
+    .province-picker-search input:focus {
       border-color: #2563eb;
       box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.10);
     }
@@ -3066,7 +3068,8 @@
       padding: 8px;
       background: #fff;
     }
-    .city-picker-empty {
+    .city-picker-empty,
+    .province-picker-empty {
       display: none;
       padding: 18px 10px;
       color: #94a3b8;
@@ -3785,11 +3788,17 @@
     }
     .policy-rule-modal .btn-cancel,
     .policy-rule-modal .btn-save {
-      min-width: 76px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
       height: 34px;
-      padding: 0 16px;
-      border-radius: 7px;
-      font-weight: 800;
+      padding: 0 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
     }
     .policy-rule-modal .btn-cancel:hover {
       color: #2563eb;
@@ -3818,14 +3827,6 @@
     }
     .allocation-policy-detail-page .form-group {
       margin-bottom: 16px;
-    }
-    .allocation-policy-detail-page .allocation-policy-page-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      padding: 14px 0 0;
-      border-top: 1px solid #edf2f7;
-      background: #fff;
     }
     #leadDispatchRuleModal .cold-lead-policy-modal {
       width: min(980px, calc(100vw - 40px));
@@ -3904,18 +3905,37 @@
       border-top: 1px solid #e8eef7;
       background: #fff;
     }
-    #leadDispatchRuleModal .cold-lead-policy-modal .btn-cancel,
-    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save {
-      min-width: 76px;
+    #leadDispatchRuleModal .modal-footer .btn-cancel,
+    #leadDispatchRuleModal .modal-footer .btn-save {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
       height: 34px;
-      padding: 0 16px;
-      border-radius: 7px;
-      font-weight: 800;
+      padding: 0 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
     }
-    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save {
+    #leadDispatchRuleModal .modal-footer .btn-cancel {
+      border: 1px solid #d5deea;
+      background: #fff;
+      color: #334155;
+    }
+    #leadDispatchRuleModal .modal-footer .btn-cancel:hover {
+      color: #2563eb;
+      border-color: #93c5fd;
+      background: #fff;
+    }
+    #leadDispatchRuleModal .modal-footer .btn-save {
+      border: 1px solid #2563eb;
       background: #2563eb;
+      color: #fff;
     }
-    #leadDispatchRuleModal .cold-lead-policy-modal .btn-save:hover {
+    #leadDispatchRuleModal .modal-footer .btn-save:hover {
+      border-color: #1d4ed8;
       background: #1d4ed8;
     }
     @media (max-width: 1100px) {
@@ -4201,6 +4221,13 @@
     .assignment-rule-table td {
       vertical-align: top;
     }
+    .data-table td:has(.action-btns),
+    .data-table td:has(.col-status-on),
+    .data-table td:has(.col-status-off),
+    .lead-table td:has(.action-btn),
+    .lead-table td:has(.action-btns) {
+      vertical-align: middle;
+    }
     .assignment-rule-table th:nth-child(1),
     .assignment-rule-table td:nth-child(1) { width: 56px; }
     .assignment-rule-table th:nth-child(2),
@@ -4248,8 +4275,18 @@
       font-size: 12px;
       font-weight: 800;
     }
-    .col-status-on { color: #52c41a; font-size: 12px; }
-    .col-status-off { color: #8c8c8c; font-size: 12px; }
+    .col-status-on,
+    .col-status-off {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .col-status-on { color: #52c41a; }
+    .col-status-off { color: #8c8c8c; }
     .review-actions {
       display: flex;
       gap: 6px;
@@ -4294,10 +4331,27 @@
       flex-shrink: 0;
     }
     /* Action buttons in table */
-    .action-btns { display: flex; align-items: center; gap: 8px; }
+    .action-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      white-space: nowrap;
+    }
     .action-btn {
-      font-size: 12px; cursor: pointer; padding: 2px 8px;
-      border-radius: 6px; border: none; background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 28px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
       transition: all 0.12s;
     }
     .action-btn.edit { color: #2563eb; }
@@ -4306,7 +4360,8 @@
     .action-btn.view:hover { background: #ecfdf5; }
     .action-btn.delete {
       color: #fff; background: #ff4d4f;
-      padding: 3px 10px; border-radius: 4px;
+      min-width: 44px;
+      padding: 0 10px; border-radius: 4px;
       font-size: 12px;
     }
     .action-btn.delete:hover { background: #ff7875; }
@@ -4494,6 +4549,20 @@
       border-color: #93c5fd;
       background: #eff6ff;
       color: #2563eb;
+    }
+    .policy-form-page-card {
+      padding: 18px;
+      border: 1px solid #e4eaf3;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .policy-form-page-card.policy-rule-modal {
+      overflow: visible;
+    }
+    .policy-form-page-card .modal-body {
+      display: grid;
+      gap: 16px;
+      padding: 0;
     }
     .tag-picker {
       position: relative;
@@ -5415,25 +5484,179 @@
       }
     }
 
+    /* Unified form fields */
+    input[type="text"]:not(.login-input),
+    input[type="number"],
+    input[type="search"],
+    input[type="date"],
+    input[type="time"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select,
+    .form-input,
+    .form-textarea,
+    .lead-input,
+    .lead-select,
+    .filter-select,
+    .hit-record-search,
+    .hit-page-size,
+    .worry-free-table-input,
+    .worry-free-table-select,
+    .validity-input,
+    .validity-unit,
+    .time-input,
+    .date-input,
+    .tag-picker-search input,
+    .city-picker-search input,
+    .province-picker-search input,
+    .series-select-search,
+    .account-select-trigger,
+    .dealer-select-trigger,
+    .tag-picker-trigger,
+    .area-multi-trigger {
+      min-height: 36px !important;
+      border: 1px solid #cfd8e3 !important;
+      border-radius: 4px !important;
+      background-color: #f8fafc !important;
+      color: #111827;
+      font-size: 13px;
+      line-height: 1.4;
+      outline: none;
+      box-shadow: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+    }
+
+    input[type="text"]:not(.login-input),
+    input[type="number"],
+    input[type="search"],
+    input[type="date"],
+    input[type="time"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    .form-input,
+    .lead-input,
+    .lead-select,
+    .filter-select,
+    .hit-record-search,
+    .hit-page-size,
+    .worry-free-table-input,
+    .worry-free-table-select,
+    .validity-input,
+    .validity-unit,
+    .time-input,
+    .date-input,
+    .tag-picker-search input,
+    .city-picker-search input,
+    .province-picker-search input,
+    .series-select-search {
+      height: 36px !important;
+      padding: 0 10px !important;
+    }
+
+    textarea,
+    .form-textarea {
+      min-height: 72px !important;
+      padding: 8px 10px !important;
+      line-height: 1.5;
+    }
+
+    input[type="text"]:not(.login-input):focus,
+    input[type="number"]:focus,
+    input[type="search"]:focus,
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus,
+    select:focus,
+    .form-input:focus,
+    .form-textarea:focus,
+    .lead-input:focus,
+    .lead-select:focus,
+    .filter-select:focus,
+    .hit-record-search:focus,
+    .hit-page-size:focus,
+    .worry-free-table-input:focus,
+    .worry-free-table-select:focus,
+    .validity-input:focus,
+    .validity-unit:focus,
+    .time-input:focus,
+    .date-input:focus,
+    .tag-picker-search input:focus,
+    .city-picker-search input:focus,
+    .province-picker-search input:focus,
+    .series-select-search:focus,
+    .account-select-trigger:focus,
+    .dealer-select-trigger:focus,
+    .tag-picker-trigger:focus,
+    .area-multi-trigger:focus {
+      border-color: #2563eb !important;
+      background-color: #fff !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #8a95a6;
+    }
+
     select,
     select.form-input,
     select.lead-select,
     select.filter-select,
     select.hit-page-size,
-    select.validity-unit {
+    select.validity-unit,
+    select.worry-free-table-select {
       appearance: none;
       -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 12px center;
+      background-position: right 10px center;
       background-size: 16px 16px;
-      padding-right: 38px;
+      padding-right: 34px !important;
     }
 
-    select.hit-page-size {
-      background-position: right 10px center;
-      padding-right: 32px;
+    .account-select-trigger,
+    .dealer-select-trigger,
+    .tag-picker-trigger,
+    .area-multi-trigger {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 34px 0 10px !important;
+      text-align: left;
+      cursor: pointer;
     }
+
+    .tag-picker-trigger {
+      justify-content: flex-start;
+      font-weight: 700;
+    }
+
+    .area-multi-trigger {
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .account-select-trigger::after,
+    .dealer-select-trigger::after,
+    .tag-picker-trigger::after {
+      right: 10px;
+      width: 16px;
+      height: 16px;
+      background-size: 16px 16px;
+    }
+
+    .area-multi-trigger.placeholder,
+    .tag-picker-trigger.placeholder,
+    .account-select-trigger.placeholder,
+    .dealer-select-trigger.placeholder {
+      color: #8a95a6;
+    }
+
   </style>
 </head>
 <body class="login-active">
@@ -7251,10 +7474,6 @@ function showReportsPage(defaultName) {
   document.getElementById('designStageDesc').textContent = '统计报表正在产品设计阶段，后续将补充完整的页面内容。';
 }
 
-function switchReportsNav(el) {
-  showReportsPage(el.textContent.trim());
-}
-
 function showSystemMonitorPage(defaultName = '预外呼监控') {
   setStrategyConfigTabsVisible(false);
   document.querySelector('nav[aria-label="培育策略三级菜单"]').classList.add('hidden');
@@ -7381,14 +7600,15 @@ function getPreDialerMetrics(tasks, calls) {
   });
   const assignedAgentIds = new Set(pushedTasks.map(task => task.agentId).filter(Boolean));
   const answeredAgentIds = new Set(pushedTasks.filter(task => calls.some(call => call.taskId === task.id && call.connected)).map(task => task.agentId).filter(Boolean));
+  const seatAnsweredLeadTasks = pushedTasks.filter(task => calls.some(call => call.taskId === task.id && call.connected));
   const assignedAgentsTotal = assignedAgentIds.size || pushedTasks.length;
-  const assignedAgentsAnswered = answeredAgentIds.size || pushedTasks.filter(task => calls.some(call => call.taskId === task.id && call.connected)).length;
+  const assignedAgentsAnswered = answeredAgentIds.size || seatAnsweredLeadTasks.length;
   const firstCalls = calls.filter(call => call.attempt === 1);
   const firstCallConnected = firstCalls.filter(call => call.connected);
   const nonFirstCalls = calls.filter(call => call.attempt > 1);
   const nonFirstCallConnected = nonFirstCalls.filter(call => call.connected);
   const totalDurationSeconds = connectedCalls.reduce((sum, call) => sum + (Number.parseInt(call.duration, 10) || 0), 0);
-  const dailyAvgLoad = assignedAgentsTotal ? (effectiveOutboundTasks.length / assignedAgentsTotal).toFixed(1) : '0.0';
+  const dailyAvgLoad = assignedAgentsTotal ? (seatAnsweredLeadTasks.length / assignedAgentsTotal).toFixed(1) : '0.0';
   const nevDispatchedTasks = tasks.filter(task => task.nevDispatched);
   const nevDispatchedSeatAnsweredTasks = nevDispatchedTasks.filter(task => getTaskCallRecords(task.id).some(call => call.connected));
   const nevDispatchedNonSeatAnsweredTasks = nevDispatchedTasks.filter(task => !getTaskCallRecords(task.id).some(call => call.connected));
@@ -7459,7 +7679,7 @@ function getPreDialerBatchMetricColumns(group = 'all') {
     { label: '线路未呼', value: metrics => metrics.lineUncalledCalls },
     { label: '呼叫接通时长', value: metrics => `${metrics.totalDurationSeconds}秒` },
     { label: '每通呼叫接通时长', value: metrics => metrics.avgDurationPerAgent },
-    { label: '日人均承载量', value: metrics => metrics.dailyAvgLoad }
+    { label: '人均日承载量', value: metrics => metrics.dailyAvgLoad }
   ];
   if (group === 'call') return callColumns;
   if (group === 'all') return [...flowColumns, ...callColumns];
@@ -7718,10 +7938,10 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('有效通话量', metrics.effectiveCalls, `有效通话率 <strong>${rate(metrics.effectiveCalls, metrics.connectedCalls)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('首呼接通率', metrics.firstCallRate, `首次接通 ${metrics.firstCallConnected} / ${metrics.firstCallTotal}`, 'quality')}
               ${renderPreDialerMetricCard('2~N呼接通率', metrics.nonFirstCallRate, `非首次接通 ${metrics.nonFirstCallConnected} / ${metrics.nonFirstCallTotal}`, 'quality')}
-              ${renderPreDialerMetricCard('线路拒呼', metrics.lineRejectedCalls, '按话单统计', 'risk')}
-              ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
               ${renderPreDialerMetricCard('呼叫接通时长', `${metrics.totalDurationSeconds}秒`, '接通通话总时长', 'quality')}
               ${renderPreDialerMetricCard('每通呼叫接通时长', metrics.avgDurationPerAgent, '呼叫接通时长 ÷ 外呼接通量', 'quality')}
+              ${renderPreDialerMetricCard('线路拒呼', metrics.lineRejectedCalls, '按话单统计', 'risk')}
+              ${renderPreDialerMetricCard('线路未呼', metrics.lineUncalledCalls, '按话单统计', 'risk')}
             </div>
           </section>
         </div>
@@ -7969,11 +8189,11 @@ function showPreDialerMetricInfo(metric) {
     '已分配坐席（通话状态 = 坐席接听）': '统计周期内存在坐席接听话单的去重坐席人数。',
     '线索下发量（通话状态 = 坐席接听）': '已下发至 NEV线索中台，出现坐席接听记录的去重任务数，用于识别接听场景下的下发量。',
     '线索下发量（通话状态 ≠ 坐席接听）': '已下发至 NEV线索中台，但未出现坐席接听记录的去重任务数，用于识别非接听场景下的下发量。',
-    '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 首次话单总量 × 100%',
-    '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 非首次话单总量 × 100%',
+    '首呼接通率': '话单结果标识为成功建联的外呼次数，且回传首次话单结果的外呼数据。首呼接通率 = 首次呼叫接通 ÷ 有效任务量 × 100%',
+    '2~N呼接通率': '话单结果标识为成功建联的外呼次数，且回传非首次话单结果的外呼数据。2~N呼接通率 = 非首次呼叫接通 ÷ 有效任务量 × 100%',
     '呼叫接通时长': '话单结果标识为成功建联的通话总时长，同一任务多次接通会分别计入',
     '每通呼叫接通时长': '每通呼叫接通时长 = 呼叫接通时长 ÷ 外呼接通量',
-    '日人均承载量': '日人均承载量 = 有效任务量 ÷ 坐席人数（需去重）',
+    '人均日承载量': '人均日承载量 = 坐席接听线索数 ÷ 去重坐席人数',
     '同步成功率': 'DCC 成功被预外呼系统接收的任务数 ÷ DCC 发起同步的任务数。用于监控两系统接口接入是否稳定。',
     '首呼及时率': '在同步后 30 分钟内完成首次外呼的任务数 ÷ 已同步任务数。用于衡量预外呼系统的响应效率。',
     '任务完成率': '处理状态为“已完成”的任务数 ÷ 已同步任务数。处理中、超时任务不计入完成。',
@@ -8400,7 +8620,9 @@ function refreshWorryFreeBatchLeadDetailTable() {
   const detail = worryFreeBatchDetails[activeWorryFreeBatchDetailDate];
   const tableArea = document.getElementById('worryFreeBatchLeadDetailTableArea');
   if (!detail || !tableArea) return;
-  tableArea.outerHTML = renderWorryFreeBatchLeadDetailTable(detail);
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = renderWorryFreeBatchLeadDetailTable(detail).trim();
+  if (wrapper.firstElementChild) tableArea.replaceWith(wrapper.firstElementChild);
 }
 
 function changeWorryFreeBatchDetailPageSize(value) {
@@ -9861,12 +10083,6 @@ function openAllocationPolicyModal(mode, id = null) {
           ${mode === 'view'
             ? renderAllocationPolicyDetail(policy)
             : renderAllocationPolicyForm(policy || { status: '启用', byCity: '否', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }] })}
-          ${mode === 'view' ? '' : `
-            <div class="allocation-policy-page-actions">
-              <button class="btn-cancel" type="button" onclick="closeAllocationPolicyPage()">取消</button>
-              <button class="btn-save" type="button" onclick="saveAllocationPolicy()">保存</button>
-            </div>
-          `}
         </div>
       </div>
     </div>
@@ -11221,14 +11437,26 @@ function renderAreaMultiPicker(options = [], selectedValues = [], label = '关�
     <div class="area-multi-picker city-allocation-city" data-area-picker="true" data-picker-type="${isCityPicker ? 'city' : 'province'}">
       <button class="area-multi-trigger${selectedValues.length ? '' : ' placeholder'}" type="button" onclick="toggleAreaMultiPicker(this)">${summary}</button>
       <div class="area-multi-panel${isCityPicker ? ' city-cascade-picker' : ' simple'}">
-        ${isCityPicker ? renderCityCascadePicker(selectedSet, activeProvince) : options.map(value => `
-            <label class="area-multi-option" data-area-option="${value}">
-              <input type="checkbox" class="area-multi-checkbox" value="${value}" ${selectedSet.has(value) ? 'checked' : ''} onchange="refreshCityAllocationSelectionMutex()" />
-              <span>${value}</span>
-            </label>
-          `).join('')}
+        ${isCityPicker ? renderCityCascadePicker(selectedSet, activeProvince) : renderProvinceMultiPicker(options, selectedSet)}
       </div>
     </div>
+  `;
+}
+
+function renderProvinceMultiPicker(options = [], selectedSet = new Set()) {
+  return `
+    <div class="province-picker-search">
+      <input type="search" class="province-picker-search-input" placeholder="搜索省份" oninput="filterProvinceMultiPicker(this)" />
+    </div>
+    <div class="province-picker-list">
+      ${options.map(value => `
+        <label class="area-multi-option" data-area-option="${value}">
+          <input type="checkbox" class="area-multi-checkbox" value="${value}" ${selectedSet.has(value) ? 'checked' : ''} onchange="refreshCityAllocationSelectionMutex()" />
+          <span>${value}</span>
+        </label>
+      `).join('')}
+    </div>
+    <div class="province-picker-empty">暂无匹配省份</div>
   `;
 }
 
@@ -11389,6 +11617,21 @@ function filterCityCascadePicker(input) {
   if (empty) empty.style.display = visibleCount ? 'none' : 'block';
 }
 
+function filterProvinceMultiPicker(input) {
+  const picker = input?.closest('.area-multi-picker');
+  if (!picker) return;
+  const keyword = String(input.value || '').trim().toLowerCase();
+  let visibleCount = 0;
+  picker.querySelectorAll('.province-picker-list .area-multi-option').forEach(option => {
+    const province = (option.dataset.areaOption || option.textContent || '').toLowerCase();
+    const visible = !keyword || province.includes(keyword);
+    option.style.display = visible ? '' : 'none';
+    if (visible) visibleCount += 1;
+  });
+  const empty = picker.querySelector('.province-picker-empty');
+  if (empty) empty.style.display = visibleCount ? 'none' : 'block';
+}
+
 function selectCurrentProvinceCities(button) {
   const picker = button.closest('.area-multi-picker');
   if (!picker) return;
@@ -11419,6 +11662,9 @@ function toggleAreaMultiPicker(trigger) {
   picker.classList.toggle('open', shouldOpen);
   if (shouldOpen && picker.dataset.pickerType === 'city') {
     filterCityCascadePicker(picker.querySelector('.city-picker-search-input'));
+  }
+  if (shouldOpen && picker.dataset.pickerType === 'province') {
+    filterProvinceMultiPicker(picker.querySelector('.province-picker-search-input'));
   }
 }
 
@@ -16678,8 +16924,20 @@ function switchCondition(type) {
 }
 
 // ===== Modal =====
+let policyFormTemplateHtml = '';
+
+function getPolicyFormTemplateHtml() {
+  if (!policyFormTemplateHtml) {
+    policyFormTemplateHtml = document.querySelector('#editModal .modal-body')?.innerHTML || '';
+  }
+  const legacyBody = document.querySelector('#editModal .modal-body');
+  if (legacyBody) legacyBody.innerHTML = '';
+  return policyFormTemplateHtml;
+}
+
 function openModal(mode, id) {
   editingId = (mode === 'edit') ? id : null;
+  openPolicyFormPage(mode, id);
   document.getElementById('modalTitle').textContent = mode === 'edit' ? '编辑黑名单策略' : '新增黑名单策略';
 
   // Reset form
@@ -16741,8 +16999,45 @@ function openModal(mode, id) {
     }
   }
 
-  document.getElementById('editModal').classList.add('show');
   syncPolicyNotificationVisibility();
+}
+
+function openPolicyFormPage(mode = 'add', id = null) {
+  stopRecordAudio();
+  viewingId = null;
+  hideLeadPages();
+  setPolicyContentVisible(false);
+  document.getElementById('designStage').classList.remove('show');
+  document.querySelector('nav[aria-label="培育策略三级菜单"]').classList.remove('hidden');
+  document.querySelector('.leads-nav').classList.remove('show');
+  document.querySelectorAll('nav[aria-label="培育策略三级菜单"] .strategy-nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === 'strategy-config');
+  });
+  const policy = id ? policies.find(item => item.id === id) : null;
+  const title = mode === 'edit' ? '编辑黑名单策略' : '新增黑名单策略';
+  const subtitle = mode === 'edit' && policy
+    ? `培育策略 / 黑名单策略 / ${policy.name} / 编辑策略`
+    : '培育策略 / 黑名单策略 / 新增策略';
+  setSidebarActiveByName('培育策略');
+  setPageName(`培育策略 / 策略配置 / 黑名单策略 / ${mode === 'edit' ? '编辑策略' : '新增策略'}`);
+  const detailPage = document.getElementById('policyDetailPage');
+  detailPage.classList.add('show');
+  detailPage.querySelector('.detail-page-title').textContent = title;
+  document.getElementById('policyDetailSubtitle').textContent = subtitle;
+  const toolbar = detailPage.querySelector('.lead-toolbar-right');
+  if (toolbar) {
+    toolbar.innerHTML = `
+      <button class="btn-secondary" type="button" onclick="backToPolicyList()">取消</button>
+      <button class="btn-add" type="button" onclick="savePolicy()">保存</button>
+    `;
+  }
+  const summary = document.getElementById('policyDetailSummary');
+  if (summary) {
+    summary.innerHTML = '';
+    summary.style.display = 'none';
+  }
+  const formTemplate = getPolicyFormTemplateHtml();
+  document.getElementById('policyDetailPageBody').innerHTML = `<div class="policy-form-page-card policy-rule-modal"><div class="modal-body">${formTemplate}</div></div>`;
 }
 
 function closeModal(id) {
@@ -17084,8 +17379,7 @@ function savePolicy() {
     showToast('策略已创建', true);
   }
 
-  closeModal('editModal');
-  renderTable();
+  backToPolicyList();
 }
 
 // ===== View Modal =====
@@ -17114,7 +17408,16 @@ function openViewModal(id) {
     item.classList.toggle('active', item.dataset.page === 'strategy-config');
   });
   document.getElementById('policyDetailPage').classList.add('show');
+  document.querySelector('#policyDetailPage .detail-page-title').textContent = '查看策略详情';
   document.getElementById('policyDetailSubtitle').textContent = `培育策略 / 黑名单策略 / ${p.name}`;
+  const toolbar = document.querySelector('#policyDetailPage .lead-toolbar-right');
+  if (toolbar) {
+    toolbar.innerHTML = `
+      <button class="btn-secondary" type="button" onclick="backToPolicyList()">返回列表</button>
+      <button class="btn-add" type="button" onclick="editFromView()">编辑策略</button>
+    `;
+  }
+  document.getElementById('policyDetailSummary').style.display = '';
   document.getElementById('policyDetailSummary').innerHTML = renderPolicyDetailSummary(p, policyPendingReview, policyReviewed);
   document.getElementById('policyDetailPageBody').innerHTML = renderPolicyDetailPageContent(p);
   renderHitRecordTable();
