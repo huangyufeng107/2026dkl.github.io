@@ -4525,6 +4525,17 @@
       border-color: #1890ff; background: #e6f7ff; color: #1890ff; font-weight: 500;
     }
     .tag-option:hover:not(.selected) { background: #f5f7fa; border-color: #bfbfbf; }
+    .outbound-source-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .outbound-source-options .tag-option {
+      min-height: 36px;
+      padding: 7px 14px;
+      border-radius: 6px;
+    }
     #editModal .section-heading {
       margin: 4px 0 14px;
       padding-left: 10px;
@@ -5562,6 +5573,13 @@
       line-height: 1.5;
     }
 
+    .assignment-manual-textarea {
+      padding-top: 18px !important;
+      padding-bottom: 18px !important;
+      line-height: 20px !important;
+      resize: vertical;
+    }
+
     input[type="text"]:not(.login-input):focus,
     input[type="number"]:focus,
     input[type="search"]:focus,
@@ -5855,6 +5873,7 @@
       <button type="button" class="strategy-config-tab" data-tab="sms-dispatch" onclick="switchStrategyConfigTab('sms-dispatch')">短信下发策略</button>
       <button type="button" class="strategy-config-tab" data-tab="cold-lead-definition" onclick="switchStrategyConfigTab('cold-lead-definition')">门店冷线索策略</button>
       <button type="button" class="strategy-config-tab" data-tab="allocation-policy" onclick="switchStrategyConfigTab('allocation-policy')">分配比例策略</button>
+      <button type="button" class="strategy-config-tab" data-tab="outbound-label-mapping" onclick="switchStrategyConfigTab('outbound-label-mapping')">外呼标签映射</button>
       <button type="button" class="strategy-config-tab" data-tab="contact-mutex-policy" onclick="switchStrategyConfigTab('contact-mutex-policy')">联络互斥策略</button>
     </div>
     <div class="page-hero policy-content">
@@ -6746,6 +6765,7 @@
     <div class="lead-page" id="leadDispatchConfigPage"></div>
     <div class="lead-page" id="smsDispatchPolicyPage"></div>
     <div class="lead-page" id="coldLeadDefinitionPage"></div>
+    <div class="lead-page" id="outboundLabelMappingPage"></div>
     <div class="lead-page" id="contactMutexPolicyPage"></div>
     <div class="lead-page" id="preCallReportPage"></div>
 
@@ -7301,43 +7321,83 @@ const leadDispatchTagOptions = [
   '接通无标签', '下次联系', '无购车意向', '不同意到店', '不同意添加企微', '不同意顾问联系'
 ];
 const leadDispatchCallStatusOptions = ['已接通', '客户未接听', '关机', '空号', '停机', '拒接', '接通秒挂', '待返回'];
+const outboundMappingSourceOptions = ['外呼标签', '通话状态'];
+const outboundMappingCategoryOptions = ['抗拒原因标签', '异常原因标签'];
+const outboundMappingOutputMap = {
+  '抗拒原因标签': ['客观理由拒绝', '态度拒绝'],
+  '异常原因标签': ['客户号码状态异常', '沟通异常']
+};
+const outboundMappingSourceMap = {
+  '客观理由拒绝': ['外呼标签'],
+  '态度拒绝': ['外呼标签'],
+  '客户号码状态异常': ['外呼标签', '通话状态'],
+  '沟通异常': ['外呼标签', '通话状态']
+};
+let outboundLabelMappingRules = [
+  { id: 1, name: '客观理由拒绝归因', category: '抗拒原因标签', sources: ['外呼标签'], matchValuesBySource: { '外呼标签': ['已购车', '已下订', '已到店', '无购车意向'] }, output: '客观理由拒绝', priority: 1, remark: '客户已有明确客观原因，优先归为客观理由拒绝', enabled: true, updatedAt: '2026-06-22 10:20' },
+  { id: 2, name: '态度拒绝归因', category: '抗拒原因标签', sources: ['外呼标签'], matchValuesBySource: { '外呼标签': ['拒绝打扰\\厌烦', '拒绝打扰', '拒绝顾问联系', '不同意到店', '不同意添加企微'] }, output: '态度拒绝', priority: 5, remark: '客户主观拒绝沟通或拒绝后续触达', enabled: true, updatedAt: '2026-06-22 10:25' },
+  { id: 3, name: '号码异常综合归因', category: '异常原因标签', sources: ['外呼标签', '通话状态'], matchValuesBySource: { '外呼标签': ['语音信箱'], '通话状态': ['空号', '停机', '关机'] }, output: '客户号码状态异常', priority: 1, remark: '支持同时按外呼标签和通话状态识别客户号码状态异常', enabled: true, updatedAt: '2026-06-21 15:12' },
+  { id: 4, name: '沟通异常综合归因', category: '异常原因标签', sources: ['外呼标签', '通话状态'], matchValuesBySource: { '外呼标签': ['拒绝打扰\\厌烦', '老年人'], '通话状态': ['客户未接听', '拒接'] }, output: '沟通异常', priority: 3, remark: '支持同时按外呼标签和通话状态识别沟通异常', enabled: true, updatedAt: '2026-06-20 18:04' }
+];
+let outboundLabelMappingNextId = 5;
+let editingOutboundLabelMappingId = null;
 const leadDispatchLeadStatusOptions = [
   '',
-  'UOC_H_INTENTION-高意向',
-  'UOC_DEFEAT-战败',
-  'UOC_UNSALEHIBERNATE-休眠未购',
-  'UOC_UNLINKHIBERNATE-休眠失联',
-  'UOC_INVALID-无效'
+  '总部_高意向',
+  '总部_休眠未购',
+  '总部_休眠失联',
+  '总部_战败',
+  '总部_暂败',
+  '总部_阶段性战败',
+  '总部_无效',
+  '总部_异地'
 ];
 const leadDispatchAbnormalReasonMap = {
   '': [''],
-  'UOC_H_INTENTION-高意向': [''],
-  'UOC_DEFEAT-战败': ['', '其他'],
-  'UOC_UNSALEHIBERNATE-休眠未购': ['', '其他'],
-  'UOC_UNLINKHIBERNATE-休眠失联': ['', '三天四次无法接通', '其他'],
-  'UOC_INVALID-无效': ['', '其他']
+  '总部_高意向': [''],
+  '总部_休眠未购': ['资金不足', '半年内不购车', '家人不同意', '征信不通过', '驾照没考到', '关注竞品车型', '其他'],
+  '总部_休眠失联': ['三天四次无法接通', '用户要求不联系', '被拉黑'],
+  '总部_战败': ['等待期长', '价格因素', '品牌偏好', '金融方案', '产品设计和配置', '服务不满', '其他'],
+  '总部_暂败': ['', '等待期长', '价格因素', '其他'],
+  '总部_阶段性战败': ['', '阶段性无购车计划', '暂不考虑', '其他'],
+  '总部_无效': ['明确空号', '错号', '停机']
 };
 const leadDispatchIntentLevelOptions = [
   '',
+  'H - H(高意向)',
   'A - A(一周内买车)',
   'B - B(计划三个月内买车)',
   'C - C(计划三个月后买车)',
   'F - F(战败)',
-  'L - L(休眠)'
+  'L - L(休眠)',
+  'N - N(阶段性战败)'
 ];
+const highIntentLevelOptions = [
+  'H - H(高意向)',
+  'A - A(一周内买车)',
+  'B - B(计划三个月内买车)',
+  'C - C(计划三个月后买车)'
+];
+const leadStatusIntentLevelMap = {
+  '总部_休眠未购': 'L - L(休眠)',
+  '总部_休眠失联': 'L - L(休眠)',
+  '总部_战败': 'F - F(战败)',
+  '总部_阶段性战败': 'N - N(阶段性战败)',
+  '总部_无效': ''
+};
 let leadDispatchRules = [
-  { id: 1, name: '冷线索高意向有店下发', priority: 1, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: 'UOC_H_INTENTION-高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
+  { id: 1, name: '冷线索高意向有店下发', priority: 1, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: '总部_高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
   { id: 2, name: '冷线索高意向无店转客服', priority: 3, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '无', dispatchTarget: '下发到总部培育客服', updateSmartCode: '', updateLeadStatus: '', abnormalReason: '', updateIntentLevel: 'C - C(计划三个月后买车)', enabled: true },
-  { id: 3, name: '冷线索兴趣标签有店下发', priority: 2, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店', '优惠活动', '金融政策', '置换政策', '首购', '换购', '增购', '全款', '贷款', '价格', '交付时间', '能耗', '三电', '同意顾问联系', '颜色', '同意添加企微'], includeTagLogic: '或', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '大于等于', durationSeconds: 15, durationLogic: '且', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: 'UOC_H_INTENTION-高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
+  { id: 3, name: '冷线索兴趣标签有店下发', priority: 2, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店', '优惠活动', '金融政策', '置换政策', '首购', '换购', '增购', '全款', '贷款', '价格', '交付时间', '能耗', '三电', '同意顾问联系', '颜色', '同意添加企微'], includeTagLogic: '或', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '大于等于', durationSeconds: 15, durationLogic: '且', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: '总部_高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
   { id: 4, name: '冷线索短通话无店不下发', priority: 4, callTypes: leadDispatchCallTypeGroups.cold, includeTags: ['有购车意向', '同意到店', '优惠活动', '金融政策', '置换政策', '首购', '换购', '增购', '全款', '贷款', '价格', '交付时间', '能耗', '三电', '同意顾问联系', '颜色', '同意添加企微'], includeTagLogic: '或', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '小于', durationSeconds: 15, durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '', abnormalReason: '', updateIntentLevel: '', enabled: true },
-  { id: 5, name: 'NEV线索高意向有店下发', priority: 1, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: 'UOC_H_INTENTION-高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
+  { id: 5, name: 'NEV线索高意向有店下发', priority: 1, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: '总部_高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
   { id: 6, name: 'NEV线索高意向无店转客服', priority: 3, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['有购车意向', '同意到店'], includeTagLogic: '且', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '', hasIntentDealer: '无', dispatchTarget: '下发到总部培育客服', updateSmartCode: '', updateLeadStatus: '', abnormalReason: '', updateIntentLevel: 'C - C(计划三个月后买车)', enabled: true },
-  { id: 7, name: 'NEV线索兴趣标签有店下发', priority: 2, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['有购车意向', '同意到店', '优惠活动', '金融政策', '置换政策', '首购', '换购', '增购', '全款', '贷款', '价格', '交付时间', '能耗', '三电', '同意顾问联系', '颜色', '同意添加企微'], includeTagLogic: '或', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '且', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: 'UOC_H_INTENTION-高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
-  { id: 8, name: 'NEV线索战败标签不下发', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['已下订', '已到店', '已购车', '拒绝打扰\\厌烦'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: 'UOC_DEFEAT-战败', abnormalReason: '其他', updateIntentLevel: 'F - F(战败)', enabled: true },
-  { id: 9, name: 'NEV老年人休眠未购', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['老年人'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: 'UOC_UNSALEHIBERNATE-休眠未购', abnormalReason: '其他', updateIntentLevel: 'L - L(休眠)', enabled: true },
-  { id: 10, name: 'NEV语音信箱休眠失联', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['语音信箱'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
-  { id: 11, name: 'NEV无效通话休眠失联', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['接通秒挂', '接通无标签', '下次联系'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
-  { id: 12, name: 'NEV无意向休眠未购', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['无购车意向', '不同意到店', '不同意添加企微', '不同意顾问联系'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: 'UOC_UNSALEHIBERNATE-休眠未购', abnormalReason: '其他', updateIntentLevel: 'L - L(休眠)', enabled: true }
+  { id: 7, name: 'NEV线索兴趣标签有店下发', priority: 2, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['有购车意向', '同意到店', '优惠活动', '金融政策', '置换政策', '首购', '换购', '增购', '全款', '贷款', '价格', '交付时间', '能耗', '三电', '同意顾问联系', '颜色', '同意添加企微'], includeTagLogic: '或', excludeTags: ['已购车', '已到店', '已下订', '拒绝打扰\\厌烦', '语音信箱', '老年人'], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '且', hasIntentDealer: '有', dispatchTarget: '下发到NEV线索中台', updateSmartCode: '', updateLeadStatus: '总部_高意向', abnormalReason: '', updateIntentLevel: 'B - B(计划三个月内买车)', enabled: true },
+  { id: 8, name: 'NEV线索战败标签不下发', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['已下订', '已到店', '已购车', '拒绝打扰\\厌烦'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '总部_战败', abnormalReason: '其他', updateIntentLevel: 'F - F(战败)', enabled: true },
+  { id: 9, name: 'NEV老年人休眠未购', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['老年人'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '总部_休眠未购', abnormalReason: '其他', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 10, name: 'NEV语音信箱休眠失联', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['语音信箱'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '总部_休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 11, name: 'NEV无效通话休眠失联', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['接通秒挂', '接通无标签', '下次联系'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '总部_休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 12, name: 'NEV无意向休眠未购', priority: 4, callTypes: leadDispatchCallTypeGroups.nev, includeTags: ['无购车意向', '不同意到店', '不同意添加企微', '不同意顾问联系'], includeTagLogic: '或', excludeTags: [], excludeTagLogic: '或', durationOperator: '', durationSeconds: '', durationLogic: '或', hasIntentDealer: '无', dispatchTarget: '线索不下发', updateSmartCode: '', updateLeadStatus: '总部_休眠未购', abnormalReason: '其他', updateIntentLevel: 'L - L(休眠)', enabled: true }
 ];
 let leadDispatchNextId = 13;
 let editingLeadDispatchRuleId = null;
@@ -7516,7 +7576,7 @@ function setPolicyContentVisible(visible) {
 }
 
 function hideLeadPages() {
-  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'callStatusPolicyPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage', 'coldLeadDefinitionPage', 'contactMutexPolicyPage', 'preCallReportPage'].forEach(id => {
+  ['nurtureLeadPage', 'resourceLeadPage', 'resourceUnfilledPage', 'worryFreePage', 'leadDetailPage', 'worryFreeBatchDetailPage', 'policyDetailPage', 'leadAssignmentConfigPage', 'callStatusPolicyPage', 'leadDispatchConfigPage', 'smsDispatchPolicyPage', 'coldLeadDefinitionPage', 'outboundLabelMappingPage', 'contactMutexPolicyPage', 'preCallReportPage'].forEach(id => {
     document.getElementById(id)?.classList.remove('show');
   });
 }
@@ -9164,6 +9224,7 @@ function switchStrategyConfigTab(tab) {
     'sms-dispatch': '短信下发策略',
     'cold-lead-definition': '门店冷线索策略',
     'allocation-policy': '分配比例策略',
+    'outbound-label-mapping': '外呼标签映射',
     'contact-mutex-policy': '联络互斥策略'
   };
   setStrategyConfigTabsVisible(true);
@@ -9192,6 +9253,9 @@ function switchStrategyConfigTab(tab) {
   } else if (tab === 'allocation-policy') {
     document.getElementById('leadAssignmentConfigPage').classList.add('show');
     renderAllocationPolicyTemplatePage();
+  } else if (tab === 'outbound-label-mapping') {
+    document.getElementById('outboundLabelMappingPage').classList.add('show');
+    renderOutboundLabelMappingPage();
   } else if (tab === 'contact-mutex-policy') {
     document.getElementById('contactMutexPolicyPage').classList.add('show');
     renderContactMutexPolicyPage();
@@ -9414,10 +9478,10 @@ const leadAssignmentDimensions = [
     desc: '按线索状态和意向车系识别线索应进入的培育路径',
     fields: '线索状态、车系、是否按比例、分配比例策略、外呼类型、排序序号',
     rules: [
-      { id: 'LS-001', name: '待培育线索进入AI', keyValue: '待培育', leadStatusValues: ['待培育'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], callTypes: ['AI外呼'], condition: '线索状态=待培育 / 意向车系=N6', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-07 10:10' },
-      { id: 'LS-002', name: '已预约线索人工跟进', keyValue: '已预约', leadStatusValues: ['已预约'], leadStatusReasonValues: [], leadStatusSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '线索状态=已预约 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-05 18:12' },
-      { id: 'LS-003', name: '无效状态暂不分配', keyValue: '无效', leadStatusValues: ['无效'], leadStatusReasonValues: ['明确空号'], leadStatusSeriesValues: [], callTypes: ['AI外呼'], condition: '线索状态=无效 / 异常原因=明确空号', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 8, status: '启用', updatedAt: '2026-06-01 16:55' },
-      { id: 'LS-004', name: '待培育线索华南比例分配', keyValue: '待培育', leadStatusValues: ['待培育'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '线索状态=待培育 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '启用', updatedAt: '2026-06-14 11:18' }
+      { id: 'LS-001', name: '总部高意向进入AI', keyValue: '总部_高意向', leadStatusValues: ['总部_高意向'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], callTypes: ['AI外呼'], condition: '线索状态=总部_高意向 / 意向车系=N6', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-07 10:10' },
+      { id: 'LS-002', name: '总部休眠未购人工跟进', keyValue: '总部_休眠未购', leadStatusValues: ['总部_休眠未购'], leadStatusReasonValues: [], leadStatusSeriesValues: ['轩逸'], callTypes: ['人工外呼'], condition: '线索状态=总部_休眠未购 / 意向车系=轩逸', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-05 18:12' },
+      { id: 'LS-003', name: '总部无效状态暂不分配', keyValue: '总部_无效', leadStatusValues: ['总部_无效'], leadStatusReasonValues: ['明确空号'], leadStatusSeriesValues: [], callTypes: ['AI外呼'], condition: '线索状态=总部_无效 / 异常原因=明确空号', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 8, status: '启用', updatedAt: '2026-06-01 16:55' },
+      { id: 'LS-004', name: '总部高意向华南比例分配', keyValue: '总部_高意向', leadStatusValues: ['总部_高意向'], leadStatusReasonValues: [], leadStatusSeriesValues: ['N6'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '线索状态=总部_高意向 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '启用', updatedAt: '2026-06-14 11:18' }
     ]
   },
   {
@@ -9429,10 +9493,10 @@ const leadAssignmentDimensions = [
     desc: '按意向门店和意向车系和线索状态识别线索应进入的培育路径',
     fields: '意向门店、车系、线索状态、是否按比例、分配比例策略、外呼类型、排序序号',
     rules: [
-      { id: 'DLR-001', name: '有意向门店优先人工', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['待培育'], callTypes: ['人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 线索状态=待培育', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-10 09:08' },
-      { id: 'DLR-002', name: '门店覆盖区AI跟进', keyValue: '深圳南山日产', dealerValues: ['深圳南山日产'], dealerSeriesValues: ['轩逸'], dealerLeadStatusValues: ['已预约'], callTypes: ['AI外呼'], condition: '意向门店=深圳南山日产 / 意向车系=轩逸 / 线索状态=已预约', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-04 11:48' },
+      { id: 'DLR-001', name: '有意向门店优先人工', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['总部_高意向'], callTypes: ['人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 线索状态=总部_高意向', allocationMode: 'single', allocations: [{ channel: '人工外呼', percent: 100 }], action: '全部分配给人工外呼', ratio: '不按比例', sort: 1, status: '启用', updatedAt: '2026-06-10 09:08' },
+      { id: 'DLR-002', name: '门店覆盖区AI跟进', keyValue: '深圳南山日产', dealerValues: ['深圳南山日产'], dealerSeriesValues: ['轩逸'], dealerLeadStatusValues: ['总部_休眠未购'], callTypes: ['AI外呼'], condition: '意向门店=深圳南山日产 / 意向车系=轩逸 / 线索状态=总部_休眠未购', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 2, status: '启用', updatedAt: '2026-06-04 11:48' },
       { id: 'DLR-003', name: '门店缺失暂不分配', keyValue: '无意向门店', dealerValues: ['无意向门店'], dealerSeriesValues: [], dealerLeadStatusValues: [], callTypes: ['AI外呼'], condition: '意向门店=无意向门店', allocationMode: 'single', allocations: [{ channel: 'AI外呼', percent: 100 }], action: '全部分配给AI外呼', ratio: '不按比例', sort: 9, status: '停用', updatedAt: '2026-05-29 10:31' },
-      { id: 'DLR-004', name: '广州门店华南比例分配', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['待培育'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '停用', updatedAt: '2026-06-11 17:18' }
+      { id: 'DLR-004', name: '广州门店华南比例分配', keyValue: '广州白云日产', dealerValues: ['广州白云日产'], dealerSeriesValues: ['N6'], dealerLeadStatusValues: ['总部_高意向'], useAllocationPolicy: '是', allocationPolicyId: 'AP-001', callTypes: ['AI外呼', '人工外呼'], condition: '意向门店=广州白云日产 / 意向车系=N6 / 线索状态=总部_高意向 / 分配比例策略=华南城市分配策略', allocationMode: 'policy', allocations: [], action: '接入比例策略：华南城市分配策略', ratio: '比例策略', sort: 3, status: '停用', updatedAt: '2026-06-11 17:18' }
     ]
   }
 ];
@@ -10235,6 +10299,445 @@ const contactMutexQueueSamples = [
   { customer: '周先生', mobile: '136****2675', activeTask: '无', waitingTask: '培育待建联任务', waitTime: '0分钟', nextAction: '可立即外呼', status: '可外呼' }
 ];
 
+function renderOutboundLabelMappingPage() {
+  const page = document.getElementById('outboundLabelMappingPage');
+  if (!page) return;
+  page.innerHTML = `
+    <div class="page-hero">
+      <div>
+        <div class="page-title">外呼标签映射</div>
+        <div class="page-desc">将预外呼回传的外呼标签或通话状态统一映射为抗拒原因标签、异常原因标签，供话单状态策略、线索下发策略、黑名单策略等后续规则引用。</div>
+      </div>
+      ${renderOutboundLabelMappingSummary()}
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">分类：</span>
+      <select class="filter-select" id="outboundMappingCategoryFilter" onchange="filterOutboundLabelMappingTable()">
+        <option value="">全部</option>
+        ${outboundMappingCategoryOptions.map(item => `<option value="${escapeAttr(item)}">${escapeHtml(item)}</option>`).join('')}
+      </select>
+      <span class="filter-label">匹配来源：</span>
+      <select class="filter-select" id="outboundMappingSourceFilter" onchange="filterOutboundLabelMappingTable()">
+        <option value="">全部</option>
+        ${outboundMappingSourceOptions.map(item => `<option value="${escapeAttr(item)}">${escapeHtml(item)}</option>`).join('')}
+      </select>
+      <span class="filter-label">状态：</span>
+      <select class="filter-select" id="outboundMappingStatusFilter" onchange="filterOutboundLabelMappingTable()">
+        <option value="">全部</option>
+        <option value="启用">启用</option>
+        <option value="停用">停用</option>
+      </select>
+      <button class="btn-secondary" type="button" onclick="resetOutboundLabelMappingFilters()">重置</button>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">外呼标签映射列表</div>
+        <button class="btn-add strategy-add-btn" type="button" onclick="openOutboundLabelMappingModal('add')">新增策略</button>
+      </div>
+      <table class="data-table assignment-rule-table">
+        <thead>
+          <tr>
+            <th style="width:64px">权重</th>
+            <th>规则名称</th>
+            <th style="width:140px">分类</th>
+            <th style="width:110px">匹配来源</th>
+            <th>匹配值</th>
+            <th style="width:150px">映射结果</th>
+            <th>备注</th>
+            <th style="width:80px">状态</th>
+            <th style="width:190px">操作</th>
+          </tr>
+        </thead>
+        <tbody id="outboundLabelMappingTableBody"></tbody>
+      </table>
+    </div>
+  `;
+  renderOutboundLabelMappingTable();
+}
+
+function renderOutboundLabelMappingSummary() {
+  const enabled = outboundLabelMappingRules.filter(rule => rule.enabled).length;
+  const reject = outboundLabelMappingRules.filter(rule => rule.category === '抗拒原因标签').length;
+  const abnormal = outboundLabelMappingRules.filter(rule => rule.category === '异常原因标签').length;
+  const tag = outboundLabelMappingRules.filter(rule => getOutboundMappingRuleSources(rule).includes('外呼标签')).length;
+  const status = outboundLabelMappingRules.filter(rule => getOutboundMappingRuleSources(rule).includes('通话状态')).length;
+  const items = [
+    { label: '规则总数', value: outboundLabelMappingRules.length },
+    { label: '启用规则', value: enabled },
+    { label: '抗拒原因标签', value: reject },
+    { label: '异常原因标签', value: abnormal },
+    { label: '外呼标签规则', value: tag },
+    { label: '通话状态规则', value: status }
+  ];
+  return `<div class="summary-strip">${items.map(item => `<div class="summary-card"><div class="summary-label">${item.label}</div><div class="summary-value">${item.value}</div></div>`).join('')}</div>`;
+}
+
+function getFilteredOutboundLabelMappingRules() {
+  const category = document.getElementById('outboundMappingCategoryFilter')?.value || '';
+  const source = document.getElementById('outboundMappingSourceFilter')?.value || '';
+  const status = document.getElementById('outboundMappingStatusFilter')?.value || '';
+  const sourceRank = { '通话状态': 1, '外呼标签': 2 };
+  return outboundLabelMappingRules
+    .filter(rule => !category || rule.category === category)
+    .filter(rule => !source || getOutboundMappingRuleSources(rule).includes(source))
+    .filter(rule => !status || (status === '启用' ? rule.enabled : !rule.enabled))
+    .sort((a, b) => (Number(a.priority) || 99) - (Number(b.priority) || 99) || getOutboundMappingSourceSort(a, sourceRank) - getOutboundMappingSourceSort(b, sourceRank) || a.id - b.id);
+}
+
+function getOutboundMappingRuleSources(rule = {}) {
+  return Array.isArray(rule.sources) && rule.sources.length ? rule.sources : (rule.source ? [rule.source] : ['外呼标签']);
+}
+
+function getOutboundMappingSourceSort(rule, sourceRank) {
+  return Math.min(...getOutboundMappingRuleSources(rule).map(source => sourceRank[source] || 9));
+}
+
+function getOutboundMappingMatchValuesBySource(rule = {}) {
+  if (rule.matchValuesBySource) return rule.matchValuesBySource;
+  const source = getOutboundMappingRuleSources(rule)[0] || '外呼标签';
+  return { [source]: rule.matchValues || [] };
+}
+
+function getOutboundMappingDisplayMatchValues(rule = {}) {
+  const valuesBySource = getOutboundMappingMatchValuesBySource(rule);
+  return getOutboundMappingRuleSources(rule).flatMap(source => (valuesBySource[source] || []).map(value => `${source}：${value}`));
+}
+
+function renderOutboundLabelMappingTable() {
+  const body = document.getElementById('outboundLabelMappingTableBody');
+  if (!body) return;
+  const rows = getFilteredOutboundLabelMappingRules();
+  body.innerHTML = rows.length ? rows.map(rule => `
+    <tr>
+      <td><span class="policy-plain-text">P${escapeHtml(rule.priority)}</span></td>
+      <td><div class="rule-text-stack"><div class="rule-text-main">${escapeHtml(rule.name)}</div><div class="rule-muted">规则ID：OLM-${String(rule.id).padStart(3, '0')}</div></div></td>
+      <td><span class="policy-plain-text">${escapeHtml(rule.category)}</span></td>
+      <td>${renderRuleChipList(getOutboundMappingRuleSources(rule), 'blue', 2)}</td>
+      <td>${renderRuleChipList(getOutboundMappingDisplayMatchValues(rule), 'green', 4)}</td>
+      <td><span class="tag-chip blue">${escapeHtml(rule.output)}</span></td>
+      <td>${renderClampedCellText(rule.remark || '—')}</td>
+      <td>${rule.enabled ? '<span class="col-status-on">● 启用</span>' : '<span class="col-status-off">● 停用</span>'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn view" type="button" onclick="openOutboundLabelMappingModal('view', ${rule.id})">查看</button>
+          <button class="action-btn edit" type="button" onclick="openOutboundLabelMappingModal('edit', ${rule.id})">编辑</button>
+          <button class="action-btn delete" type="button" onclick="deleteOutboundLabelMappingRule(${rule.id})">删除</button>
+        </div>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="9"><div class="empty-state">暂无匹配的外呼标签映射</div></td></tr>';
+}
+
+function filterOutboundLabelMappingTable() {
+  renderOutboundLabelMappingTable();
+}
+
+function resetOutboundLabelMappingFilters() {
+  ['outboundMappingCategoryFilter', 'outboundMappingSourceFilter', 'outboundMappingStatusFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  renderOutboundLabelMappingTable();
+}
+
+function renderOutboundLabelMappingDetail(rule) {
+  if (!rule) return '<div class="empty-state">未找到外呼标签映射</div>';
+  const fields = [
+    ['规则名称', rule.name],
+    ['分类', rule.category],
+    ['匹配来源', getOutboundMappingRuleSources(rule).join('、')],
+    ['匹配值', getOutboundMappingDisplayMatchValues(rule).join('、')],
+    ['映射结果', rule.output],
+    ['权重', `P${rule.priority}`],
+    ['状态', rule.enabled ? '启用' : '停用'],
+    ['更新时间', rule.updatedAt],
+    ['备注', rule.remark || '—']
+  ];
+  return `<div class="rule-detail-layout"><section class="rule-detail-section"><div class="rule-detail-title">规则详情</div><div class="rule-detail-body">${fields.map(([label, value]) => `<div class="rule-detail-field"><div class="rule-detail-label">${label}</div><div class="rule-detail-value">${detailValue(value)}</div></div>`).join('')}</div></section></div>`;
+}
+
+function getOutboundMappingValueOptions(source) {
+  if (source === '通话状态') return leadDispatchCallStatusOptions;
+  if (source === '外呼标签') return leadDispatchTagOptions;
+  return [];
+}
+
+function getOutboundMappingOutputs(category) {
+  return outboundMappingOutputMap[category] || outboundMappingOutputMap['抗拒原因标签'];
+}
+
+function getOutboundMappingSources(output) {
+  return outboundMappingSourceMap[output] || ['外呼标签'];
+}
+
+function normalizeOutboundMappingTarget(rule = {}) {
+  const category = outboundMappingCategoryOptions.includes(rule.category) ? rule.category : '抗拒原因标签';
+  const outputs = getOutboundMappingOutputs(category);
+  const output = outputs.includes(rule.output) ? rule.output : outputs[0];
+  const sources = getOutboundMappingSources(output);
+  const selectedSources = getOutboundMappingRuleSources(rule).filter(source => sources.includes(source));
+  return { category, output, sources: selectedSources.length ? selectedSources : [sources[0]] };
+}
+
+function renderOutboundMappingOutputOptions(category, selected = '') {
+  return getOutboundMappingOutputs(category).map(item => `<option value="${escapeAttr(item)}" ${selected === item ? 'selected' : ''}>${escapeHtml(item)}</option>`).join('');
+}
+
+function renderOutboundMappingSourceCheckboxes(output, selected = []) {
+  const sources = getOutboundMappingSources(output);
+  return `<div class="outbound-source-options">${sources.map(source => {
+    const checked = selected.includes(source) || sources.length === 1;
+    return `<label class="tag-option ${checked ? 'selected' : ''}"><input type="checkbox" name="outboundMappingSource" value="${escapeAttr(source)}" ${checked ? 'checked' : ''} ${sources.length === 1 ? 'disabled' : ''} onchange="this.closest('.tag-option').classList.toggle('selected', this.checked);syncOutboundMappingValueField()" />${escapeHtml(source)}</label>`;
+  }).join('')}</div>`;
+}
+
+function renderOutboundMappingValueField(source, selected = []) {
+  const options = getOutboundMappingValueOptions(source);
+  const config = getOutboundMappingPickerConfig(source);
+  const safeSelected = selected || [];
+  const triggerText = safeSelected.length ? safeSelected.join('、') : config.placeholder;
+  return `
+    <div class="tag-picker dispatch-tag-picker outbound-mapping-picker" data-source="${escapeAttr(source)}">
+      <button class="tag-picker-trigger ${safeSelected.length ? '' : 'placeholder'}" id="${config.triggerId}" type="button" onclick="toggleOutboundMappingValuePicker('${source}')">${escapeHtml(triggerText)}</button>
+      <div class="tag-picker-panel" id="${config.panelId}">
+        <div class="tag-picker-toolbar">
+          <span id="${config.countId}">已选 ${safeSelected.length} / ${options.length}</span>
+          <div class="tag-picker-actions">
+            <button class="tag-picker-action" type="button" onclick="selectAllOutboundMappingValues('${source}')">全选</button>
+            <button class="tag-picker-action" type="button" onclick="clearOutboundMappingValues('${source}')">清空</button>
+          </div>
+        </div>
+        ${source === '外呼标签' ? `<div class="tag-picker-search"><input type="search" placeholder="搜索外呼标签" oninput="filterTagPickerOptions('${config.panelId}', this.value)" /></div>` : ''}
+        <div class="tag-picker-list">
+          ${options.map(value => `
+            <label class="tag-option ${safeSelected.includes(value) ? 'selected' : ''}">
+              <input type="checkbox" name="outboundMappingMatchValue" data-source="${escapeAttr(source)}" value="${escapeAttr(value)}" ${safeSelected.includes(value) ? 'checked' : ''} onchange="toggleOutboundMappingValueOption('${source}', this)" />
+              ${escapeHtml(value)}
+            </label>
+          `).join('')}
+        </div>
+        <div class="tag-picker-empty">暂无匹配数据</div>
+      </div>
+    </div>
+  `;
+}
+
+function getOutboundMappingPickerConfig(source) {
+  if (source === '通话状态') {
+    return {
+      key: 'Status',
+      panelId: 'outboundMappingStatusPanel',
+      triggerId: 'outboundMappingStatusTrigger',
+      countId: 'outboundMappingStatusCount',
+      placeholder: '请选择通话状态'
+    };
+  }
+  return {
+    key: 'Tag',
+    panelId: 'outboundMappingTagPanel',
+    triggerId: 'outboundMappingTagTrigger',
+    countId: 'outboundMappingTagCount',
+    placeholder: '请选择外呼标签'
+  };
+}
+
+function getOutboundMappingValueInputs(source) {
+  return Array.from(document.querySelectorAll(`input[name="outboundMappingMatchValue"][data-source="${source}"]`));
+}
+
+function toggleOutboundMappingValuePicker(source) {
+  const { panelId } = getOutboundMappingPickerConfig(source);
+  document.querySelectorAll('.tag-picker-panel').forEach(panel => {
+    if (panel.id !== panelId) panel.classList.remove('show');
+  });
+  document.getElementById(panelId)?.classList.toggle('show');
+  updateOutboundMappingValuePicker(source);
+}
+
+function toggleOutboundMappingValueOption(source, input) {
+  input.closest('.tag-option')?.classList.toggle('selected', input.checked);
+  updateOutboundMappingValuePicker(source);
+}
+
+function updateOutboundMappingValuePicker(source) {
+  const config = getOutboundMappingPickerConfig(source);
+  const inputs = getOutboundMappingValueInputs(source);
+  const selected = inputs.filter(input => input.checked).map(input => input.value);
+  const trigger = document.getElementById(config.triggerId);
+  const count = document.getElementById(config.countId);
+  if (trigger) {
+    trigger.textContent = selected.length ? selected.join('、') : config.placeholder;
+    trigger.classList.toggle('placeholder', selected.length === 0);
+  }
+  if (count) count.textContent = `已选 ${selected.length} / ${inputs.length}`;
+}
+
+function selectAllOutboundMappingValues(source) {
+  getVisibleTagPickerInputs(getOutboundMappingPickerConfig(source).panelId).forEach(input => {
+    input.checked = true;
+    input.closest('.tag-option')?.classList.add('selected');
+  });
+  updateOutboundMappingValuePicker(source);
+}
+
+function clearOutboundMappingValues(source) {
+  getOutboundMappingValueInputs(source).forEach(input => {
+    input.checked = false;
+    input.closest('.tag-option')?.classList.remove('selected');
+  });
+  updateOutboundMappingValuePicker(source);
+}
+
+function renderOutboundMappingValueFields(sources = [], selectedBySource = {}) {
+  return sources.map(source => `
+    <div class="form-group" style="margin-bottom:14px">
+      <div class="form-label">${escapeHtml(source)}匹配值 <span class="required">*</span></div>
+      ${renderOutboundMappingValueField(source, selectedBySource[source] || [])}
+    </div>
+  `).join('');
+}
+
+function renderOutboundLabelMappingForm(rule = {}) {
+  const normalized = normalizeOutboundMappingTarget(rule);
+  const target = {
+    name: '',
+    category: normalized.category,
+    sources: normalized.sources,
+    matchValuesBySource: {},
+    output: normalized.output,
+    priority: 10,
+    remark: '',
+    enabled: true,
+    ...rule
+  };
+  target.category = normalized.category;
+  target.output = normalized.output;
+  target.sources = normalized.sources;
+  target.matchValuesBySource = getOutboundMappingMatchValuesBySource(target);
+  return `
+    <div class="dispatch-rule-form">
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">基础信息</div>
+        <div class="dispatch-form-grid">
+          <div class="form-group wide"><div class="form-label">规则名称 <span class="required">*</span></div><input class="form-input" id="outboundMappingName" value="${escapeAttr(target.name)}" placeholder="例：客观理由拒绝归因" /></div>
+          <div class="form-group"><div class="form-label">分类 <span class="required">*</span></div><select class="form-input" id="outboundMappingCategory" onchange="syncOutboundMappingOutputOptions()">${outboundMappingCategoryOptions.map(item => `<option value="${escapeAttr(item)}" ${target.category === item ? 'selected' : ''}>${escapeHtml(item)}</option>`).join('')}</select></div>
+          <div class="form-group"><div class="form-label">映射结果 <span class="required">*</span></div><select class="form-input" id="outboundMappingOutput" onchange="syncOutboundMappingSourceOptions()">${renderOutboundMappingOutputOptions(target.category, target.output)}</select></div>
+          <div class="form-group"><div class="form-label">权重 <span class="required">*</span></div><input class="form-input" id="outboundMappingPriority" type="number" min="1" max="99" value="${escapeAttr(target.priority)}" /></div>
+          <div class="form-group"><div class="form-label">状态</div><select class="form-input" id="outboundMappingEnabled"><option value="启用" ${target.enabled ? 'selected' : ''}>启用</option><option value="停用" ${!target.enabled ? 'selected' : ''}>停用</option></select></div>
+        </div>
+      </section>
+      <section class="dispatch-form-section">
+        <div class="dispatch-section-title">匹配关系</div>
+        <div class="form-group">
+          <div class="form-label">匹配来源 <span class="required">*</span></div>
+          <div id="outboundMappingSourceField">${renderOutboundMappingSourceCheckboxes(target.output, target.sources)}</div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">匹配值 <span class="required">*</span></div>
+          <div id="outboundMappingValueField">${renderOutboundMappingValueFields(target.sources, target.matchValuesBySource)}</div>
+        </div>
+        <div class="form-group"><div class="form-label">备注</div><textarea class="form-textarea" id="outboundMappingRemark" placeholder="填写该映射规则的业务说明">${escapeHtml(target.remark || '')}</textarea></div>
+      </section>
+    </div>
+  `;
+}
+
+function syncOutboundMappingValueField() {
+  const sources = getSelectedOutboundMappingSources();
+  const field = document.getElementById('outboundMappingValueField');
+  if (field) field.innerHTML = renderOutboundMappingValueFields(sources, {});
+}
+
+function syncOutboundMappingOutputOptions() {
+  const category = document.getElementById('outboundMappingCategory')?.value || '抗拒原因标签';
+  const outputSelect = document.getElementById('outboundMappingOutput');
+  if (!outputSelect) return;
+  const outputs = getOutboundMappingOutputs(category);
+  outputSelect.innerHTML = renderOutboundMappingOutputOptions(category, outputs[0]);
+  syncOutboundMappingSourceOptions();
+}
+
+function syncOutboundMappingSourceOptions() {
+  const output = document.getElementById('outboundMappingOutput')?.value || '客观理由拒绝';
+  const sourceField = document.getElementById('outboundMappingSourceField');
+  if (!sourceField) return;
+  const sources = getOutboundMappingSources(output);
+  sourceField.innerHTML = renderOutboundMappingSourceCheckboxes(output, [sources[0]]);
+  syncOutboundMappingValueField();
+}
+
+function openOutboundLabelMappingModal(mode, id = null) {
+  setSharedRuleModalVisual('config');
+  const rule = id ? outboundLabelMappingRules.find(item => item.id === id) : null;
+  editingOutboundLabelMappingId = mode === 'edit' ? id : null;
+  const titleMap = { add: '新增外呼标签映射', edit: '编辑外呼标签映射', view: '查看外呼标签映射' };
+  document.getElementById('leadDispatchRuleModalTitle').textContent = titleMap[mode] || '外呼标签映射';
+  document.getElementById('leadDispatchRuleModalBody').innerHTML = mode === 'view' ? renderOutboundLabelMappingDetail(rule) : renderOutboundLabelMappingForm(rule || {});
+  document.getElementById('leadDispatchRuleModalFooter').innerHTML = mode === 'view'
+    ? `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">关闭</button>`
+    : `<button class="btn-cancel" type="button" onclick="closeModal('leadDispatchRuleModal')">取消</button><button class="btn-save" type="button" onclick="saveOutboundLabelMappingRule()">保存</button>`;
+  document.getElementById('leadDispatchRuleModal').classList.add('show');
+}
+
+function getSelectedOutboundMappingSources() {
+  return Array.from(document.querySelectorAll('input[name="outboundMappingSource"]:checked')).map(input => input.value);
+}
+
+function getOutboundMappingMatchValuesBySelectedSources(sources = []) {
+  return sources.reduce((result, source) => {
+    result[source] = Array.from(document.querySelectorAll(`input[name="outboundMappingMatchValue"][data-source="${source}"]:checked`)).map(input => input.value);
+    return result;
+  }, {});
+}
+
+function saveOutboundLabelMappingRule() {
+  const name = document.getElementById('outboundMappingName')?.value.trim() || '';
+  if (!name) { showToast('请填写规则名称', false); return; }
+  const sources = getSelectedOutboundMappingSources();
+  if (!sources.length) { showToast('请选择匹配来源', false); return; }
+  const matchValuesBySource = getOutboundMappingMatchValuesBySelectedSources(sources);
+  const missingSource = sources.find(source => !(matchValuesBySource[source] || []).length);
+  if (missingSource) { showToast(`请选择${missingSource}匹配值`, false); return; }
+  const priority = Number(document.getElementById('outboundMappingPriority')?.value || 10);
+  if (!priority || priority < 1) { showToast('请填写有效权重', false); return; }
+  const category = document.getElementById('outboundMappingCategory')?.value || '抗拒原因标签';
+  const output = document.getElementById('outboundMappingOutput')?.value || '';
+  if (!getOutboundMappingOutputs(category).includes(output)) { showToast('请选择有效映射结果', false); return; }
+  if (sources.some(source => !getOutboundMappingSources(output).includes(source))) { showToast('请选择有效匹配来源', false); return; }
+  const payload = {
+    name,
+    category,
+    sources,
+    source: sources.join('、'),
+    matchValuesBySource,
+    matchValues: sources.flatMap(source => matchValuesBySource[source] || []),
+    output,
+    priority,
+    remark: document.getElementById('outboundMappingRemark')?.value.trim() || '',
+    enabled: document.getElementById('outboundMappingEnabled')?.value !== '停用',
+    updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
+  };
+  if (editingOutboundLabelMappingId) {
+    const index = outboundLabelMappingRules.findIndex(item => item.id === editingOutboundLabelMappingId);
+    if (index > -1) outboundLabelMappingRules[index] = { ...outboundLabelMappingRules[index], ...payload };
+    showToast('外呼标签映射已更新', true);
+  } else {
+    outboundLabelMappingRules.push({ id: outboundLabelMappingNextId++, ...payload });
+    showToast('外呼标签映射已新增', true);
+  }
+  closeModal('leadDispatchRuleModal');
+  renderOutboundLabelMappingPage();
+}
+
+function deleteOutboundLabelMappingRule(id) {
+  const rule = outboundLabelMappingRules.find(item => item.id === id);
+  if (!rule) return;
+  if (!confirm(`确认删除外呼标签映射「${rule.name}」？`)) return;
+  outboundLabelMappingRules = outboundLabelMappingRules.filter(item => item.id !== id);
+  showToast('外呼标签映射已删除', true);
+  renderOutboundLabelMappingPage();
+}
+
 function renderContactMutexPolicyPage() {
   const page = document.getElementById('contactMutexPolicyPage');
   if (!page) return;
@@ -10606,12 +11109,14 @@ const assignmentCityOptions = assignmentCityGroups.flatMap(group => group.cities
 const assignmentProvinceOptions = ['广东省', '浙江省', '上海市', '四川省'];
 const projectNameOptions = ['新能源专项', '置换活动', 'DCC培育项目', '高意向培育', '保客激活', '金融置换专项'];
 const assignmentChannelCodeOptions = ['R1', 'R2', 'R3', 'R4', 'R5', '未知渠道'];
-const assignmentLeadStatusOptions = ['待培育', '已预约', '战败', '无效', '休眠未购', '休眠失联', '重复线索', '已转化'];
+const assignmentLeadStatusOptions = ['总部_高意向', '总部_休眠未购', '总部_休眠失联', '总部_战败', '总部_暂败', '总部_阶段性战败', '总部_无效', '总部_异地'];
 const assignmentLeadStatusReasonMap = {
-  '战败': ['等待期长', '价格因素', '品牌偏好', '金融方案', '产品设计和配置', '服务不满', '其他'],
-  '无效': ['明确空号', '错号', '停机'],
-  '休眠未购': ['资金不足', '半年内不购车', '家人不同意', '征信不通过', '驾照没考到', '关注竞品车型', '其他'],
-  '休眠失联': ['三天四次无法接通', '用户要求不联系', '被拉黑']
+  '总部_休眠未购': ['资金不足', '半年内不购车', '家人不同意', '征信不通过', '驾照没考到', '关注竞品车型', '其他'],
+  '总部_休眠失联': ['三天四次无法接通', '用户要求不联系', '被拉黑'],
+  '总部_战败': ['等待期长', '价格因素', '品牌偏好', '金融方案', '产品设计和配置', '服务不满', '其他'],
+  '总部_暂败': ['等待期长', '价格因素', '其他'],
+  '总部_阶段性战败': ['阶段性无购车计划', '暂不考虑', '其他'],
+  '总部_无效': ['明确空号', '错号', '停机']
 };
 const assignmentDealerOptions = ['广州白云日产', '深圳南山日产', '杭州东风日产滨江店', '上海东风日产浦东店', '成都东风日产高新店', '无意向门店'];
 const assignmentOutboundChannels = ['AI外呼', '人工外呼', '机器人外呼', '预测外呼', 'IVR外呼'];
@@ -10997,7 +11502,7 @@ function renderSmartCodeValueInput(selectedValues = [], inputMode = 'picker') {
       </div>
     </div>
     <div id="smartCodeManualInputPanel" style="${inputMode === 'manual' ? '' : 'display:none'}">
-      <textarea class="form-input" id="assignmentSmartCodeManualInput" rows="4" placeholder="可一次粘贴多个 SmartCode，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
+      <textarea class="form-input assignment-manual-textarea" id="assignmentSmartCodeManualInput" rows="4" placeholder="可一次粘贴多个 SmartCode，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
       <div class="series-form-hint">保存时会自动拆分并去重；不在下拉选项中的 SmartCode 也可直接录入。</div>
     </div>
   `;
@@ -11040,7 +11545,7 @@ function renderProjectNameValueInput(selectedValues = [], inputMode = 'picker') 
       </div>
     </div>
     <div id="projectNameManualInputPanel" style="${inputMode === 'manual' ? '' : 'display:none'}">
-      <textarea class="form-input" id="assignmentProjectNameManualInput" rows="4" placeholder="可一次粘贴多个大项目名，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
+      <textarea class="form-input assignment-manual-textarea" id="assignmentProjectNameManualInput" rows="4" placeholder="可一次粘贴多个大项目名，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
       <div class="series-form-hint">保存时会自动拆分并去重；不在下拉选项中的大项目名也可直接录入。</div>
     </div>
   `;
@@ -11083,7 +11588,7 @@ function renderDealerValueInput(selectedValues = [], inputMode = 'picker') {
       </div>
     </div>
     <div id="dealerManualInputPanel" style="${inputMode === 'manual' ? '' : 'display:none'}">
-      <textarea class="form-input" id="assignmentDealerManualInput" rows="4" placeholder="可一次粘贴多个意向门店编码，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
+      <textarea class="form-input assignment-manual-textarea" id="assignmentDealerManualInput" rows="4" placeholder="可一次粘贴多个意向门店编码，支持换行、逗号、分号或空格分隔">${escapeHtml(manualValue)}</textarea>
       <div class="series-form-hint">保存时会自动拆分并去重；不在下拉选项中的意向门店也可直接录入。</div>
     </div>
   `;
@@ -12927,10 +13432,10 @@ const callStatusPolicyCallTypeOptions = [
 ];
 const callStatusPolicyStatusOptions = ['2-无人接听', '3-占线', '4-拒接', '5-空号', '6-关机', '7-停机', '8-欠费', '9-无法接通'];
 let callStatusPolicyRules = [
-  { id: 1, name: '冷线索未接通阶段性战败', priority: 1, callTypes: ['一知-冷线索', '一知-冷线索（大模型）'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '5-空号', '6-关机', '7-停机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_DEFEAT_PERIOD-阶段性战败', abnormalReason: '', updateIntentLevel: 'N - N(阶段性战败)', enabled: true },
-  { id: 2, name: '冰兰新线索休眠失联', priority: 2, callTypes: ['冰兰-新线索', '冰兰-保客'], callStatuses: ['2-无人接听', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
-  { id: 3, name: 'NEV新线索未接通休眠失联', priority: 3, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '6-关机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: 'UOC_UNLINKHIBERNATE-休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
-  { id: 4, name: 'NEV新线索号码无效', priority: 4, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['5-空号', '7-停机'], statusLogic: '或', updateLeadStatus: 'UOC_INVALID-无效', abnormalReason: '明确空号', updateIntentLevel: '', enabled: true }
+  { id: 1, name: '冷线索未接通阶段性战败', priority: 1, callTypes: ['一知-冷线索', '一知-冷线索（大模型）'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '5-空号', '6-关机', '7-停机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: '总部_阶段性战败', abnormalReason: '', updateIntentLevel: 'N - N(阶段性战败)', enabled: true },
+  { id: 2, name: '冰兰新线索休眠失联', priority: 2, callTypes: ['冰兰-新线索', '冰兰-保客'], callStatuses: ['2-无人接听', '9-无法接通'], statusLogic: '或', updateLeadStatus: '总部_休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 3, name: 'NEV新线索未接通休眠失联', priority: 3, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['2-无人接听', '3-占线', '4-拒接', '6-关机', '8-欠费', '9-无法接通'], statusLogic: '或', updateLeadStatus: '总部_休眠失联', abnormalReason: '三天四次无法接通', updateIntentLevel: 'L - L(休眠)', enabled: true },
+  { id: 4, name: 'NEV新线索号码无效', priority: 4, callTypes: ['一知-大模型NEV新线索', '一知-保客'], callStatuses: ['5-空号', '7-停机'], statusLogic: '或', updateLeadStatus: '总部_无效', abnormalReason: '明确空号', updateIntentLevel: '', enabled: true }
 ];
 let callStatusPolicyNextId = 5;
 let editingCallStatusPolicyRuleId = null;
@@ -13166,8 +13671,8 @@ function renderCallStatusPolicyForm(rule) {
         <div class="dispatch-action-card">
           <div class="dispatch-form-grid">
             <div class="form-group"><div class="form-label">线索状态更新为 <span class="required">*</span></div><select class="form-input" id="callStatusFormLeadStatus" onchange="updateCallStatusPolicyReasonOptions()">${renderLeadDispatchOptionList(leadDispatchLeadStatusOptions, rule.updateLeadStatus || '', '请选择线索状态')}</select></div>
-            <div class="form-group"><div class="form-label">异常原因更新为</div><select class="form-input" id="callStatusFormAbnormalReason">${renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(rule.updateLeadStatus || '', rule.abnormalReason || ''), rule.abnormalReason || '', '不更新')}</select></div>
-            <div class="form-group wide"><div class="form-label">意向级别更新为</div><select class="form-input" id="callStatusFormIntentLevel">${renderLeadDispatchOptionList(leadDispatchIntentLevelOptions, rule.updateIntentLevel || '', '不更新')}</select></div>
+            <div class="form-group" id="callStatusFormAbnormalReasonGroup" style="${shouldShowLeadDispatchAbnormalReason(rule.updateLeadStatus || '') ? '' : 'display:none'}"><div class="form-label">异常原因更新为 <span class="required">*</span></div><select class="form-input" id="callStatusFormAbnormalReason" ${isLeadStatusAbnormalReasonLocked(rule.updateLeadStatus || '') ? 'disabled' : ''}>${renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(rule.updateLeadStatus || '', rule.abnormalReason || ''), getSelectedLeadDispatchAbnormalReason(rule.updateLeadStatus || '', rule.abnormalReason || ''), isLeadStatusAbnormalReasonLocked(rule.updateLeadStatus || '') ? '不更新' : '请选择异常原因')}</select></div>
+            <div class="form-group wide"><div class="form-label">意向级别更新为 <span class="required">*</span></div><select class="form-input" id="callStatusFormIntentLevel" ${isLeadStatusIntentLevelLocked(rule.updateLeadStatus || '') ? 'disabled' : ''}>${renderLeadDispatchOptionList(getLeadDispatchIntentLevelOptions(rule.updateLeadStatus || '', rule.updateIntentLevel || ''), getLeadStatusLockedIntentLevel(rule.updateLeadStatus || '', rule.updateIntentLevel || ''), isLeadStatusIntentLevelLocked(rule.updateLeadStatus || '') ? '不更新' : '请选择意向级别')}</select></div>
           </div>
         </div>
       </section>
@@ -13189,8 +13694,13 @@ function updateCallStatusPolicyReasonOptions() {
   const statusSelect = document.getElementById('callStatusFormLeadStatus');
   const reasonSelect = document.getElementById('callStatusFormAbnormalReason');
   if (!statusSelect || !reasonSelect) return;
-  const options = leadDispatchAbnormalReasonMap[statusSelect.value || ''] || [''];
-  reasonSelect.innerHTML = renderLeadDispatchOptionList(options, '', '不更新');
+  const reasonGroup = document.getElementById('callStatusFormAbnormalReasonGroup');
+  const shouldShowReason = shouldShowLeadDispatchAbnormalReason(statusSelect.value || '');
+  if (reasonGroup) reasonGroup.style.display = shouldShowReason ? '' : 'none';
+  reasonSelect.disabled = isLeadStatusAbnormalReasonLocked(statusSelect.value || '');
+  reasonSelect.innerHTML = renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(statusSelect.value || '', ''), getSelectedLeadDispatchAbnormalReason(statusSelect.value || '', ''), isLeadStatusAbnormalReasonLocked(statusSelect.value || '') ? '不更新' : '请选择异常原因');
+  if (!shouldShowReason) reasonSelect.value = '';
+  syncIntentLevelByLeadStatus(statusSelect.value || '', 'callStatusFormIntentLevel');
 }
 
 function renderCallStatusPolicyDetail(rule) {
@@ -13211,14 +13721,17 @@ function saveCallStatusPolicyRule() {
     callStatuses: collectCheckedValues('callStatusPolicyStatus'),
     statusLogic: document.getElementById('callStatusFormLogic').value,
     updateLeadStatus: document.getElementById('callStatusFormLeadStatus').value.trim(),
-    abnormalReason: document.getElementById('callStatusFormAbnormalReason').value.trim(),
-    updateIntentLevel: document.getElementById('callStatusFormIntentLevel').value.trim(),
+    abnormalReason: getLeadStatusLockedAbnormalReason(document.getElementById('callStatusFormLeadStatus').value.trim(), document.getElementById('callStatusFormAbnormalReason').value.trim()),
+    updateIntentLevel: getLeadStatusLockedIntentLevel(document.getElementById('callStatusFormLeadStatus').value.trim(), document.getElementById('callStatusFormIntentLevel').value.trim()),
     enabled: document.getElementById('callStatusFormEnabled').value === '启用'
   };
   if (!payload.name) { showToast('请填写策略名称', false); return; }
   if (!payload.callTypes.length) { showToast('请选择外呼类型', false); return; }
   if (!payload.callStatuses.length) { showToast('请选择通话状态', false); return; }
   if (!payload.updateLeadStatus) { showToast('请选择线索状态更新值', false); return; }
+  if (!isLeadStatusAbnormalReasonLocked(payload.updateLeadStatus) && hasLeadDispatchAbnormalReasons(payload.updateLeadStatus) && !payload.abnormalReason) { showToast('请选择异常原因', false); return; }
+  if (isLeadDispatchIntentLevelRequired(payload.updateLeadStatus) && !payload.updateIntentLevel) { showToast('请选择意向级别', false); return; }
+  if (!isLeadDispatchIntentLevelValid(payload.updateLeadStatus, payload.updateIntentLevel)) { showToast('请选择有效的意向级别', false); return; }
   if (editingCallStatusPolicyRuleId) {
     const index = callStatusPolicyRules.findIndex(rule => rule.id === editingCallStatusPolicyRuleId);
     if (index > -1) callStatusPolicyRules[index] = { ...callStatusPolicyRules[index], ...payload };
@@ -13242,9 +13755,9 @@ function deleteCallStatusPolicyRule(id) {
 
 // ===== Cold Lead Definition Config =====
 let coldLeadDefinitionRules = [
-  { id: 1, leadStatus: 'UOC_UNSALEHIBERNATE-休眠未购', isCold: true, enabled: true, remark: '休眠未购进入门店冷线索池' },
-  { id: 2, leadStatus: 'UOC_UNDELIVER-暂败', isCold: true, enabled: true, remark: '暂败进入门店冷线索池' },
-  { id: 3, leadStatus: 'UOC_OUTCITY-异地', isCold: true, enabled: true, remark: '异地进入门店冷线索池' }
+  { id: 1, leadStatus: '总部_休眠未购', isCold: true, enabled: true, remark: '休眠未购进入门店冷线索池' },
+  { id: 2, leadStatus: '总部_暂败', isCold: true, enabled: true, remark: '暂败进入门店冷线索池' },
+  { id: 3, leadStatus: '总部_异地', isCold: true, enabled: true, remark: '异地进入门店冷线索池' }
 ];
 let coldLeadDefinitionNextId = 4;
 let editingColdLeadDefinitionId = null;
@@ -13724,17 +14237,86 @@ function renderLeadDispatchOptionList(options, selectedValue = '', emptyText = '
 }
 
 function getLeadDispatchAbnormalReasonOptions(leadStatus = '', currentReason = '') {
+  if (isLeadStatusAbnormalReasonLocked(leadStatus || '')) return [''];
   const baseOptions = leadDispatchAbnormalReasonMap[leadStatus || ''] || [''];
-  return baseOptions.includes(currentReason || '') ? baseOptions : [...baseOptions, currentReason || ''];
+  if (!currentReason) return baseOptions;
+  return baseOptions.includes(currentReason) ? baseOptions : [...baseOptions, currentReason];
+}
+
+function shouldShowLeadDispatchAbnormalReason(leadStatus = '') {
+  return true;
+}
+
+function isLeadStatusAbnormalReasonLocked(leadStatus = '') {
+  return ['总部_高意向', '总部_暂败', '总部_阶段性战败', '总部_异地'].includes(leadStatus || '');
+}
+
+function getLeadStatusLockedAbnormalReason(leadStatus = '', currentValue = '') {
+  return isLeadStatusAbnormalReasonLocked(leadStatus || '') ? '' : currentValue;
+}
+
+function getSelectedLeadDispatchAbnormalReason(leadStatus = '', currentValue = '') {
+  if (isLeadStatusAbnormalReasonLocked(leadStatus || '')) return '';
+  const options = getLeadDispatchAbnormalReasonOptions(leadStatus || '', currentValue || '');
+  if (currentValue && options.includes(currentValue)) return currentValue;
+  return '';
+}
+
+function hasLeadDispatchAbnormalReasons(leadStatus = '') {
+  return (leadDispatchAbnormalReasonMap[leadStatus || ''] || []).some(Boolean);
+}
+
+function isLeadStatusIntentLevelLocked(statusValue = '') {
+  return Object.prototype.hasOwnProperty.call(leadStatusIntentLevelMap, statusValue || '');
+}
+
+function getLeadDispatchIntentLevelOptions(statusValue = '', currentValue = '') {
+  const baseOptions = (statusValue || '') === '总部_高意向' ? highIntentLevelOptions : leadDispatchIntentLevelOptions;
+  if (!currentValue || baseOptions.includes(currentValue)) return baseOptions;
+  return [...baseOptions, currentValue];
+}
+
+function getLeadStatusLockedIntentLevel(statusValue = '', currentValue = '') {
+  if (isLeadStatusIntentLevelLocked(statusValue)) return leadStatusIntentLevelMap[statusValue || ''];
+  const options = getLeadDispatchIntentLevelOptions(statusValue || '', currentValue || '');
+  if (currentValue && options.includes(currentValue)) return currentValue;
+  return '';
+}
+
+function isLeadDispatchIntentLevelValid(statusValue = '', intentLevel = '') {
+  if (isLeadStatusIntentLevelLocked(statusValue || '')) return intentLevel === leadStatusIntentLevelMap[statusValue || ''];
+  if ((statusValue || '') === '总部_高意向') return highIntentLevelOptions.includes(intentLevel || '');
+  return true;
+}
+
+function isLeadDispatchIntentLevelRequired(statusValue = '') {
+  return !isLeadStatusIntentLevelLocked(statusValue || '') || leadStatusIntentLevelMap[statusValue || ''] !== '';
+}
+
+function syncIntentLevelByLeadStatus(statusValue, intentLevelSelectId) {
+  const intentLevelSelect = document.getElementById(intentLevelSelectId);
+  if (!intentLevelSelect) return;
+  const locked = isLeadStatusIntentLevelLocked(statusValue || '');
+  intentLevelSelect.disabled = locked;
+  const currentValue = intentLevelSelect.value || '';
+  const options = getLeadDispatchIntentLevelOptions(statusValue || '', currentValue);
+  const selected = getLeadStatusLockedIntentLevel(statusValue || '', currentValue);
+  intentLevelSelect.innerHTML = renderLeadDispatchOptionList(options, selected, locked ? '不更新' : '请选择意向级别');
 }
 
 function updateLeadDispatchAbnormalReasonOptions() {
   const statusSelect = document.getElementById('dispatchFormLeadStatus');
   const reasonSelect = document.getElementById('dispatchFormAbnormalReason');
   if (!statusSelect || !reasonSelect) return;
+  const reasonGroup = document.getElementById('dispatchFormAbnormalReasonGroup');
   const currentValue = reasonSelect.value;
-  const options = leadDispatchAbnormalReasonMap[statusSelect.value || ''] || [''];
-  reasonSelect.innerHTML = renderLeadDispatchOptionList(options, options.includes(currentValue) ? currentValue : '', '不更新');
+  const shouldShowReason = shouldShowLeadDispatchAbnormalReason(statusSelect.value || '');
+  if (reasonGroup) reasonGroup.style.display = shouldShowReason ? '' : 'none';
+  reasonSelect.disabled = isLeadStatusAbnormalReasonLocked(statusSelect.value || '');
+  const options = getLeadDispatchAbnormalReasonOptions(statusSelect.value || '', currentValue);
+  reasonSelect.innerHTML = renderLeadDispatchOptionList(options, getSelectedLeadDispatchAbnormalReason(statusSelect.value || '', options.includes(currentValue) ? currentValue : ''), isLeadStatusAbnormalReasonLocked(statusSelect.value || '') ? '不更新' : '请选择异常原因');
+  if (!shouldShowReason) reasonSelect.value = '';
+  syncIntentLevelByLeadStatus(statusSelect.value || '', 'dispatchFormIntentLevel');
 }
 
 function renderLeadDispatchTagPicker(kind, inputName, selectedTags = [], placeholder = '请选择外呼标签') {
@@ -14048,16 +14630,16 @@ function renderLeadDispatchRuleForm(rule) {
                 ${renderLeadDispatchOptionList(leadDispatchLeadStatusOptions, rule.updateLeadStatus || '', '不更新')}
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="dispatchFormAbnormalReasonGroup" style="${shouldShowLeadDispatchAbnormalReason(rule.updateLeadStatus || '') ? '' : 'display:none'}">
               <div class="form-label">异常原因 <span class="required">*</span></div>
-              <select class="form-input" id="dispatchFormAbnormalReason">
-                ${renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(rule.updateLeadStatus || '', rule.abnormalReason || ''), rule.abnormalReason || '', '不更新')}
+              <select class="form-input" id="dispatchFormAbnormalReason" ${isLeadStatusAbnormalReasonLocked(rule.updateLeadStatus || '') ? 'disabled' : ''}>
+                ${renderLeadDispatchOptionList(getLeadDispatchAbnormalReasonOptions(rule.updateLeadStatus || '', rule.abnormalReason || ''), getSelectedLeadDispatchAbnormalReason(rule.updateLeadStatus || '', rule.abnormalReason || ''), isLeadStatusAbnormalReasonLocked(rule.updateLeadStatus || '') ? '不更新' : '请选择异常原因')}
               </select>
             </div>
             <div class="form-group wide">
-              <div class="form-label">意向级别 <span class="required">*</span></div>
-              <select class="form-input" id="dispatchFormIntentLevel">
-                ${renderLeadDispatchOptionList(leadDispatchIntentLevelOptions, rule.updateIntentLevel || '', '不更新')}
+              <div class="form-label">意向级别更新为 <span class="required">*</span></div>
+              <select class="form-input" id="dispatchFormIntentLevel" ${isLeadStatusIntentLevelLocked(rule.updateLeadStatus || '') ? 'disabled' : ''}>
+                ${renderLeadDispatchOptionList(getLeadDispatchIntentLevelOptions(rule.updateLeadStatus || '', rule.updateIntentLevel || ''), getLeadStatusLockedIntentLevel(rule.updateLeadStatus || '', rule.updateIntentLevel || ''), isLeadStatusIntentLevelLocked(rule.updateLeadStatus || '') ? '不更新' : '请选择意向级别')}
               </select>
             </div>
           </div>
@@ -14147,16 +14729,17 @@ function saveLeadDispatchRule() {
     dispatchTarget: document.getElementById('dispatchFormTarget').value,
     updateSmartCode: document.getElementById('dispatchFormSmartCode').value.trim(),
     updateLeadStatus: document.getElementById('dispatchFormLeadStatus').value.trim(),
-    abnormalReason: document.getElementById('dispatchFormAbnormalReason').value.trim(),
-    updateIntentLevel: document.getElementById('dispatchFormIntentLevel').value.trim(),
+    abnormalReason: getLeadStatusLockedAbnormalReason(document.getElementById('dispatchFormLeadStatus').value.trim(), document.getElementById('dispatchFormAbnormalReason').value.trim()),
+    updateIntentLevel: getLeadStatusLockedIntentLevel(document.getElementById('dispatchFormLeadStatus').value.trim(), document.getElementById('dispatchFormIntentLevel').value.trim()),
     enabled: (document.getElementById('dispatchFormStatus')?.value || '启用') === '启用'
   };
   if (!payload.includeTags.length) { showToast('请选择包含标签', false); return; }
   if (!payload.hasIntentDealer) { showToast('请选择是否有意向专营店', false); return; }
   if (!payload.dispatchTarget) { showToast('请选择线索是否下发', false); return; }
   if (!payload.updateLeadStatus) { showToast('请选择线索状态', false); return; }
-  if (!payload.abnormalReason) { showToast('请选择异常原因', false); return; }
-  if (!payload.updateIntentLevel) { showToast('请选择意向级别', false); return; }
+  if (!isLeadStatusAbnormalReasonLocked(payload.updateLeadStatus) && hasLeadDispatchAbnormalReasons(payload.updateLeadStatus) && !payload.abnormalReason) { showToast('请选择异常原因', false); return; }
+  if (isLeadDispatchIntentLevelRequired(payload.updateLeadStatus) && !payload.updateIntentLevel) { showToast('请选择意向级别', false); return; }
+  if (!isLeadDispatchIntentLevelValid(payload.updateLeadStatus, payload.updateIntentLevel)) { showToast('请选择有效的意向级别', false); return; }
   if (editingLeadDispatchRuleId) {
     const index = leadDispatchRules.findIndex(rule => rule.id === editingLeadDispatchRuleId);
     if (index > -1) leadDispatchRules[index] = { ...leadDispatchRules[index], ...payload };
