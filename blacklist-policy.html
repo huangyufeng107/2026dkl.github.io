@@ -7996,7 +7996,7 @@ function renderPreDialerReportPage(page) {
               ${renderPreDialerMetricCard('任务已处理', metrics.handledTasks, `处理率 <strong>${rate(metrics.handledTasks, metrics.pushedTasks)}</strong>`, 'quality')}
               ${renderPreDialerMetricCard('有效任务量', metrics.effectiveOutboundCalls, '剔除无效与待回传任务', 'quality')}
               ${renderPreDialerMetricCard('话单已回传', metrics.returnedCalls, '不按任务去重', 'quality')}
-              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '按话单统计', 'quality')}
+              ${renderPreDialerMetricCard('话单待回传', metrics.pendingCalls, '按任务去重', 'quality')}
               ${renderPreDialerMetricCard('话单超时未回传', metrics.timeoutPendingCalls, '超 24 小时未回传', 'risk')}
               ${renderPreDialerMetricCard('录音丢失量', metrics.recordingMissingCalls, '已回传话单无录音', 'risk')}
               ${renderPreDialerMetricCard('外呼接通量', metrics.connectedCalls, `接通率 <strong>${rate(metrics.connectedCalls, metrics.effectiveOutboundCalls)}</strong>`, 'quality')}
@@ -8242,8 +8242,8 @@ function showPreDialerMetricInfo(metric) {
     '任务处理中': '预外呼系统仍在处理中，尚未回传最终处理结果的去重任务数。占比 = 任务处理中 ÷ 推送任务量 × 100%',
     '任务已处理': '预外呼系统已完成处理，已接收到最终处理结果的去重任务数。处理率 = 任务已处理 ÷ 推送任务量 × 100%',
     '话单已回传': '预外呼系统已将外呼结果成功回传至 DCC培育系统的话单数量，按话单统计，不按任务去重。',
-    '话单待回传': '已发起外呼但尚未收到预外呼系统回传结果的话单数量，按话单统计，不按任务去重。',
-    '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统回传结果的话单数量，按话单统计，需要核查接口或补偿任务。',
+    '话单待回传': '预外呼系统未回传首次话单结果的任务数量，按任务去重。',
+    '话单超时未回传': '已超过 24 小时且尚未收到预外呼系统未回传首次话单结果的任务数量，按任务去重，需要核查接口或补偿任务。',
     '录音丢失量': '已回传话单中未获取到有效录音文件或录音地址的话单数量，按话单统计，不按任务去重。',
     '外呼接通量': '话单结果标识为成功建联的外呼次数，去重任务数。接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
     '接通率': '接通率 = 外呼接通量 ÷ 有效任务量 × 100%',
